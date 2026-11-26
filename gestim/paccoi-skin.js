@@ -280,14 +280,14 @@
 })();
 
 /* =========================================================
-   V3.1 — "Le nostre sedi": solo le foto 1, 2, 4 e 7 (ordine del pannello Slide sedi),
+   V3.1 — "Le nostre sedi": solo le foto 1, 2, 4 e 3 della sede attuale (la 7 era di un'altra agenzia),
    e la 1 sempre per prima (Gestim le mescola a ogni visita)
    ========================================================= */
 (function () {
   function ready(fn) { document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", fn) : fn(); }
   ready(function () {
     try {
-      var KEEP = ["20241002121244765096380", "20241002121323502901260", "20241002121423501270100", "20241002121636413833290"];
+      var KEEP = ["20241002121244765096380", "20241002121323502901260", "20241002121423501270100", "20241002121356385313010"];
       document.querySelectorAll("main .carousel").forEach(function (c) {
         var inner = c.querySelector(".carousel-inner"); if (!inner) return;
         var items = [].slice.call(inner.querySelectorAll(":scope > .carousel-item"));

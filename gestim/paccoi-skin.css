@@ -438,3 +438,48 @@ html body .pk-ph-cue::after{content:"";position:absolute;left:50%;top:7px;width:
   html body .pk-ph-btns .pk-ph-more{display:none!important}
   html body .pk-ph-cue{display:none}
 }
+
+/* =========================================================
+   V3.2 — barra filtri uguale in home e nei risultati,
+   menu a tendina leggibili nella barra che compare scorrendo
+   ========================================================= */
+@media (min-width:992px){
+  html body .cercaInterno{background:#17110c!important;padding:26px 0!important;border-bottom:1px solid var(--pk-line)}
+  html body .cercaInterno .contentbox{max-width:1240px;margin:0 auto;padding:0 12px}
+  html body #motoreRicerca, html body #motoreRicercaInterno{padding:0!important;border-radius:6px!important;background:rgba(33,28,23,.95)!important;border:1px solid var(--pk-line)!important;box-shadow:0 30px 60px -36px rgba(0,0,0,.9)!important}
+  html body #motoreRicerca form>.row, html body #motoreRicercaInterno form>.row{align-items:stretch;margin:0!important}
+  html body #motoreRicerca form>.row>div>.row, html body #motoreRicercaInterno form>.row>div>.row{height:100%;margin:0!important}
+  html body #motoreRicerca form>.row>div>.row>div, html body #motoreRicercaInterno form>.row>div>.row>div{position:relative;padding:30px 16px 10px!important;border-right:1px solid var(--pk-line);display:flex;flex-direction:column;justify-content:flex-end;min-height:84px}
+  html body #motoreRicerca form>.row>div:last-child>.row>div, html body #motoreRicercaInterno form>.row>div:last-child>.row>div{border-right:0;padding:12px!important;justify-content:center}
+  html body #motoreRicerca form>.row>div>.row>div::before, html body #motoreRicercaInterno form>.row>div>.row>div::before{position:absolute;top:12px;left:18px;font-size:11.5px;font-weight:600;color:var(--pk-muted);letter-spacing:.04em}
+  html body #motoreRicerca .codice::before, html body #motoreRicercaInterno .codice::before{content:"Codice"}
+  html body #motoreRicerca .prezzo::before, html body #motoreRicercaInterno .prezzo::before{content:"Prezzo (€)"}
+  html body #motoreRicerca .localita::before, html body #motoreRicercaInterno .localita::before{content:"Comune"}
+  html body #motoreRicerca .zone::before, html body #motoreRicercaInterno .zone::before{content:"Zona"}
+  html body #motoreRicerca .contratto::before, html body #motoreRicercaInterno .contratto::before{content:"Contratto"}
+  html body #motoreRicerca .tipologia::before, html body #motoreRicercaInterno .tipologia::before{content:"Tipo di immobile"}
+  html body #motoreRicerca .boxinput, html body #motoreRicercaInterno .boxinput{width:100%;margin:0!important;padding:0!important;height:auto!important;border:0!important;background:transparent!important}
+  html body #motoreRicerca .prezzo .boxinput, html body #motoreRicercaInterno .prezzo .boxinput{display:flex;gap:8px}
+  html body #motoreRicerca .form-control, html body #motoreRicercaInterno .form-control, html body #motoreRicerca select, html body #motoreRicercaInterno select, html body #motoreRicerca .select2-selection, html body #motoreRicercaInterno .select2-selection{background:transparent!important;border:0!important;border-bottom:1px solid var(--pk-line2)!important;border-radius:0!important;height:38px!important;min-height:38px!important;max-height:38px!important;padding:0 22px 0 2px!important;margin:0!important;color:#fff!important;font-size:15px!important;font-weight:500;box-shadow:none!important;overflow:hidden}
+  html body #motoreRicerca .form-control:focus, html body #motoreRicercaInterno .form-control:focus, html body #motoreRicerca .select2-container--focus .select2-selection, html body #motoreRicercaInterno .select2-container--focus .select2-selection, html body #motoreRicerca .select2-container--open .select2-selection, html body #motoreRicercaInterno .select2-container--open .select2-selection{border-bottom-color:var(--pk-gold)!important}
+  html body #motoreRicerca .select2-container, html body #motoreRicercaInterno .select2-container{width:100%!important;display:block}
+  html body #motoreRicerca .select2-selection__rendered, html body #motoreRicercaInterno .select2-selection__rendered{display:block!important;line-height:37px!important;padding:0!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff!important}
+  html body #motoreRicerca .select2-selection--multiple .select2-selection__rendered, html body #motoreRicercaInterno .select2-selection--multiple .select2-selection__rendered{display:flex!important;flex-wrap:nowrap!important;align-items:center;height:37px}
+  html body #motoreRicerca .select2-selection__choice, html body #motoreRicercaInterno .select2-selection__choice{margin:0 4px 0 0!important;background:rgba(232,192,143,.15)!important;border:1px solid var(--pk-line2)!important;color:#fff!important;font-size:12.5px!important;line-height:22px!important;padding:0 6px!important}
+  html body #motoreRicerca .select2-search--inline, html body #motoreRicercaInterno .select2-search--inline, html body #motoreRicerca .select2-search__field, html body #motoreRicercaInterno .select2-search__field{margin:0!important;height:36px!important;line-height:36px!important;color:#fff!important}
+  html body #motoreRicerca .select2-search__field::placeholder, html body #motoreRicercaInterno .select2-search__field::placeholder, html body #motoreRicerca .form-control::placeholder, html body #motoreRicercaInterno .form-control::placeholder{color:#cdbba7!important;opacity:1}
+  html body #motoreRicerca .select2-selection__arrow, html body #motoreRicercaInterno .select2-selection__arrow{height:36px!important;top:0!important;right:2px!important}
+  html body #motoreRicerca .select2-selection__arrow b, html body #motoreRicercaInterno .select2-selection__arrow b{border-color:var(--pk-muted) transparent transparent transparent!important}
+  html body #motoreRicerca .avanzata a, html body #motoreRicercaInterno .avanzata a, html body #motoreRicerca .avanzata button, html body #motoreRicercaInterno .avanzata button, html body #motoreRicerca [onclick*="vanzat"], html body #motoreRicercaInterno [onclick*="vanzat"]{display:flex!important;align-items:center;justify-content:center;width:100%;height:56px!important;min-height:56px!important;padding:0 6px!important;background:transparent!important;color:var(--pk-gold)!important;border:1px solid var(--pk-line2)!important;border-radius:4px!important;font-weight:700!important;font-size:13px!important;letter-spacing:.06em;box-shadow:none!important}
+  html body #motoreRicerca .avanzata a:hover, html body #motoreRicercaInterno .avanzata a:hover, html body #motoreRicerca .avanzata button:hover, html body #motoreRicercaInterno .avanzata button:hover{border-color:var(--pk-gold)!important;color:#fff!important}
+  html body #motoreRicerca .cerca button, html body #motoreRicercaInterno .cerca button, html body #motoreRicerca .cerca .submit, html body #motoreRicercaInterno .cerca .submit, html body #motoreRicerca .cerca input[type=submit], html body #motoreRicercaInterno .cerca input[type=submit]{width:100%;height:56px!important;min-height:56px!important;margin:0!important}
+}
+html body .select2-dropdown{z-index:1065!important}
+
+/* barra che compare scorrendo: i sottomenu devono uscire e stare sopra a tutto */
+html body .intestazione_scroll{overflow:visible!important;max-height:none!important;z-index:1030!important}
+html body .intestazione_scroll .row, html body .intestazione_scroll .menu, html body .intestazione_scroll nav{overflow:visible!important}
+html body .intestazione_scroll .dropdown-menu, html body header .dropdown-menu{z-index:1060!important}
+html body .intestazione_scroll .dropdown-menu{background:var(--pk-surface)!important;margin-top:6px!important}
+html body .intestazione_scroll .dropdown-item{color:var(--pk-text)!important}
+html body .intestazione_scroll .dropdown-item:hover{background:rgba(233,225,215,.1)!important;color:#fff!important}
