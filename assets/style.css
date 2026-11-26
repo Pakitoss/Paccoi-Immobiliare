@@ -3,10 +3,10 @@
    Palette scura ed elegante: espresso profondo + bronzo del marchio
    ========================================================= */
 :root{
-  --bg:#16110d;          /* fondo pagina */
-  --bg-2:#1f1711;        /* sezioni alternate */
-  --surface:#2a1f17;     /* card, pannelli */
-  --surface-2:#36281d;   /* campi, hover */
+  --bg:#1f1812;          /* fondo pagina */
+  --bg-2:#281e16;        /* sezioni alternate */
+  --surface:#33271d;     /* card, pannelli */
+  --surface-2:#403125;   /* campi, hover */
   --text:#efe4d6;        /* testo */
   --heading:#f6efe6;     /* titoli */
   --muted:#b8a491;       /* testo secondario */
@@ -60,7 +60,7 @@ section{padding:110px 0}
 .btn svg{width:17px;height:17px;flex:none}
 
 /* ---------- top bar ---------- */
-.topbar{background:#0d0b09;color:var(--muted);font-size:13px;border-bottom:1px solid var(--line)}
+.topbar{background:#17110c;color:var(--muted);font-size:13px;border-bottom:1px solid var(--line)}
 .topbar .wrap{display:flex;justify-content:space-between;align-items:center;height:38px}
 .topbar .contacts{display:flex;gap:28px}
 .topbar a:hover{color:#fff}
@@ -71,7 +71,7 @@ section{padding:110px 0}
 header.site{position:sticky;top:0;z-index:50;background:rgba(19,16,13,.86);backdrop-filter:blur(14px) saturate(1.2);border-bottom:1px solid var(--line);color:var(--text);transition:background .35s,border-color .35s,box-shadow .35s,top .35s}
 header.site .wrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:var(--header-h)}
 header.site.scrolled{box-shadow:0 18px 40px -26px rgba(0,0,0,.9)}
-.logo img{height:58px;width:auto}
+.logo img{height:58px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.45))}
 .logo .col{display:none}
 nav.main ul{display:flex;gap:2px;list-style:none;align-items:center}
 nav.main li{position:relative}
@@ -91,11 +91,11 @@ nav.main .has-sub>a::after{content:"";display:inline-block;width:6px;height:6px;
 /* header trasparente sopra le foto a tutto schermo (home e scheda) */
 body.over-hero header.site{position:fixed;left:0;right:0;top:38px}
 body.over-hero header.site.scrolled{top:0}
-body.over-hero header.site:not(.scrolled){background:linear-gradient(180deg,rgba(13,11,9,.55),rgba(13,11,9,0));border-color:transparent;backdrop-filter:none}
+body.over-hero header.site:not(.scrolled){background:linear-gradient(180deg,rgba(20,14,9,.72),rgba(20,14,9,.25) 70%,rgba(20,14,9,0));border-color:transparent;backdrop-filter:none}
 body.over-hero .topbar{position:absolute;top:0;left:0;right:0;z-index:51;background:rgba(13,11,9,.7);backdrop-filter:blur(6px)}
 
 /* menu a tutto schermo (mobile) */
-.drawer{position:fixed;inset:0;z-index:80;background:#0d0b09;color:var(--heading);display:flex;flex-direction:column;padding:28px 28px 40px;transform:translateY(-100%);transition:transform .5s cubic-bezier(.7,0,.2,1);visibility:hidden}
+.drawer{position:fixed;inset:0;z-index:80;background:#17110c;color:var(--heading);display:flex;flex-direction:column;padding:28px 28px 40px;transform:translateY(-100%);transition:transform .5s cubic-bezier(.7,0,.2,1);visibility:hidden}
 .drawer.open{transform:none;visibility:visible}
 .drawer .top{display:flex;justify-content:space-between;align-items:center}
 .drawer .top img{height:48px}
@@ -109,15 +109,15 @@ body.over-hero .topbar{position:absolute;top:0;left:0;right:0;z-index:51;backgro
 .hero{position:relative;height:100vh;min-height:640px;max-height:980px;overflow:hidden;color:var(--heading);padding:0;background:var(--bg)}
 .hero-media{position:absolute;inset:-8% 0;will-change:transform}
 .hero .slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.6s ease, transform 9s ease;transform:scale(1.06);
-  filter:saturate(1.08) brightness(.82) contrast(1.06)}
+  filter:saturate(1.05) contrast(1.03)}
 .hero .slide.active{opacity:1;transform:scale(1)}
 /* velatura color espresso: le foto restano leggibili ma logo e titoli non vengono mai coperti */
-.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(120,60,20,.28),rgba(20,30,50,.18));mix-blend-mode:soft-light}
+.hero-media::after{content:none}
 .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(180deg,rgba(13,9,6,.8) 0%,rgba(13,9,6,.25) 20%,rgba(13,9,6,0) 42%,rgba(22,17,13,.55) 74%,var(--bg) 100%)}
+  background:linear-gradient(180deg,rgba(20,14,9,.6) 0%,rgba(20,14,9,0) 18%,rgba(20,14,9,0) 48%,rgba(20,14,9,.5) 72%,var(--bg) 100%)}
 .hero .wrap{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:180px}
 .hero .eyebrow{color:#efe2d3;text-shadow:0 1px 14px rgba(0,0,0,.7)}
-.hero h1{color:var(--heading);font-size:clamp(46px,6.6vw,92px);max-width:13ch;margin:18px 0 0;text-shadow:0 2px 40px rgba(0,0,0,.35)}
+.hero h1{color:#fff;font-size:clamp(46px,6.6vw,92px);max-width:13ch;margin:18px 0 0;text-shadow:0 2px 6px rgba(0,0,0,.35),0 4px 50px rgba(0,0,0,.55)}
 .hero h1 em{font-style:italic;color:var(--gold)}
 .hero h1 .wm{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
 .hero h1 .w{display:inline-block}
@@ -176,7 +176,7 @@ body.over-hero .topbar{position:absolute;top:0;left:0;right:0;z-index:51;backgro
 .prop .specs svg{width:16px;height:16px;color:var(--bronze)}
 
 /* ---------- pagina risultati ---------- */
-.results-hero{background:#0d0b09;padding:56px 0 0;position:relative;border-bottom:1px solid var(--line)}
+.results-hero{background:#17110c;padding:56px 0 0;position:relative;border-bottom:1px solid var(--line)}
 .results-hero h1{font-size:clamp(34px,4.4vw,56px);max-width:22ch}
 .results-hero p{color:var(--muted);max-width:62ch;margin-top:14px}
 .results-hero .searchbar{margin-top:34px;transform:translateY(50%)}
@@ -201,15 +201,17 @@ body.over-hero .topbar{position:absolute;top:0;left:0;right:0;z-index:51;backgro
 .ph-hero img.main{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s ease,transform 12s ease;transform:scale(1.04)}
 .ph-hero img.main.ready{opacity:1;transform:scale(1)}
 .ph-hero.contain img.main{object-fit:contain}
-.ph-hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(13,9,6,.65) 0%,rgba(13,9,6,0) 20%,rgba(13,9,6,0) 55%,rgba(13,9,6,.82) 100%)}
+.ph-hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(13,9,6,.6) 0%,rgba(13,9,6,0) 18%,rgba(13,9,6,0) 45%,rgba(13,9,6,.55) 70%,rgba(13,9,6,.9) 100%)}
 .ph-hero .cap{position:absolute;left:0;right:0;bottom:0;z-index:2;cursor:default}
 .ph-hero .cap .wrap{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;padding-bottom:46px;flex-wrap:wrap}
-.ph-hero h1{font-size:clamp(34px,4.6vw,64px);max-width:20ch;margin-top:14px;text-shadow:0 2px 30px rgba(0,0,0,.4)}
-.ph-hero .loc{color:var(--text);margin-top:10px;font-size:15px;opacity:.9}
+.ph-hero .cap .wrap>div:first-child,.ph-hero .right{background:rgba(22,16,11,.62);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:24px 28px;box-shadow:0 30px 60px -30px rgba(0,0,0,.7)}
+.ph-hero .cap .wrap>div:first-child{max-width:min(760px,100%)}
+.ph-hero h1{font-size:clamp(30px,3.8vw,54px);max-width:22ch;margin-top:14px;color:#fff}
+.ph-hero .loc{color:#efe4d6;margin-top:10px;font-size:15px}
 .ph-hero .loc .cod{color:var(--gold);font-weight:600}
 .ph-hero .right{display:flex;flex-direction:column;align-items:flex-end;gap:16px}
 .ph-hero .price{font-family:var(--serif);font-size:clamp(36px,3.6vw,52px);font-weight:600;color:var(--heading);line-height:1;white-space:nowrap}
-.ph-hero .price small{font-family:var(--sans);font-size:13px;color:var(--muted);font-weight:600;margin-left:6px;letter-spacing:.05em}
+.ph-hero .price small{font-family:var(--sans);font-size:13px;color:#d8c8b6;font-weight:600;margin-left:6px;letter-spacing:.05em}
 .ph-hero .btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 .ph-hero .scroll-cue{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:2;width:22px;height:34px;border:1.5px solid rgba(255,255,255,.5);border-radius:12px;display:none}
 .ph-hero .scroll-cue::after{content:"";position:absolute;left:50%;top:7px;width:3px;height:7px;border-radius:2px;background:#fff;transform:translateX(-50%);animation:cue 1.8s infinite}
@@ -344,7 +346,7 @@ body.over-hero .topbar{position:absolute;top:0;left:0;right:0;z-index:51;backgro
 .hours dd{color:var(--heading)}
 .svc .actions{display:flex;gap:12px;flex-wrap:wrap}
 
-.contact{background:#0d0b09;border-top:1px solid var(--line)}
+.contact{background:#17110c;border-top:1px solid var(--line)}
 .contact .wrap{display:grid;grid-template-columns:5fr 7fr;gap:80px}
 .contact h2{margin:16px 0 32px}
 .company{font-family:var(--serif);font-size:24px;color:var(--heading);margin-bottom:26px;line-height:1.3}
@@ -375,7 +377,7 @@ body.over-hero .topbar{position:absolute;top:0;left:0;right:0;z-index:51;backgro
 .member a{font-size:13.5px;color:var(--muted);border-bottom:1px solid var(--line-2)}
 
 /* ---------- footer ---------- */
-footer{background:#0a0807;color:var(--muted);font-size:14px;padding:72px 0 32px;border-top:1px solid var(--line)}
+footer{background:#130e0a;color:var(--muted);font-size:14px;padding:72px 0 32px;border-top:1px solid var(--line)}
 footer .top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:44px;border-bottom:1px solid var(--line)}
 footer .flogo{height:72px;width:auto}
 footer address{font-style:normal;margin-top:18px;line-height:1.8}
@@ -441,8 +443,9 @@ footer .bottom .links{display:flex;gap:22px;flex-wrap:wrap}
   .form-card{padding:26px}
   .form-grid{grid-template-columns:1fr}
   .team-grid{grid-template-columns:repeat(2,1fr)}
-  .ph-hero .cap .wrap{padding-bottom:28px;gap:18px}
-  .ph-hero h1{font-size:30px}
+  .ph-hero .cap .wrap{padding-bottom:20px;gap:10px}
+  .ph-hero .cap .wrap>div:first-child,.ph-hero .right{padding:16px 18px;width:100%}
+  .ph-hero h1{font-size:26px}
   .ph-hero .loc{font-size:13.5px}
   .ph-hero .price{font-size:34px}
   .ph-hero .btns .btn{padding:11px 16px;font-size:14px}
