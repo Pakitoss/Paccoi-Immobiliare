@@ -9,9 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
+<body class="over-hero">
 <div id="site-header"></div>
-<main id="app"><div class="wrap" style="padding-top:40px"><div class="gallery"><div class="g skeleton"></div><div class="g skeleton"></div><div class="g skeleton"></div></div></div></main>
+<main id="app"><section class="ph-hero skeleton" style="padding:0"></section></main>
 <div id="site-footer"></div>
 
 <div class="lightbox" id="lb" role="dialog" aria-modal="true" aria-label="Galleria foto">
@@ -62,26 +62,35 @@
     const msg = `Buongiorno, vorrei informazioni sull'immobile Cod. ${x.c} – ${P.title(x)}.`;
     const back = document.referrer.includes("immobili.html") ? "javascript:history.back()" : "immobili.html" + (rent ? "?contratto=A" : "");
 
-    const gal = photos.slice(0, 3).map((src, i) => `<div class="g" data-i="${i}"><img src="${src}" alt="${esc(title)} – foto ${i + 1}" ${i ? 'loading="lazy"' : ""}>${i === Math.min(2, photos.length - 1) && photos.length > 1 ? `<button class="btn btn-light all" type="button" data-i="0">${I.cam} Vedi tutte le ${photos.length} foto</button>` : ""}</div>`).join("");
-    const galleryClass = photos.length >= 3 ? "gallery" : "gallery single";
+    const first = photos[0] || "";
+    const more = photos.slice(1);
 
     document.getElementById("app").innerHTML = `
-    <div class="wrap" style="padding-top:28px">
-      <div class="${galleryClass}" ${photos.length < 3 ? 'style="grid-template-columns:1fr;grid-template-rows:1fr"' : ""}>${gal}</div>
-      ${photos.length > 3 ? `<div class="thumbs" aria-label="Altre foto">${photos.map((p, i) => `<button type="button" data-i="${i}" aria-label="Apri foto ${i + 1}"><img src="${p}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
+    <section class="ph-hero" id="ph" style="padding:0" data-i="0" aria-label="Foto principale: clicca per aprire la galleria">
+      <div class="bgblur" style="background-image:url('${first}')"></div>
+      <img class="main" id="ph-img" src="${first}" alt="${esc(title)} – foto 1" fetchpriority="high" decoding="async">
+      <div class="cap"><div class="wrap">
+        <div>
+          <span class="badge ${rent ? "rent" : "dark"}">${rent ? "In affitto" : "In vendita"}</span>
+          <h1>${esc(title)}</h1>
+          <div class="loc">${esc(x.co)}${x.z ? " · " + esc(x.z) : ""} — <span class="cod">Cod. ${x.c}</span></div>
+        </div>
+        <div class="right">
+          <div class="price">${esc(x.ps)}${rent ? "<small>AL MESE</small>" : ""}</div>
+          <div class="btns">
+            ${photos.length > 1 ? `<button class="btn btn-light" type="button" data-i="0">${I.cam} Vedi tutte le ${photos.length} foto</button>` : ""}
+            <a class="btn btn-ghost" href="#info">Richiedi informazioni</a>
+          </div>
+        </div>
+      </div></div>
+      <span class="scroll-cue" aria-hidden="true"></span>
+    </section>
+    <div class="wrap">
+      ${more.length ? `<div class="strip" aria-label="Altre foto">${more.map((p, i) => `<button type="button" data-i="${i + 1}" aria-label="Apri foto ${i + 2}"><img src="${p}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
 
       <div class="detail-top">
         <a href="${back}">${I.back} Torna ai risultati</a>
         <div class="actions"><button type="button" id="share">Condividi</button><button type="button" onclick="print()">Stampa</button></div>
-      </div>
-
-      <div class="detail-head">
-        <div>
-          <span class="badge ${rent ? "rent" : "dark"}">${rent ? "In affitto" : "In vendita"}</span>
-          <h1 style="margin-top:14px">${esc(title)}</h1>
-          <div class="loc">${esc(x.co)}${x.z ? " · " + esc(x.z) : ""} — <span class="cod">Cod. ${x.c}</span></div>
-        </div>
-        <div class="price">${esc(x.ps)}${rent ? "<small>AL MESE</small>" : ""}</div>
       </div>
       ${facts.length ? `<div class="facts">${facts.map(f => `<div class="fact">${f[0]}<div><b>${f[1]}</b><span>${f[2]}</span></div></div>`).join("")}</div>` : ""}
 
@@ -95,7 +104,7 @@
             <iframe class="map" loading="lazy" title="Mappa della zona" src="https://www.openstreetmap.org/export/embed.html?bbox=${d.coord[1] - .012},${d.coord[0] - .007},${d.coord[1] + .012},${d.coord[0] + .007}&layer=mapnik&marker=${d.coord[0]},${d.coord[1]}"></iframe>
             <p class="map-note">La posizione indicata è quella pubblicata sul sito dell'agenzia e può essere approssimativa.</p></div>` : ""}
         </div>
-        <aside class="agent-card" aria-label="Richiedi informazioni">
+        <aside class="agent-card" id="info" style="scroll-margin-top:110px" aria-label="Richiedi informazioni">
           <h3>Ti interessa?</h3>
           <p>Contatta Paccoi Immobiliare indicando il Cod. ${x.c}: ti rispondiamo il prima possibile.</p>
           <div class="btns">
@@ -119,6 +128,19 @@
         <a class="link-arrow" href="immobili.html?${rent ? "contratto=A&" : ""}comune=${encodeURIComponent(x.co)}">Altri immobili a ${esc(x.co)} →</a></div>
       <div class="grid-props" id="similar"></div>
     </div></section>`;
+
+    const phImg = document.getElementById("ph-img"), ph = document.getElementById("ph");
+    const fit = () => {
+      const w = phImg.naturalWidth, h = phImg.naturalHeight;
+      const r = ph.getBoundingClientRect();
+      // quanto andrebbe ingrandita la foto per riempire lo schermo (tenendo conto degli schermi retina)
+      const upscale = Math.max(r.width / w, r.height / h) * Math.min(devicePixelRatio || 1, 1.5);
+      // foto verticali o troppo piccole: le mostriamo intere su fondo sfocato invece di sgranarle
+      ph.classList.toggle("contain", h > w || upscale > 1.35);
+      phImg.classList.add("ready");
+    };
+    if (phImg.complete && phImg.naturalWidth) fit(); else phImg.addEventListener("load", fit);
+    addEventListener("resize", () => phImg.naturalWidth && fit());
 
     // immobili simili: stesso contratto, stessa tipologia o stesso comune, prezzo vicino
     const sim = P.items.filter(y => y.c !== x.c && y.m === x.m && y.img)
@@ -152,6 +174,7 @@
     };
     const close = () => { lb.classList.remove("open"); document.body.style.overflow = ""; };
     document.getElementById("app").addEventListener("click", e => {
+      if (e.target.closest("a")) return;
       const t = e.target.closest("[data-i]"); if (t) return open(photos, +t.dataset.i);
       const p = e.target.closest("[data-plan]"); if (p) open(plans, +p.dataset.plan);
     });
