@@ -339,3 +339,9 @@ html body .contattacihome .pk-h2{font-family:var(--pk-serif)!important;font-weig
 
 /* ---------- staff ---------- */
 html body .staffhome .pk-eyebrow{justify-content:center}
+/* v2.1: quando Gestim nasconde il menu (schermi medi) telefono e bottone restano a destra */
+@media (min-width:992px){
+  html body header#headerPage .contentbox .logo{grid-column:1}
+  html body header#headerPage .contentbox .menu{grid-column:2}
+  html body header#headerPage .contentbox .langtel{grid-column:3;justify-self:end}
+}
