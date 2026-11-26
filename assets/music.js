@@ -177,6 +177,9 @@
   }
 
   /* ---------- pulsante ---------- */
+  // la scelta "musica spenta" vale solo per la visita in corso:
+  // a ogni nuova apertura del sito la musica è di nuovo attiva
+  const pref = () => sessionStorage.getItem(KEY);
   const btn = document.createElement("button");
   btn.type = "button"; btn.className = "music-btn";
   btn.innerHTML = '<span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl">Musica</span>';
@@ -188,22 +191,65 @@
   }
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (playing) { stop(); localStorage.setItem(KEY, "off"); }
-    else { start(); localStorage.setItem(KEY, "on"); }
+    if (playing && ctx && ctx.state === "running") { stop(); sessionStorage.setItem(KEY, "off"); }
+    else { start(); sessionStorage.setItem(KEY, "on"); }
   });
   document.body.appendChild(btn); ui();
 
-  // i browser non permettono l'audio prima di un gesto dell'utente:
-  // se non è stata spenta, la musica parte al primo clic o tasto sulla pagina
-  if (localStorage.getItem(KEY) !== "off") {
-    btn.classList.add("hint");
-    const first = (e) => {
-      ["pointerdown", "keydown", "touchstart"].forEach((ev) => removeEventListener(ev, first, true));
+  // se il browser blocca l'audio, riparte al primo clic/tocco/tasto sulla pagina
+  const GESTURES = ["pointerdown", "keydown", "touchend"];
+  function armGesture() {
+    const go = (e) => {
+      GESTURES.forEach((ev) => removeEventListener(ev, go, true));
       btn.classList.remove("hint");
-      if (btn.contains(e.target)) return; // il clic sul pulsante lo gestisce il pulsante stesso
-      if (!playing && localStorage.getItem(KEY) !== "off") start();
+      if (btn.contains(e.target)) return;            // il pulsante gestisce da sé il clic
+      if (pref() !== "off") start();
     };
-    ["pointerdown", "keydown", "touchstart"].forEach((ev) => addEventListener(ev, first, { capture: true, passive: true }));
+    GESTURES.forEach((ev) => addEventListener(ev, go, { capture: true, passive: true }));
+    btn.classList.add("hint");
+  }
+
+  // schermata di benvenuto: il clic su "Entra nel sito" fa partire la musica
+  function splash() {
+    const LOGO = "https://www.immobiliarepaccoi.it/img/logo_neg.png";
+    const el = document.createElement("div");
+    el.className = "welcome"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-label", "Benvenuto");
+    el.innerHTML = `<div class="welcome-bg"></div>
+      <div class="welcome-box">
+        <img src="${LOGO}" alt="Paccoi Immobiliare" class="welcome-logo">
+        <p class="welcome-eyebrow">Agenzia immobiliare · San Benedetto del Tronto</p>
+        <p class="welcome-title">È il momento di <em>cambiare casa!</em></p>
+        <button type="button" class="btn btn-primary welcome-go"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Entra nel sito</button>
+        <button type="button" class="welcome-mute">Entra senza musica</button>
+      </div>`;
+    document.body.appendChild(el);
+    document.documentElement.style.overflow = "hidden";
+    requestAnimationFrame(() => el.classList.add("show"));
+    setTimeout(() => el.classList.add("show"), 60);   // anche se la scheda non è in primo piano
+    const close = (withMusic) => {
+      sessionStorage.setItem(KEY + "-intro", "1");
+      if (withMusic) { sessionStorage.setItem(KEY, "on"); start(); }
+      else { sessionStorage.setItem(KEY, "off"); stop(); }
+      btn.classList.remove("hint");
+      el.classList.remove("show"); el.classList.add("hide");
+      document.documentElement.style.overflow = "";
+      setTimeout(() => el.remove(), 900);
+    };
+    el.querySelector(".welcome-go").addEventListener("click", () => close(true));
+    el.querySelector(".welcome-mute").addEventListener("click", () => close(false));
+    el.addEventListener("keydown", (e) => { if (e.key === "Escape") close(true); });
+    setTimeout(() => el.querySelector(".welcome-go").focus(), 50);
+  }
+
+  // all'apertura: proviamo subito a suonare; se il browser lo blocca,
+  // mostriamo la schermata di benvenuto (una volta per visita) o aspettiamo il primo clic
+  if (pref() !== "off") {
+    start();
+    setTimeout(() => {
+      if (ctx.state === "running") return;            // il browser ha permesso l'avvio automatico
+      if (!sessionStorage.getItem(KEY + "-intro")) splash();
+      else armGesture();
+    }, 350);
   }
   // pausa quando la scheda non è visibile
   document.addEventListener("visibilitychange", () => {
