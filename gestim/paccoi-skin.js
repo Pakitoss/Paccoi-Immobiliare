@@ -343,3 +343,96 @@
     } catch (e) { if (window.console) console.warn("paccoi-skin v3.3", e); }
   });
 })();
+
+/* =========================================================
+   V3.5 — foto principale a carosello, Paccoi Paolo primo nel team, contatti ordinati
+   ========================================================= */
+(function () {
+  function ready(fn) { document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", fn) : fn(); }
+  function safe(fn) { try { fn(); } catch (e) { if (window.console) console.warn("[paccoi v3.5]", e); } }
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+
+  ready(function () {
+    // ---------- scheda: la foto principale diventa un carosello di tutte le foto ----------
+    safe(function () {
+      var tries = 0;
+      (function wait() {
+        var ph = document.querySelector(".pk-ph"), gal = document.querySelector("main > .sectionpage .gallery");
+        if (!ph || !gal) { if (++tries < 40) setTimeout(wait, 150); return; }
+        if (ph.querySelector(".pk-ph-nav")) return;
+        var sk = gal.querySelector("[id^=sk-immo]") || gal;
+        var urls = [], items = [];
+        [].slice.call(sk.querySelectorAll(".carousel-inner > .carousel-item")).forEach(function (it) {
+          var u = "";
+          [].slice.call(it.querySelectorAll("source")).forEach(function (s) { if (!s.media && !u) u = (s.getAttribute("srcset") || "").split(" ")[0]; });
+          if (!u) { var i = it.querySelector("img"); u = i ? (i.getAttribute("data-src") || i.getAttribute("src") || "") : ""; }
+          u = u.replace("/thumb/", "/");
+          if (u && urls.indexOf(u) < 0) { urls.push(u); items.push(it); }
+        });
+        if (urls.length < 2) return;
+        var cur = 0, busy = false, timer = null, DELAY = 5000;
+        var prev = el("button", "pk-ph-nav pk-ph-prev"), next = el("button", "pk-ph-nav pk-ph-next");
+        prev.type = next.type = "button"; prev.setAttribute("aria-label", "Foto precedente"); next.setAttribute("aria-label", "Foto successiva");
+        var count = el("div", "pk-ph-count", "1 / " + urls.length);
+        ph.appendChild(prev); ph.appendChild(next); ph.appendChild(count);
+        var cache = {};
+        function preload(i) { var u = urls[(i + urls.length) % urls.length]; if (!cache[u]) { cache[u] = new Image(); cache[u].src = u; } return cache[u]; }
+        preload(1);
+        function show(i) {
+          if (busy) return; i = (i + urls.length) % urls.length; if (i === cur) return;
+          busy = true;
+          var im = preload(i);
+          function go() {
+            var old = ph.querySelectorAll(".pk-ph-img");
+            var n = el("img", "pk-ph-img pk-ph-in"); n.alt = old[0] ? old[0].alt : ""; n.src = im.src;
+            var last = old[old.length - 1]; last.parentNode.insertBefore(n, last.nextSibling);
+            requestAnimationFrame(function () { requestAnimationFrame(function () { n.classList.remove("pk-ph-in"); }); });
+            setTimeout(function () { [].slice.call(old).forEach(function (o) { o.remove(); }); busy = false; }, 900);
+            cur = i; count.textContent = (i + 1) + " / " + urls.length;
+            preload(i + 1); preload(i - 1);
+          }
+          if (im.complete && im.naturalWidth) go(); else { im.onload = go; im.onerror = function () { busy = false; urls.splice(i, 1); items.splice(i, 1); }; }
+        }
+        function restart() { clearInterval(timer); timer = setInterval(function () { if (!document.hidden) show(cur + 1); }, DELAY); }
+        prev.addEventListener("click", function (e) { e.stopPropagation(); show(cur - 1); restart(); });
+        next.addEventListener("click", function (e) { e.stopPropagation(); show(cur + 1); restart(); });
+        // apre la galleria sulla foto che si sta guardando
+        ph.addEventListener("click", function (e) {
+          if (e.target.closest(".pk-ph-nav")) return;
+          var it = items[cur];
+          if (it) { e.stopImmediatePropagation(); (it.querySelector("picture") || it).click(); }
+        }, true);
+        var x0 = null;
+        ph.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+        ph.addEventListener("touchend", function (e) { if (x0 == null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 45) { show(cur + (dx < 0 ? 1 : -1)); restart(); } }, { passive: true });
+        document.addEventListener("keydown", function (e) { if (scrollY > ph.offsetHeight / 2) return; if (e.key === "ArrowRight") { show(cur + 1); restart(); } if (e.key === "ArrowLeft") { show(cur - 1); restart(); } });
+        restart();
+      })();
+    });
+
+    // ---------- team: Paccoi Paolo per primo ----------
+    safe(function () {
+      var inner = document.querySelector(".staffhome .carousel-inner"); if (!inner) return;
+      var items = [].slice.call(inner.querySelectorAll(":scope > .carousel-item"));
+      var p = items.filter(function (it) { var t = it.querySelector(".titolo"); return t && /paccoi\s+paolo/i.test(t.textContent); })[0];
+      if (!p || items[0] === p) return;
+      inner.insertBefore(p, items[0]);
+    });
+
+    // ---------- contatti: una riga ordinata per ogni recapito ----------
+    safe(function () {
+      var d = document.querySelector(".contattacihome .dettagli"); if (!d || d.querySelector(".pk-clist")) return;
+      var p = [].slice.call(d.querySelectorAll("p")).filter(function (x) { return x.querySelector("i[class*=la-]"); })[0]; if (!p) return;
+      var list = el("ul", "pk-clist"), li = null;
+      [].slice.call(p.childNodes).forEach(function (n) {
+        if (n.nodeType === 1 && n.tagName === "I") { li = el("li", "pk-crow"); li.appendChild(n.cloneNode(true)); li.appendChild(el("div", "pk-ctxt")); list.appendChild(li); return; }
+        if (!li || (n.nodeType === 1 && n.tagName === "BR")) return;
+        if (n.nodeType === 3 && !n.textContent.trim()) return;
+        li.lastChild.appendChild(n.cloneNode(true));
+      });
+      if (!list.children.length) return;
+      p.parentNode.insertBefore(list, p); p.style.display = "none";
+      d.classList.add("pk-dettagli-ok");
+    });
+  });
+})();
