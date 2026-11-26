@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=202611261845">
+<link rel="stylesheet" href="assets/style.css?v=202611261847">
 </head>
 <body class="over-hero">
 <div id="site-header"></div>
@@ -20,9 +20,9 @@
   <div class="lb-strip" id="lb-strip"></div>
 </div>
 
-<script src="data/immobili.js?v=202611261845"></script>
-<script src="assets/app.js?v=202611261845"></script>
-<script src="assets/music.js?v=202611261845" defer></script>
+<script src="data/immobili.js?v=202611261847"></script>
+<script src="assets/app.js?v=202611261847"></script>
+<script src="assets/music.js?v=202611261847" defer></script>
 <script>
   const P = Paccoi, I = P.icons, esc = P.esc;
   P.chrome("immobili");
@@ -70,7 +70,16 @@
     <section class="ph-hero" id="ph" style="padding:0" data-i="0" aria-label="Foto principale: clicca per aprire la galleria">
       <div class="bgblur" style="background-image:url('${first}')"></div>
       <img class="main" id="ph-img" src="${first}" alt="${esc(title)} – foto 1" fetchpriority="high" decoding="async">
-      <div class="cap"><div class="wrap">
+      ${photos.length > 1 ? `<button class="ph-count" type="button" data-i="0">${I.cam} ${photos.length} foto</button>` : ""}
+      <a class="scroll-cue" href="#dettagli" aria-label="Scorri per vedere i dettagli dell'immobile"><span></span></a>
+    </section>
+    <div class="wrap" id="dettagli" style="scroll-margin-top:90px">
+      <div class="detail-top">
+        <a href="${back}">${I.back} Torna ai risultati</a>
+        <div class="actions"><button type="button" id="share">Condividi</button><button type="button" onclick="print()">Stampa</button></div>
+      </div>
+
+      <div class="detail-intro">
         <div>
           <span class="badge ${rent ? "rent" : "dark"}">${rent ? "In affitto" : "In vendita"}</span>
           <h1>${esc(title)}</h1>
@@ -79,21 +88,13 @@
         <div class="right">
           <div class="price">${esc(x.ps)}${rent ? "<small>AL MESE</small>" : ""}</div>
           <div class="btns">
-            ${photos.length > 1 ? `<button class="btn btn-light" type="button" data-i="0">${I.cam} Vedi tutte le ${photos.length} foto</button>` : ""}
-            <a class="btn btn-ghost" href="#info">Richiedi informazioni</a>
+            ${photos.length > 1 ? `<button class="btn btn-outline" type="button" data-i="0">${I.cam} Vedi tutte le ${photos.length} foto</button>` : ""}
+            <a class="btn btn-primary" href="#info">Richiedi informazioni</a>
           </div>
         </div>
-      </div></div>
-      <span class="scroll-cue" aria-hidden="true"></span>
-    </section>
-    <div class="wrap">
-      ${more.length ? `<div class="strip" aria-label="Altre foto">${more.map((p, i) => `<button type="button" data-i="${i + 1}" aria-label="Apri foto ${i + 2}"><img src="${p}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
-
-      <div class="detail-top">
-        <a href="${back}">${I.back} Torna ai risultati</a>
-        <div class="actions"><button type="button" id="share">Condividi</button><button type="button" onclick="print()">Stampa</button></div>
       </div>
       ${facts.length ? `<div class="facts">${facts.map(f => `<div class="fact">${f[0]}<div><b>${f[1]}</b><span>${f[2]}</span></div></div>`).join("")}</div>` : ""}
+      ${more.length ? `<div class="strip" style="margin-top:28px" aria-label="Altre foto">${more.map((p, i) => `<button type="button" data-i="${i + 1}" aria-label="Apri foto ${i + 2}"><img src="${p}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
 
       <div class="detail-body">
         <div>
