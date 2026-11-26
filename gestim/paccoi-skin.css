@@ -201,3 +201,7 @@ html body .mobile_toolbar .col, html body .mobile_toolbar .col-2, html body .mob
 html body #motoreRicerca .avanzata a, html body #motoreRicerca .avanzata button, html body #motoreRicerca [onclick*="vanzat"]{background:transparent!important;color:var(--pk-gold)!important;border:1px solid var(--pk-line2)!important;border-radius:4px!important;min-height:46px}
 html body .homeBox3 .card .card-body > *{padding-left:30px!important;padding-right:30px!important;margin-left:0!important}
 html body .homeBox3 .card .card-body > .card-link{padding-bottom:30px!important}
+/* barra che compare scorrendo: il contenuto non deve uscire */
+html body .intestazione_scroll{overflow:hidden!important;max-height:76px}
+/* pulsante "Dettagli" su una riga */
+html body .immobili_listhome .action a.dettagli, html body .immobili_listgriglia .action a.dettagli{display:inline-flex!important;align-items:center;gap:4px;white-space:nowrap!important;width:auto!important;height:auto!important}
