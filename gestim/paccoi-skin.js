@@ -436,3 +436,47 @@
     });
   });
 })();
+
+/* =========================================================
+   V3.6 — tendine della barra filtri: si aprono sempre verso il basso
+   ========================================================= */
+(function () {
+  function ready(fn) { document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", fn) : fn(); }
+  function patch(sel) {
+    var $ = window.jQuery; if (!$) return;
+    var inst = $(sel).data("select2"); if (!inst || !inst.dropdown || inst.dropdown.__pkDown) return;
+    var dd = inst.dropdown, orig = dd._positionDropdown;
+    if (typeof orig !== "function") return;
+    dd.__pkDown = true;
+    dd._positionDropdown = function () {
+      orig.apply(this, arguments);
+      try {
+        var $d = this.$dropdown, $c = this.$container, $w = this.$dropdownContainer;
+        if (!$d || !$c || !$w) return;
+        $d.removeClass("select2-dropdown--above").addClass("select2-dropdown--below");
+        $c.removeClass("select2-container--above").addClass("select2-container--below");
+        var want = $c[0].getBoundingClientRect().bottom + 6, now = $d[0].getBoundingClientRect().top;
+        var top = parseFloat($w.css("top")) || 0;
+        if (Math.abs(want - now) > 1) $w.css("top", top + (want - now) + "px");
+      } catch (e) {}
+    };
+  }
+  ready(function () {
+    var $ = window.jQuery; if (!$) return;
+    var boxes = "#motoreRicerca select, #motoreRicercaInterno select";
+    $(document).on("select2:opening", boxes, function () { patch(this); });
+    setTimeout(function () { $(boxes).each(function () { patch(this); }); }, 600);
+  });
+})();
+/* se la tendina finirebbe sotto lo schermo, la pagina scorre quanto basta per vederla */
+(function () {
+  var $ = window.jQuery; if (!$) return;
+  $(document).on("select2:open", "#motoreRicerca select, #motoreRicercaInterno select", function () {
+    var c = $(this).next(".select2-container")[0]; if (!c) return;
+    setTimeout(function () {
+      var d = document.querySelector(".select2-container--open .select2-dropdown"); if (!d) return;
+      var over = d.getBoundingClientRect().bottom + 16 - window.innerHeight;
+      if (over > 0) window.scrollBy({ top: over, behavior: "smooth" });
+    }, 30);
+  });
+})();
