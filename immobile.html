@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scheda immobile | Immobiliare Paccoi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main id="app"><div class="wrap" style="padding-top:40px"><div class="gallery"><div class="g skeleton"></div><div class="g skeleton"></div><div class="g skeleton"></div></div></div></main>
+<div id="site-footer"></div>
+
+<div class="lightbox" id="lb" role="dialog" aria-modal="true" aria-label="Galleria foto">
+  <div class="lb-top"><span id="lb-count"></span><button type="button" id="lb-close" aria-label="Chiudi">×</button></div>
+  <div class="lb-stage"><button class="lb-nav lb-prev" type="button" aria-label="Foto precedente">‹</button><img id="lb-img" alt=""><button class="lb-nav lb-next" type="button" aria-label="Foto successiva">›</button></div>
+  <div class="lb-strip" id="lb-strip"></div>
+</div>
+
+<script src="data/immobili.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const P = Paccoi, I = P.icons, esc = P.esc;
+  P.chrome("immobili");
+  const cod = new URLSearchParams(location.search).get("cod") || "";
+  const base = P.items.find(x => x.c === cod);
+
+  function notFound() {
+    document.getElementById("app").innerHTML = `<section><div class="wrap"><div class="empty"><h3>Immobile non trovato</h3>
+      <p>Il codice “${esc(cod)}” non è tra gli immobili disponibili. Potrebbe essere stato venduto o affittato.</p>
+      <a class="btn btn-primary" href="immobili.html">Vedi tutti gli immobili</a></div></div></section>`;
+  }
+  if (!/^\d+$/.test(cod) || !base) notFound();
+  else {
+    const s = document.createElement("script");
+    s.src = `data/schede/${cod}.js`;
+    s.onload = () => render(window.PACCOI_SCHEDA);
+    s.onerror = () => render(null);
+    document.head.appendChild(s);
+  }
+
+  function render(d) {
+    d = d || {};
+    const x = base;
+    const photos = (d.foto && d.foto.length ? d.foto.map(P.full) : [P.full(x.img)]).filter(Boolean);
+    const plans = (d.planimetrie || []).map(P.full);
+    const title = d.titoloCompleto || P.title(x);
+    const rent = x.m === "A";
+    document.title = `${title} – Cod. ${x.c} | Immobiliare Paccoi`;
+
+    const facts = [
+      x.mq && [I.mq, x.mq.toLocaleString("it-IT") + " mq", "Superficie"],
+      x.l && [I.locali, x.l, "Locali"],
+      x.ca && [I.camere, x.ca, x.ca > 1 ? "Camere" : "Camera"],
+      x.b && [I.bagni, x.b, x.b > 1 ? "Bagni" : "Bagno"],
+      d.classeEnergetica && [I.energy, `<span class="energy">${esc(d.classeEnergetica)}</span>`, "Classe energetica"],
+    ].filter(Boolean);
+    const feats = (d.caratteristiche || []);
+    const msg = `Buongiorno, vorrei informazioni sull'immobile Cod. ${x.c} – ${P.title(x)}.`;
+    const back = document.referrer.includes("immobili.html") ? "javascript:history.back()" : "immobili.html" + (rent ? "?contratto=A" : "");
+
+    const gal = photos.slice(0, 3).map((src, i) => `<div class="g" data-i="${i}"><img src="${src}" alt="${esc(title)} – foto ${i + 1}" ${i ? 'loading="lazy"' : ""}>${i === Math.min(2, photos.length - 1) && photos.length > 1 ? `<button class="btn btn-light all" type="button" data-i="0">${I.cam} Vedi tutte le ${photos.length} foto</button>` : ""}</div>`).join("");
+    const galleryClass = photos.length >= 3 ? "gallery" : "gallery single";
+
+    document.getElementById("app").innerHTML = `
+    <div class="wrap" style="padding-top:28px">
+      <div class="${galleryClass}" ${photos.length < 3 ? 'style="grid-template-columns:1fr;grid-template-rows:1fr"' : ""}>${gal}</div>
+      ${photos.length > 3 ? `<div class="thumbs" aria-label="Altre foto">${photos.map((p, i) => `<button type="button" data-i="${i}" aria-label="Apri foto ${i + 1}"><img src="${p}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
+
+      <div class="detail-top">
+        <a href="${back}">${I.back} Torna ai risultati</a>
+        <div class="actions"><button type="button" id="share">Condividi</button><button type="button" onclick="print()">Stampa</button></div>
+      </div>
+
+      <div class="detail-head">
+        <div>
+          <span class="badge ${rent ? "rent" : "dark"}">${rent ? "In affitto" : "In vendita"}</span>
+          <h1 style="margin-top:14px">${esc(title)}</h1>
+          <div class="loc">${esc(x.co)}${x.z ? " · " + esc(x.z) : ""} — <span class="cod">Cod. ${x.c}</span></div>
+        </div>
+        <div class="price">${esc(x.ps)}${rent ? "<small>AL MESE</small>" : ""}</div>
+      </div>
+      ${facts.length ? `<div class="facts">${facts.map(f => `<div class="fact">${f[0]}<div><b>${f[1]}</b><span>${f[2]}</span></div></div>`).join("")}</div>` : ""}
+
+      <div class="detail-body">
+        <div>
+          ${d.descrizione ? `<div class="block"><h2>Descrizione</h2><div class="desc clamp" id="desc">${esc(d.descrizione)}</div><button class="more-btn" type="button" id="desc-btn">Leggi tutto</button></div>` : ""}
+          ${feats.length ? `<div class="block"><h2>Caratteristiche</h2><div class="feat-grid">${feats.map(([k, v]) => `<div><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("")}</div></div>` : ""}
+          ${(d.vicinanze || []).length ? `<div class="block"><h2>Nelle vicinanze</h2><p style="color:var(--muted);margin:-8px 0 16px">Servizi e infrastrutture della zona</p><div class="near">${d.vicinanze.map(v => `<span>${esc(v)}</span>`).join("")}</div></div>` : ""}
+          ${plans.length ? `<div class="block"><h2>Planimetrie</h2><div class="plans">${plans.map((p, i) => `<button type="button" data-plan="${i}" aria-label="Apri planimetria ${i + 1}"><img src="${p}" alt="Planimetria ${i + 1}" loading="lazy"></button>`).join("")}</div></div>` : ""}
+          ${d.coord ? `<div class="block"><h2>Ubicazione immobile</h2>
+            <iframe class="map" loading="lazy" title="Mappa della zona" src="https://www.openstreetmap.org/export/embed.html?bbox=${d.coord[1] - .012},${d.coord[0] - .007},${d.coord[1] + .012},${d.coord[0] + .007}&layer=mapnik&marker=${d.coord[0]},${d.coord[1]}"></iframe>
+            <p class="map-note">La posizione indicata è quella pubblicata sul sito dell'agenzia e può essere approssimativa.</p></div>` : ""}
+        </div>
+        <aside class="agent-card" aria-label="Richiedi informazioni">
+          <h3>Ti interessa?</h3>
+          <p>Contatta Paccoi Immobiliare indicando il Cod. ${x.c}: ti rispondiamo il prima possibile.</p>
+          <div class="btns">
+            <a class="btn btn-primary" href="${P.TEL_HREF}">${I.tel} Chiama ${P.TEL}</a>
+            <a class="btn btn-wa" href="https://wa.me/${P.WA}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${I.wa} Scrivici su WhatsApp</a>
+            <a class="btn btn-outline" href="mailto:${P.MAIL}?subject=${encodeURIComponent("Richiesta informazioni Cod. " + x.c)}&body=${encodeURIComponent(msg)}">${I.mail} Invia una email</a>
+          </div>
+          <form id="req">
+            <label class="sr-only" for="rn">Nome</label><input id="rn" placeholder="Nome e cognome *" required autocomplete="name">
+            <label class="sr-only" for="rt">Telefono</label><input id="rt" type="tel" placeholder="Telefono *" required autocomplete="tel">
+            <label class="sr-only" for="re">Email</label><input id="re" type="email" placeholder="Email *" required autocomplete="email">
+            <label class="sr-only" for="rm">Messaggio</label><textarea id="rm">${esc(msg)}</textarea>
+            <label class="consent"><input type="checkbox" required><span>Autorizzo il trattamento dei miei dati personali e confermo di aver letto l'informativa privacy.</span></label>
+            <button class="btn btn-primary" type="submit">Richiedi informazioni</button>
+          </form>
+        </aside>
+      </div>
+    </div>
+    <section class="similar"><div class="wrap">
+      <div class="section-head"><div><div class="eyebrow">Potrebbero interessarti</div><h2>Immobili simili</h2></div>
+        <a class="link-arrow" href="immobili.html?${rent ? "contratto=A&" : ""}comune=${encodeURIComponent(x.co)}">Altri immobili a ${esc(x.co)} →</a></div>
+      <div class="grid-props" id="similar"></div>
+    </div></section>`;
+
+    // immobili simili: stesso contratto, stessa tipologia o stesso comune, prezzo vicino
+    const sim = P.items.filter(y => y.c !== x.c && y.m === x.m && y.img)
+      .map(y => ({ y, s: (y.co === x.co ? 2 : 0) + (P.groupOf(y.t) === P.groupOf(x.t) ? 2 : 0) + (x.p && y.p ? 1 - Math.min(1, Math.abs(y.p - x.p) / x.p) : 0) }))
+      .sort((a, b) => b.s - a.s).slice(0, 3).map(o => o.y);
+    document.getElementById("similar").innerHTML = sim.map(P.card).join("");
+
+    const desc = document.getElementById("desc"), db = document.getElementById("desc-btn");
+    if (desc && db) {
+      if (desc.scrollHeight <= 320) { desc.classList.remove("clamp"); db.remove(); }
+      else db.onclick = () => { const open = desc.classList.toggle("clamp"); db.textContent = open ? "Leggi tutto" : "Mostra meno"; };
+    }
+    document.getElementById("req").addEventListener("submit", e => { e.preventDefault(); e.target.querySelector("button").textContent = "Richiesta pronta (prototipo: nessun invio)"; });
+    document.getElementById("share").onclick = async () => {
+      try { if (navigator.share) await navigator.share({ title, url: location.href }); else { await navigator.clipboard.writeText(location.href); document.getElementById("share").textContent = "Link copiato!"; } } catch (_) {}
+    };
+
+    // galleria a schermo intero
+    const lb = document.getElementById("lb"), img = document.getElementById("lb-img"), strip = document.getElementById("lb-strip");
+    let set = photos, i = 0;
+    const show = n => {
+      i = (n + set.length) % set.length; img.src = set[i]; img.alt = `${title} – foto ${i + 1}`;
+      document.getElementById("lb-count").textContent = `${i + 1} / ${set.length}`;
+      strip.querySelectorAll("button").forEach((b, k) => b.classList.toggle("on", k === i));
+      strip.children[i]?.scrollIntoView({ block: "nearest", inline: "center" });
+    };
+    const open = (list, n) => {
+      set = list; strip.innerHTML = set.map((p, k) => `<button type="button" aria-label="Foto ${k + 1}"><img src="${p}" alt="" loading="lazy"></button>`).join("");
+      strip.querySelectorAll("button").forEach((b, k) => b.onclick = () => show(k));
+      lb.classList.add("open"); document.body.style.overflow = "hidden"; show(n); document.getElementById("lb-close").focus();
+    };
+    const close = () => { lb.classList.remove("open"); document.body.style.overflow = ""; };
+    document.getElementById("app").addEventListener("click", e => {
+      const t = e.target.closest("[data-i]"); if (t) return open(photos, +t.dataset.i);
+      const p = e.target.closest("[data-plan]"); if (p) open(plans, +p.dataset.plan);
+    });
+    document.getElementById("lb-close").onclick = close;
+    lb.querySelector(".lb-prev").onclick = () => show(i - 1);
+    lb.querySelector(".lb-next").onclick = () => show(i + 1);
+    addEventListener("keydown", e => {
+      if (!lb.classList.contains("open")) return;
+      if (e.key === "Escape") close(); if (e.key === "ArrowLeft") show(i - 1); if (e.key === "ArrowRight") show(i + 1);
+    });
+    let sx = 0;
+    lb.addEventListener("touchstart", e => sx = e.touches[0].clientX, { passive: true });
+    lb.addEventListener("touchend", e => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1)); });
+  }
+</script>
+</body>
+</html>
