@@ -483,3 +483,63 @@ html body .intestazione_scroll .dropdown-menu, html body header .dropdown-menu{z
 html body .intestazione_scroll .dropdown-menu{background:var(--pk-surface)!important;margin-top:6px!important}
 html body .intestazione_scroll .dropdown-item{color:var(--pk-text)!important}
 html body .intestazione_scroll .dropdown-item:hover{background:rgba(233,225,215,.1)!important;color:#fff!important}
+
+/* =========================================================
+   V3.3 — ritocchi richiesti il 26/11 sera
+   ========================================================= */
+/* carosello home: niente barra di avanzamento */
+html body .pk-hero-bar{display:none!important}
+
+/* card "Compravendite immobiliari": foto dell'agenzia */
+html body #box283 figure{background-image:url("https://www.immobiliarepaccoi.it/public/file/20241002121549173564150.jpg")!important}
+
+/* barra filtri: niente etichette doppie, niente sottolineature né riquadri */
+@media (min-width:992px){
+  html body #motoreRicerca form>.row>div>.row>div::before, html body #motoreRicercaInterno form>.row>div>.row>div::before{content:none!important;display:none!important}
+  html body #motoreRicerca, html body #motoreRicercaInterno{border:0!important}
+  html body #motoreRicerca form>.row>div>.row>div, html body #motoreRicercaInterno form>.row>div>.row>div{border:0!important;padding:16px 10px!important;min-height:0!important;justify-content:center}
+  html body #motoreRicerca form>.row>div:last-child>.row>div, html body #motoreRicercaInterno form>.row>div:last-child>.row>div{padding:12px 8px!important}
+  html body #motoreRicerca .form-control, html body #motoreRicercaInterno .form-control, html body #motoreRicerca select, html body #motoreRicercaInterno select, html body #motoreRicerca .select2-selection, html body #motoreRicercaInterno .select2-selection{border:0!important;border-bottom:0!important;background:rgba(255,255,255,.05)!important;border-radius:4px!important;padding:0 26px 0 12px!important;height:48px!important;min-height:48px!important;max-height:48px!important}
+  html body #motoreRicerca .select2-selection__rendered, html body #motoreRicercaInterno .select2-selection__rendered{line-height:48px!important}
+  html body #motoreRicerca .select2-selection--multiple .select2-selection__rendered, html body #motoreRicercaInterno .select2-selection--multiple .select2-selection__rendered{height:48px}
+  html body #motoreRicerca .select2-search--inline, html body #motoreRicercaInterno .select2-search--inline, html body #motoreRicerca .select2-search__field, html body #motoreRicercaInterno .select2-search__field{height:46px!important;line-height:46px!important}
+  html body #motoreRicerca .select2-selection__arrow, html body #motoreRicercaInterno .select2-selection__arrow{height:46px!important;right:8px!important}
+  html body #motoreRicerca .form-control:focus, html body #motoreRicercaInterno .form-control:focus{background:rgba(255,255,255,.09)!important}
+  html body #motoreRicerca .avanzata a, html body #motoreRicercaInterno .avanzata a, html body #motoreRicerca .avanzata button, html body #motoreRicercaInterno .avanzata button, html body #motoreRicerca [onclick*="vanzat"], html body #motoreRicercaInterno [onclick*="vanzat"]{border:0!important;height:48px!important;min-height:48px!important}
+  html body #motoreRicerca .cerca button, html body #motoreRicercaInterno .cerca button, html body #motoreRicerca .cerca .submit, html body #motoreRicercaInterno .cerca .submit, html body #motoreRicerca .cerca input[type=submit], html body #motoreRicercaInterno .cerca input[type=submit]{height:48px!important;min-height:48px!important}
+}
+
+/* scheda: solo la foto a schermo intero, nessun riquadro; niente barra fissa scorrendo */
+html body .pk-ph-cap, html body .pk-ph-cue{display:none!important}
+html body .pk-ph::after{background:linear-gradient(180deg,rgba(13,9,6,.55) 0%,rgba(13,9,6,0) 16%)!important}
+html body.pk-scheda .intestazione_scroll{display:none!important}
+
+/* selezionati per te: 6 immobili, 2 righe da 3, tutti uguali */
+@media (min-width:992px){
+  html body .immobilihome .contentbox>.row>div{flex:0 0 33.3333%!important;max-width:33.3333%!important;width:33.3333%!important}
+}
+@media (min-width:768px) and (max-width:991px){
+  html body .immobilihome .contentbox>.row>div{flex:0 0 50%!important;max-width:50%!important;width:50%!important}
+}
+html body .immobilihome .contentbox>.row>div.pk-hide6{display:none!important}
+html body .immobili_listhome .titolo{font-family:var(--pk-serif)!important;font-size:24px!important;line-height:1.2!important;font-weight:500!important;color:var(--pk-heading)!important;min-height:2.4em}
+html body .immobili_listhome .dove, html body .immobili_listhome .dove small{font-family:var(--pk-sans)!important;font-size:13.5px!important;color:var(--pk-muted)!important}
+html body .immobili_listhome .pk-price{font-family:var(--pk-sans)!important;font-size:16px!important;font-weight:700!important;color:var(--pk-heading)!important}
+html body .immobili_listhome .icone, html body .immobili_listhome .icone span, html body .immobili_listhome .icone .ico{font-family:var(--pk-sans)!important;font-size:13.5px!important;color:var(--pk-muted)!important}
+html body .immobili_listhome .codice{font-family:var(--pk-sans)!important;font-size:13.5px!important}
+
+/* menu a tendina: allineati sotto la voce, testo a sinistra, stesso carattere del sito */
+@media (min-width:992px){
+  html body header .navbar-nav .dropdown, html body .intestazione_scroll .navbar-nav .dropdown{position:relative}
+  html body header .navbar-nav .dropdown-menu, html body .intestazione_scroll .navbar-nav .dropdown-menu{left:0!important;right:auto!important;top:calc(100% + 8px)!important;transform:none!important;min-width:260px!important;padding:8px!important;margin:0!important;background:rgba(36,27,20,.98)!important;backdrop-filter:blur(12px);border:1px solid var(--pk-line2)!important;border-top:2px solid var(--pk-bronze)!important;border-radius:0 0 6px 6px!important;box-shadow:0 24px 50px -18px rgba(0,0,0,.85)!important;text-align:left!important}
+  html body header .navbar-nav .dropdown-menu::before, html body .intestazione_scroll .navbar-nav .dropdown-menu::before{content:"";position:absolute;left:0;right:0;top:-10px;height:10px}
+  html body header .dropdown-menu li, html body .intestazione_scroll .dropdown-menu li{list-style:none;margin:0;padding:0}
+  html body header .dropdown-menu .dropdown-item, html body .intestazione_scroll .dropdown-menu .dropdown-item{display:block!important;font-family:var(--pk-sans)!important;font-size:15px!important;font-weight:500!important;line-height:1.3!important;color:var(--pk-text)!important;text-align:left!important;white-space:nowrap;padding:11px 14px 11px 16px!important;border-radius:4px!important;border-left:2px solid transparent;background:transparent!important;text-transform:none!important;letter-spacing:0!important}
+  html body header .dropdown-menu .dropdown-item:hover, html body header .dropdown-menu .dropdown-item:focus,
+  html body .intestazione_scroll .dropdown-menu .dropdown-item:hover, html body .intestazione_scroll .dropdown-menu .dropdown-item:focus{background:rgba(233,225,215,.07)!important;color:#fff!important;border-left-color:var(--pk-gold)}
+  html body header .navbar-nav .dropdown-toggle::after, html body .intestazione_scroll .navbar-nav .dropdown-toggle::after{border:0!important;width:6px;height:6px;border-right:1.5px solid currentColor!important;border-bottom:1.5px solid currentColor!important;transform:rotate(45deg) translate(-2px,-2px);margin-left:9px;vertical-align:middle;transition:transform .2s}
+  html body header .navbar-nav .dropdown-toggle.show::after, html body .intestazione_scroll .navbar-nav .dropdown-toggle.show::after{transform:rotate(-135deg) translate(-1px,-1px)}
+}
+/* menu a schermo intero (telefono) */
+html body #menuNav .dropdown-menu{background:transparent!important;border:0!important;box-shadow:none!important;padding:0 0 8px 14px!important;text-align:left!important}
+html body #menuNav .dropdown-item{color:var(--pk-gold)!important;font-family:var(--pk-sans)!important;font-size:16px!important;padding:8px 0!important;background:transparent!important}

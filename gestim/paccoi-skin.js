@@ -312,3 +312,34 @@
     } catch (e) { if (window.console) console.warn("paccoi-skin v3.1", e); }
   });
 })();
+
+/* =========================================================
+   V3.3 — "Selezionati per te": sempre 6 immobili
+   (Gestim ne manda 5: il sesto si prende da un'altra selezione della home)
+   ========================================================= */
+(function () {
+  function ready(fn) { document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", fn) : fn(); }
+  ready(function () {
+    try {
+      var row = document.querySelector(".immobilihome .contentbox > .row");
+      if (!row) return;
+      var cols = [].slice.call(row.children);
+      var linkOf = function (c) { var a = c.querySelector("figure a[href]"); return a ? a.href : ""; };
+      var addPrice = function (c) { var p = c.querySelector("figure .prezzo"), t = c.querySelector(".boxdettagli .titolo"); if (p && t && !c.querySelector(".pk-price")) { var d = document.createElement("div"); d.className = "pk-price"; d.textContent = p.textContent.trim(); t.after(d); } };
+      cols.forEach(function (c, i) { c.className = "col-12 col-md-6 col-lg-4"; if (i >= 6) c.classList.add("pk-hide6"); });
+      if (cols.length >= 6 || !window.fetch || !window.DOMParser) return;
+      var have = cols.map(linkOf);
+      fetch("/", { credentials: "same-origin" }).then(function (r) { return r.text(); }).then(function (h) {
+        var d = new DOMParser().parseFromString(h, "text/html");
+        var extra = [].slice.call(d.querySelectorAll(".immobilihome .contentbox > .row > div")).filter(function (c) { var l = linkOf(c); return l && have.indexOf(l) < 0; });
+        extra.slice(0, 6 - cols.length).forEach(function (c) {
+          c.className = "col-12 col-md-6 col-lg-4";
+          c.querySelectorAll(".pk-reveal,[data-aos]").forEach(function (x) { x.classList.remove("pk-reveal"); x.removeAttribute("data-aos"); });
+          c.querySelectorAll("img").forEach(function (im) { im.loading = "lazy"; });
+          addPrice(c);
+          row.appendChild(document.importNode(c, true));
+        });
+      }).catch(function () {});
+    } catch (e) { if (window.console) console.warn("paccoi-skin v3.3", e); }
+  });
+})();
