@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Immobili in vendita e in affitto | Immobiliare Paccoi</title>
+<meta name="description" content="Tutti gli immobili di Paccoi Immobiliare: cerca per zona, budget, tipologia e camere.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+  <section class="results-hero" style="padding-bottom:0">
+    <div class="wrap">
+      <div class="eyebrow" style="color:#bba796">Immobili</div>
+      <h1 id="title" style="margin-top:14px">Immobili in vendita</h1>
+      <p>Case, appartamenti, ville e locali commerciali a San Benedetto del Tronto e nei dintorni. Usa i filtri per trovare l'immobile giusto: i risultati si aggiornano subito.</p>
+      <div id="search"></div>
+    </div>
+  </section>
+
+  <section class="results-body">
+    <div class="wrap">
+      <div class="toolbar">
+        <div class="count" id="count" aria-live="polite"></div>
+        <label>
+          <span class="sr-only">Ordina per</span>
+          <select id="sort">
+            <option value="">Più recenti</option>
+            <option value="prezzo-asc">Prezzo: dal più basso</option>
+            <option value="prezzo-desc">Prezzo: dal più alto</option>
+            <option value="mq-desc">Superficie: dalla più grande</option>
+          </select>
+        </label>
+      </div>
+      <div class="chips" id="chips"></div>
+      <div class="grid-props" id="results"></div>
+      <div class="load-more" id="more"></div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="data/immobili.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const P = Paccoi;
+  P.chrome("immobili");
+  const PAGE = 24;
+  let shown = PAGE, current = P.readFilters();
+
+  const labelOf = {
+    tipo: v => (P.GROUPS.find(g => g[0] === v) || [, v])[1],
+    max: v => "Fino a " + P.euro(v), min: v => "Da " + P.euro(v),
+    camere: v => v + "+ camere", mq: v => v + "+ mq", giardino: () => "Con giardino",
+    q: v => "“" + v + "”", comune: v => v, zona: v => v,
+  };
+
+  function render(f, keepPage) {
+    current = f;
+    if (!keepPage) shown = PAGE;
+    history.replaceState(null, "", "immobili.html" + (P.toQuery(f) ? "?" + P.toQuery(f) : ""));
+    const list = P.sort(P.filter(f), f.sort);
+    const what = f.contratto === "A" ? "in affitto" : "in vendita";
+    const heading = `${list.length} ${list.length === 1 ? "immobile" : "immobili"} ${what}${f.comune ? " a " + f.comune : ""}`;
+    document.getElementById("title").textContent = heading;
+    document.title = `${heading} | Immobiliare Paccoi`;
+    document.getElementById("count").innerHTML = `<strong>${list.length}</strong> risultati`;
+    document.getElementById("sort").value = f.sort || "";
+
+    // filtri attivi, rimovibili con un clic
+    const chips = Object.keys(labelOf).filter(k => f[k]).map(k =>
+      `<span class="chip">${P.esc(labelOf[k](f[k]))}<button type="button" data-k="${k}" aria-label="Rimuovi filtro ${P.esc(labelOf[k](f[k]))}">×</button></span>`);
+    document.getElementById("chips").innerHTML = chips.length ? chips.join("") + `<button class="chip reset" type="button" data-reset>Azzera filtri</button>` : "";
+
+    const res = document.getElementById("results");
+    if (!list.length) {
+      res.innerHTML = `<div class="empty" style="grid-column:1/-1"><h3>Nessun immobile trovato</h3>
+        <p>Prova a togliere qualche filtro, ad esempio il budget o la zona.</p>
+        <button class="btn btn-primary" type="button" data-reset>Azzera i filtri</button></div>`;
+      document.getElementById("more").innerHTML = "";
+      return;
+    }
+    res.innerHTML = list.slice(0, shown).map(P.card).join("");
+    document.getElementById("more").innerHTML = shown < list.length
+      ? `<span>Stai vedendo ${Math.min(shown, list.length)} di ${list.length} immobili</span><button class="btn btn-outline" type="button" id="more-btn">Mostra altri ${Math.min(PAGE, list.length - shown)}</button>`
+      : `<span>Hai visto tutti i ${list.length} immobili</span>`;
+  }
+
+  P.searchbar(document.getElementById("search"), {
+    live: true,
+    onChange: f => render(Object.assign(f, { sort: current.sort })),
+    onSubmit: f => { render(Object.assign(f, { sort: current.sort })); document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" }); },
+  });
+
+  document.getElementById("sort").addEventListener("change", e => render(Object.assign({}, current, { sort: e.target.value }), true));
+  document.addEventListener("click", e => {
+    const k = e.target.closest("[data-k]")?.dataset.k;
+    if (k) {
+      const empty = { comune: "", zona: "", tipo: "", q: "", min: 0, max: 0, camere: 0, mq: 0, giardino: false };
+      const patch = { [k]: empty[k] };
+      if (k === "comune") patch.zona = "";
+      P.setFilters(patch);
+    }
+    if (e.target.closest("[data-reset]")) P.setFilters({ comune: "", zona: "", tipo: "", q: "", min: 0, max: 0, camere: 0, mq: 0, giardino: false });
+    if (e.target.id === "more-btn") { shown += PAGE; render(current, true); }
+  });
+</script>
+</body>
+</html>
