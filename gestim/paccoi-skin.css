@@ -4,7 +4,14 @@
    Per tornare all'originale basta togliere il blocco
    "PACCOI RESTYLING" dal pannello.
    ========================================================= */
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap");
+/* caratteri ospitati su jsDelivr (niente Google Fonts: meglio per la privacy/GDPR) */
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/cormorant-garamond@5/500.css");
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/cormorant-garamond@5/600.css");
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/cormorant-garamond@5/500-italic.css");
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/manrope@5/400.css");
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/manrope@5/500.css");
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/manrope@5/600.css");
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/manrope@5/700.css");
 
 :root{
   /* variabili del modello Gestim -> palette del nuovo sito */
@@ -205,3 +212,6 @@ html body .homeBox3 .card .card-body > .card-link{padding-bottom:30px!important}
 html body .intestazione_scroll{overflow:hidden!important;max-height:76px}
 /* pulsante "Dettagli" su una riga */
 html body .immobili_listhome .action a.dettagli, html body .immobili_listgriglia .action a.dettagli{display:inline-flex!important;align-items:center;gap:4px;white-space:nowrap!important;width:auto!important;height:auto!important}
+
+/* descrizione della scheda: allineata a sinistra e con righe di lunghezza comoda */
+html body .dettaglio .testo, html body .dettaglio .testo p{text-align:left!important;max-width:82ch}
