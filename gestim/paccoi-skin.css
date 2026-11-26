@@ -217,3 +217,125 @@ html body .immobili_listhome .action a.dettagli, html body .immobili_listgriglia
 html body .dettaglio .testo, html body .dettaglio .testo p{text-align:left!important;max-width:82ch}
 /* etichetta sopra il titolo dello slider sempre leggibile */
 html body .homeslide .carousel-caption .title::before{color:#fff!important;text-shadow:0 1px 3px rgba(0,0,0,.8),0 2px 18px rgba(0,0,0,.7)!important}
+
+/* =========================================================
+   V2 — più vicino al prototipo (header, hero, ricerca, sezioni)
+   ========================================================= */
+html body .pk-eyebrow{display:flex;align-items:center;gap:14px;font-family:var(--pk-sans)!important;font-size:12.5px;font-weight:600;color:var(--pk-bronze)!important;letter-spacing:.14em;text-transform:uppercase;margin:0 0 14px}
+html body .pk-eyebrow::before{content:"";width:30px;height:1px;background:currentColor}
+/* le vecchie lineette sopra i titoli lasciano il posto all'etichetta */
+html body.pk-v2 .benvenuto h1::before, html body.pk-v2 .immobilihome h2::before, html body.pk-v2 .homeBox3 h2::before, html body.pk-v2 .staffhome h3::before{display:none!important}
+
+/* ---------- header (desktop) ---------- */
+@media (min-width:992px){
+  html body header#headerPage .contentbox>.row{display:grid!important;grid-template-columns:auto 1fr auto;align-items:center;gap:28px;max-width:1304px;margin:0 auto!important;padding:0 32px!important;min-height:108px}
+  html body header#headerPage .contentbox .logo{width:auto!important;flex:none!important;max-width:none!important;padding:0!important}
+  html body header#headerPage .contentbox .menu{justify-self:center;margin:0!important}
+  html body header#headerPage .contentbox .langtel{display:flex!important;align-items:center;gap:20px;padding:0!important}
+  html body header#headerPage .langtel .tel a{font-weight:600!important;font-size:15px!important;color:var(--pk-text)!important;display:inline-flex;align-items:center;gap:8px}
+  html body header#headerPage .langtel .tel a i{color:var(--pk-bronze)!important}
+  html body .pk-cta{display:inline-flex!important;align-items:center;gap:8px;background:var(--pk-grad)!important;color:var(--pk-ink)!important;font-weight:700;font-size:15px;padding:12px 22px;border-radius:4px;white-space:nowrap}
+  html body .pk-cta:hover{background:linear-gradient(135deg,#f7dab2,#e2ad78)!important;color:var(--pk-ink)!important}
+  /* home: header trasparente sopra la foto */
+  html body header#headerPage.headerhome{position:absolute!important;top:0;left:0;right:0;z-index:40;background:transparent!important}
+  html body header#headerPage.headerhome .recapititop{background:rgba(13,11,9,.6)!important;backdrop-filter:blur(6px)}
+  html body header#headerPage.headerhome .contentbox{background:linear-gradient(180deg,rgba(20,14,9,.72),rgba(20,14,9,.25) 70%,rgba(20,14,9,0))!important;border-bottom-color:transparent!important;backdrop-filter:none!important}
+  html body header#headerPage.headerhome + .clear{display:none}
+}
+html body .recapititop{font-size:13px!important}
+
+/* ---------- hero a tutto schermo ---------- */
+@media (min-width:992px){
+  html body .homeslide, html body .homeslide .carousel, html body .homeslide .carousel-inner, html body .homeslide .carousel-item, html body .homeslide .carousel-item .image, html body .homeslide .carousel-item picture{height:100vh!important;min-height:640px;max-height:980px}
+  html body .homeslide .carousel-item img{width:100%!important;height:100%!important;object-fit:cover!important}
+  html body .homeslide .carousel-caption{left:max(32px,calc((100vw - 1240px)/2))!important;bottom:190px!important;max-width:900px}
+}
+html body .homeslide .carousel-caption .title em{font-style:italic;color:var(--pk-gold)}
+html body .homeslide .carousel-control-prev, html body .homeslide .carousel-control-next{display:none!important}
+@media (min-width:992px){
+  html body .homeslide .carousel-indicators{flex-direction:column;left:auto!important;right:32px!important;top:50%!important;bottom:auto!important;transform:translateY(-50%);margin:0!important;gap:10px}
+  html body .homeslide .carousel-indicators button{width:2px!important;height:28px!important;margin:0!important;border:0!important}
+  html body .homeslide .carousel-indicators .active{width:2px!important;height:48px!important}
+}
+
+/* ---------- barra di ricerca stile prototipo ---------- */
+@media (min-width:992px){
+  html body.pk-v2 main > .cercaHome{margin-top:-96px!important;margin-bottom:0!important;position:relative;z-index:6}
+  html body .cercaHome .contentbox{max-width:1240px;margin:0 auto;padding:0}
+  html body #motoreRicerca{padding:0!important;border-radius:6px!important;background:rgba(33,28,23,.95)!important}
+  html body #motoreRicerca #cercaForm>.row{align-items:stretch}
+  html body #motoreRicerca #cercaForm>.row>div>.row>div{position:relative;padding:30px 16px 12px!important;border-right:1px solid var(--pk-line)}
+  html body #motoreRicerca #cercaForm>.row>div:last-child>.row>div{border-right:0;padding:12px!important;display:flex;align-items:center}
+  html body #motoreRicerca #cercaForm>.row>div>.row>div::before{position:absolute;top:12px;left:18px;font-size:11.5px;font-weight:600;color:var(--pk-muted);letter-spacing:.04em}
+  html body #motoreRicerca .codice::before{content:"Codice"}
+  html body #motoreRicerca .prezzo::before{content:"Prezzo (€)"}
+  html body #motoreRicerca .localita::before{content:"Comune"}
+  html body #motoreRicerca .zone::before{content:"Zona"}
+  html body #motoreRicerca .contratto::before{content:"Contratto"}
+  html body #motoreRicerca .tipologia::before{content:"Tipo di immobile"}
+  html body #motoreRicerca .form-control, html body #motoreRicerca .select2-selection, html body #motoreRicerca select{background:transparent!important;border:0!important;min-height:38px!important;padding-left:2px!important;font-weight:500}
+  html body #motoreRicerca .prezzo .boxinput{display:flex;gap:6px}
+  html body #motoreRicerca .select2-selection__rendered, html body #motoreRicerca .select2-selection__placeholder{line-height:38px!important;color:#fff!important}
+  html body #motoreRicerca .cerca button, html body #motoreRicerca .cerca .submit{width:100%;min-height:56px!important}
+  html body #motoreRicerca .avanzata a{display:flex!important;align-items:center;justify-content:center;width:100%;border:0!important;color:var(--pk-gold)!important;font-weight:600}
+}
+
+/* ---------- chi siamo: due colonne ---------- */
+@media (min-width:992px){
+  html body .benvenuto{padding:150px 0 110px!important}
+  html body .benvenuto .text{display:grid!important;grid-template-columns:5fr 6fr;column-gap:80px;align-items:start;max-width:1240px!important;width:100%!important;padding:0 32px!important;margin:0 auto!important;float:none!important}
+  html body .benvenuto .pk-col-l h1{margin:0!important;font-size:clamp(34px,4vw,52px)!important;max-width:none!important}
+}
+html body .benvenuto .pk-col-r p:empty{display:none}
+html body .benvenuto .text .clear{display:none}
+
+/* ---------- intestazioni di sezione con link a destra ---------- */
+html body .pk-head{max-width:1240px;margin:0 auto 48px;padding:0 32px;display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap}
+html body .pk-head h2, html body .pk-head h3{margin:0!important;padding:0!important;max-width:none!important}
+html body .pk-link{font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:8px;border-bottom:1px solid currentColor;padding-bottom:3px;color:var(--pk-gold)!important}
+html body .pk-link:hover{color:#fff!important}
+
+/* ---------- card immobili: prezzo sotto il titolo come nel prototipo ---------- */
+html body .immobili_listhome figure .prezzo{display:none!important}
+html body .pk-price{font-weight:700;font-size:16px;color:var(--pk-heading);margin-top:6px}
+html body .immobili_listhome .titolo{margin-top:4px}
+
+/* ---------- cerca nella tua zona ---------- */
+html body .pk-zone{background:var(--pk-bg);padding:110px 0}
+html body .pk-towns{max-width:1240px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:220px;gap:14px}
+html body .pk-town{position:relative;overflow:hidden;border-radius:6px;color:#fff!important;display:flex;flex-direction:column;justify-content:flex-end;padding:22px;background:var(--pk-surface)}
+html body .pk-town:nth-child(1){grid-column:span 3;grid-row:span 2}
+html body .pk-town:nth-child(2), html body .pk-town:nth-child(3){grid-column:span 3}
+html body .pk-town:nth-child(n+4){grid-column:span 2}
+html body .pk-town img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1s,filter .6s;filter:saturate(1.05) brightness(.92)}
+html body .pk-town::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,9,6,0) 45%,rgba(13,9,6,.8))}
+html body .pk-town:hover img{transform:scale(1.05);filter:saturate(1.15) brightness(1)}
+html body .pk-town>*:not(img){position:relative;z-index:1}
+html body .pk-town b{font-family:var(--pk-serif);font-weight:500;font-size:30px;line-height:1.1;color:#fff}
+html body .pk-town:nth-child(1) b{font-size:46px}
+html body .pk-town span{font-size:13.5px;color:var(--pk-gold)}
+@media (max-width:991px){
+  html body .pk-zone{padding:70px 0}
+  html body .pk-towns{grid-template-columns:1fr 1fr;grid-auto-rows:170px;padding:0 16px}
+  html body .pk-town:nth-child(n){grid-column:span 1;grid-row:span 1}
+  html body .pk-town:nth-child(1){grid-column:span 2}
+  html body .pk-town{padding:14px}
+  html body .pk-town b{font-size:21px}
+  html body .pk-town:nth-child(1) b{font-size:28px}
+  html body .pk-head{padding:0 16px}
+}
+
+/* etichette allineate ai titoli delle sezioni Gestim */
+html body .homeBox3 .pk-eyebrow{max-width:1200px;margin:0 auto 14px!important;padding:0 12px}
+html body.pk-v2 .homeBox3 h2{margin-top:0!important}
+
+/* ---------- perché sceglierci: numeri 01 02 03 ---------- */
+html body .homeBox3 .card .pk-num{position:absolute;top:28px;left:34px;font-family:var(--pk-serif);font-style:italic;color:var(--pk-gold);font-size:20px;z-index:2}
+
+/* ---------- contatti ---------- */
+html body .contattacihome .pk-eyebrow{margin-bottom:10px}
+html body .contattacihome .pk-hide{display:none!important}
+html body .contattacihome .pk-h2{font-family:var(--pk-serif)!important;font-weight:500;color:var(--pk-heading)!important;font-size:clamp(34px,4vw,52px);line-height:1.08;margin:0 0 24px}
+
+/* ---------- staff ---------- */
+html body .staffhome .pk-eyebrow{justify-content:center}
