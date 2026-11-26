@@ -215,3 +215,5 @@ html body .immobili_listhome .action a.dettagli, html body .immobili_listgriglia
 
 /* descrizione della scheda: allineata a sinistra e con righe di lunghezza comoda */
 html body .dettaglio .testo, html body .dettaglio .testo p{text-align:left!important;max-width:82ch}
+/* etichetta sopra il titolo dello slider sempre leggibile */
+html body .homeslide .carousel-caption .title::before{color:#fff!important;text-shadow:0 1px 3px rgba(0,0,0,.8),0 2px 18px rgba(0,0,0,.7)!important}
