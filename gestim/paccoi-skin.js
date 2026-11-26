@@ -278,3 +278,37 @@
     });
   });
 })();
+
+/* =========================================================
+   V3.1 — "Le nostre sedi": solo le foto 1, 2, 4 e 7 (ordine del pannello Slide sedi),
+   e la 1 sempre per prima (Gestim le mescola a ogni visita)
+   ========================================================= */
+(function () {
+  function ready(fn) { document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", fn) : fn(); }
+  ready(function () {
+    try {
+      var KEEP = ["20241002121244765096380", "20241002121323502901260", "20241002121423501270100", "20241002121636413833290"];
+      document.querySelectorAll("main .carousel").forEach(function (c) {
+        var inner = c.querySelector(".carousel-inner"); if (!inner) return;
+        var items = [].slice.call(inner.querySelectorAll(":scope > .carousel-item"));
+        var keyOf = function (it) { var h = it.innerHTML; for (var k = 0; k < KEEP.length; k++) if (h.indexOf(KEEP[k]) > -1) return k; return -1; };
+        if (!items.some(function (it) { return keyOf(it) === 0; })) return; // non è il carosello delle sedi
+        var keep = items.filter(function (it) { return keyOf(it) > -1; }).sort(function (a, b) { return keyOf(a) - keyOf(b); });
+        items.forEach(function (it) { if (keep.indexOf(it) < 0) it.remove(); });
+        keep.forEach(function (it, i) { it.classList.toggle("active", i === 0); inner.appendChild(it); });
+        var ind = c.querySelector(".carousel-indicators");
+        if (ind) {
+          ind.innerHTML = "";
+          keep.forEach(function (it, i) {
+            var b = document.createElement("button"); b.type = "button";
+            b.setAttribute("data-bs-target", "#" + c.id); b.setAttribute("data-bs-slide-to", String(i)); b.setAttribute("aria-label", "Foto " + (i + 1));
+            if (i === 0) { b.className = "active"; b.setAttribute("aria-current", "true"); }
+            ind.appendChild(b);
+          });
+        }
+        var B = window.bootstrap && window.bootstrap.Carousel, inst = B && B.getInstance && B.getInstance(c);
+        if (inst) { inst.dispose(); new B(c, { interval: +(c.getAttribute("data-bs-interval") || 5000), ride: "carousel" }).cycle(); }
+      });
+    } catch (e) { if (window.console) console.warn("paccoi-skin v3.1", e); }
+  });
+})();
