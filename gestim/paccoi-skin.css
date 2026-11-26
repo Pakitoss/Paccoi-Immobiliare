@@ -345,3 +345,96 @@ html body .staffhome .pk-eyebrow{justify-content:center}
   html body header#headerPage .contentbox .menu{grid-column:2}
   html body header#headerPage .contentbox .langtel{grid-column:3;justify-self:end}
 }
+
+/* =========================================================
+   V3 — hero di giorno più dinamico, foto annunci senza barra,
+   scheda con foto a schermo intero
+   ========================================================= */
+/* ---------- hero della home ---------- */
+html body .homeslide.pk-has-hero > .carousel{display:none!important}
+html body .homeslide.pk-has-hero{position:relative;overflow:hidden;background:#17110c}
+@media (max-width:991px){html body .homeslide.pk-has-hero{height:78vh;height:78svh;min-height:480px}}
+html body .pk-hero{position:absolute;inset:0;color:#fff}
+html body .pk-hero-media{position:absolute;inset:-6% 0;will-change:transform}
+html body .pk-hero-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.4s ease}
+html body .pk-hero-slide.on{opacity:1}
+html body .pk-hero-slide.on.kb0{animation:pkkb0 7.5s ease-out both}
+html body .pk-hero-slide.on.kb1{animation:pkkb1 7.5s ease-out both}
+html body .pk-hero-slide.on.kb2{animation:pkkb2 7.5s ease-out both}
+html body .pk-hero-slide.on.kb3{animation:pkkb3 7.5s ease-out both}
+@keyframes pkkb0{from{transform:scale(1.16) translate(2%,1%)}to{transform:scale(1.02) translate(0,0)}}
+@keyframes pkkb1{from{transform:scale(1.02) translate(0,0)}to{transform:scale(1.15) translate(-2.5%,-1%)}}
+@keyframes pkkb2{from{transform:scale(1.14) translate(-2%,0)}to{transform:scale(1.03) translate(1.5%,1%)}}
+@keyframes pkkb3{from{transform:scale(1.03) translate(1%,-1%)}to{transform:scale(1.16) translate(-1%,1.5%)}}
+/* velature: le foto di giorno restano luminose, ma testo e menu sono sempre leggibili */
+html body .pk-hero-shade{position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(180deg,rgba(15,10,6,.7) 0%,rgba(15,10,6,.25) 16%,rgba(15,10,6,0) 30%),
+  linear-gradient(90deg,rgba(15,10,6,.78) 0%,rgba(15,10,6,.55) 32%,rgba(15,10,6,.12) 62%,rgba(15,10,6,0) 78%),
+  linear-gradient(180deg,rgba(15,10,6,0) 58%,rgba(15,10,6,.55) 82%,var(--pk-bg) 100%)}
+html body .pk-hero-text{position:absolute;z-index:2;left:max(32px,calc((100vw - 1240px)/2 + 32px));right:32px;bottom:200px;max-width:900px}
+html body .pk-hero-text .pk-eyebrow{color:#f3e6d6!important;text-shadow:0 1px 3px rgba(0,0,0,.9),0 2px 14px rgba(0,0,0,.7)}
+html body .pk-hero-title{font-family:var(--pk-serif);font-weight:500;font-size:clamp(44px,6.4vw,92px);line-height:1.02;letter-spacing:-.01em;color:#fff;margin:0;text-shadow:0 2px 4px rgba(0,0,0,.55),0 6px 40px rgba(0,0,0,.6)}
+html body .pk-hero-title em{font-style:italic;color:#f1c995}
+html body .pk-hero-title .w{display:inline-block;opacity:0;transform:translateY(60%) rotate(2deg);animation:pkword 1.1s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes pkword{to{opacity:1;transform:none}}
+html body .pk-hero-text .pk-eyebrow{opacity:0;animation:pkfade .9s .15s ease forwards}
+@keyframes pkfade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+html body .pk-hero-dots{position:absolute;z-index:3;right:32px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px}
+html body .pk-hero-dots button{width:3px;height:28px;padding:0;border:0;border-radius:2px;background:rgba(255,255,255,.45);cursor:pointer;transition:height .3s,background .3s;box-shadow:0 0 6px rgba(0,0,0,.5)}
+html body .pk-hero-dots button.on{background:var(--pk-gold);height:52px}
+html body .pk-hero-bar{position:absolute;left:0;bottom:0;height:2px;background:var(--pk-gold);z-index:3;width:0}
+html body .pk-hero-bar.run{animation:pkbar 5.5s linear forwards}
+@keyframes pkbar{to{width:100%}}
+@media (max-width:991px){
+  html body .pk-hero-text{left:20px;right:20px;bottom:56px}
+  html body .pk-hero-title{font-size:clamp(36px,10vw,52px)}
+  html body .pk-hero-dots{right:12px}
+  html body .pk-hero-shade{background:linear-gradient(180deg,rgba(15,10,6,.35) 0%,rgba(15,10,6,0) 30%,rgba(15,10,6,.35) 55%,rgba(15,10,6,.85) 100%)}
+}
+@media (prefers-reduced-motion:reduce){
+  html body .pk-hero-slide.on{animation:none!important}
+  html body .pk-hero-title .w, html body .pk-hero-text .pk-eyebrow{animation:none;opacity:1;transform:none}
+}
+
+/* ---------- foto degli annunci: niente barra marrone ---------- */
+html body .immobili_listhome figure, html body .immobili_listgriglia figure, html body .immobili_list figure{background:transparent!important;height:auto!important;min-height:0!important}
+html body .immobili_listhome figure::before, html body .immobili_listgriglia figure::before, html body .immobili_list figure::before,
+html body .immobili_listhome figure::after, html body .immobili_listgriglia figure::after, html body .immobili_list figure::after{display:none!important}
+html body .immobili_listhome figure>a, html body .immobili_listgriglia figure>a, html body .immobili_list figure>a{display:block!important;height:auto!important}
+html body .immobili_listhome figure img, html body .immobili_listgriglia figure img, html body .immobili_list figure img{display:block!important;aspect-ratio:4/3;width:100%!important;height:auto!important;object-fit:cover!important}
+
+/* ---------- scheda: prima la foto a schermo intero ---------- */
+html body .pk-ph{position:relative;height:100vh;height:100svh;min-height:520px;overflow:hidden;background:#0d0b09;cursor:zoom-in}
+html body .pk-ph-bg{position:absolute;inset:-40px;background-size:cover;background-position:center;filter:blur(38px) brightness(.55) saturate(1.15);transform:scale(1.08)}
+html body .pk-ph-img{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s ease}
+html body .pk-ph.ready .pk-ph-img{opacity:1}
+html body .pk-ph.contain .pk-ph-img{object-fit:contain}
+html body .pk-ph::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(13,9,6,.6) 0%,rgba(13,9,6,0) 18%,rgba(13,9,6,0) 74%,rgba(13,9,6,.5) 100%)}
+html body .pk-ph-cap{position:absolute;z-index:2;left:0;right:0;bottom:0;padding:0 max(24px,calc((100vw - 1240px)/2 + 32px)) 46px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;cursor:default}
+html body .pk-ph-box{background:rgba(22,16,11,.66);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:22px 26px;box-shadow:0 30px 60px -30px rgba(0,0,0,.7);max-width:min(760px,100%)}
+html body .pk-ph-box .pk-eyebrow{margin-bottom:10px}
+html body .pk-ph-title{font-family:var(--pk-serif);font-weight:500;font-size:clamp(26px,3.2vw,46px);line-height:1.1;color:#fff}
+html body .pk-ph-right{display:flex;flex-direction:column;align-items:flex-end;gap:14px}
+html body .pk-ph-price{font-family:var(--pk-serif);font-weight:600;font-size:clamp(32px,3.4vw,50px);line-height:1;color:#fff;white-space:nowrap}
+html body .pk-ph-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+html body .pk-ph-btns button, html body .pk-ph-btns a{display:inline-flex!important;align-items:center;gap:8px;font:700 14.5px var(--pk-sans);padding:12px 20px;border-radius:4px;cursor:pointer;white-space:nowrap}
+html body .pk-ph-all{background:var(--pk-grad)!important;color:var(--pk-ink)!important;border:0}
+html body .pk-ph-more{background:transparent;color:#fff!important;border:1px solid rgba(246,239,230,.55)}
+html body .pk-ph-more:hover{background:#fff;color:var(--pk-ink)!important}
+html body .pk-ph-cue{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:2;width:22px;height:34px;border:1.5px solid rgba(255,255,255,.6);border-radius:12px}
+html body .pk-ph-cue::after{content:"";position:absolute;left:50%;top:7px;width:3px;height:7px;border-radius:2px;background:#fff;transform:translateX(-50%);animation:pkcue 1.8s infinite}
+@keyframes pkcue{0%{opacity:0;transform:translate(-50%,0)}40%{opacity:1}100%{opacity:0;transform:translate(-50%,10px)}}
+@media (min-width:992px){
+  html body.pk-scheda header#headerPage{position:absolute!important;top:0;left:0;right:0;z-index:40;background:transparent!important}
+  html body.pk-scheda header#headerPage .recapititop{background:rgba(13,11,9,.6)!important;backdrop-filter:blur(6px)}
+  html body.pk-scheda header#headerPage .contentbox{background:linear-gradient(180deg,rgba(20,14,9,.72),rgba(20,14,9,.25) 70%,rgba(20,14,9,0))!important;border-bottom-color:transparent!important;backdrop-filter:none!important}
+  html body.pk-scheda header#headerPage + .clear{display:none}
+}
+@media (max-width:991px){
+  html body .pk-ph{height:calc(100svh - 70px)}
+  html body .pk-ph-cap{padding:0 14px 60px;gap:10px}
+  html body .pk-ph-box{padding:14px 16px}
+  html body .pk-ph-right{flex-direction:row;align-items:center;justify-content:space-between;width:100%}
+  html body .pk-ph-btns .pk-ph-more{display:none!important}
+  html body .pk-ph-cue{display:none}
+}

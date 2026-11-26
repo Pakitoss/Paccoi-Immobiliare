@@ -155,3 +155,126 @@
     });
   });
 })();
+
+/* =========================================================
+   V3 — hero di giorno, scheda con foto a schermo intero
+   ========================================================= */
+(function () {
+  function ready(fn) { document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", fn) : fn(); }
+  function safe(fn) { try { fn(); } catch (e) { if (window.console) console.warn("paccoi-skin v3", e); } }
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  var calm = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  ready(function () {
+    // ---------- home: foto di giorno con movimento ----------
+    safe(function () {
+      var hs = document.querySelector("main > .homeslide");
+      if (!hs || hs.querySelector(".pk-hero")) return;
+      var U = "https://images.unsplash.com/", Q = "?auto=format&fit=crop&q=80&w=" + (innerWidth > 1600 ? 2600 : innerWidth > 900 ? 2000 : 1100);
+      var photos = ["photo-1600596542815-ffad4c1539a9", "photo-1613490493576-7fde63acd811", "photo-1580587771525-78b9dba3b914", "photo-1564013799919-ab600027ffc6", "photo-1512917774080-9991f1c4c750"];
+      var cap = hs.querySelector(".carousel-caption .title");
+      var txt = cap ? cap.textContent.trim().replace(/^E'\s*/, "È ") : "È il momento di cambiare casa!";
+      var hero = el("div", "pk-hero"), media = el("div", "pk-hero-media");
+      var slides = photos.map(function (p, i) { var s = el("div", "pk-hero-slide kb" + (i % 4)); s.dataset.src = U + p + Q; media.appendChild(s); return s; });
+      hero.appendChild(media);
+      hero.appendChild(el("div", "pk-hero-shade"));
+      var text = el("div", "pk-hero-text");
+      text.appendChild(el("div", "pk-eyebrow", "Agenzia immobiliare · San Benedetto del Tronto"));
+      var title = el("div", "pk-hero-title");
+      // parola per parola, "cambiare casa!" in corsivo dorato
+      var m = txt.match(/^(.*?)(cambiare casa!?)(.*)$/i), parts = m ? [[m[1], 0], [m[2], 1], [m[3], 0]] : [[txt, 0]], n = 0;
+      parts.forEach(function (pt) {
+        var host = pt[1] ? title.appendChild(el("em")) : title;
+        pt[0].split(/(\s+)/).forEach(function (w) {
+          if (!w) return;
+          if (/^\s+$/.test(w)) { host.appendChild(document.createTextNode(" ")); return; }
+          var s = el("span", "w"); s.textContent = w; s.style.animationDelay = (0.25 + n++ * 0.08) + "s"; host.appendChild(s);
+        });
+      });
+      text.appendChild(title);
+      hero.appendChild(text);
+      var dots = el("div", "pk-hero-dots"), bar = el("div", "pk-hero-bar");
+      slides.forEach(function (s, i) { var b = el("button"); b.type = "button"; b.setAttribute("aria-label", "Foto " + (i + 1)); b.onclick = function () { go(i, true); }; dots.appendChild(b); });
+      hero.appendChild(dots); hero.appendChild(bar);
+
+      var cur = -1, timer = null;
+      function load(s, cb) { if (s.dataset.ok) return cb && cb(); var im = new Image(); im.onload = function () { s.style.backgroundImage = "url('" + s.dataset.src + "')"; s.dataset.ok = 1; cb && cb(); }; im.onerror = function () { cb && cb(true); }; im.src = s.dataset.src; }
+      function go(i, user) {
+        if (i === cur) return;
+        load(slides[i], function (err) {
+          if (err) return;
+          if (cur >= 0) { slides[cur].classList.remove("on"); dots.children[cur].classList.remove("on"); }
+          var s = slides[i]; s.classList.remove("on"); void s.offsetWidth; s.classList.add("on"); dots.children[i].classList.add("on"); cur = i;
+          bar.classList.remove("run"); void bar.offsetWidth; if (!calm) bar.classList.add("run");
+          load(slides[(i + 1) % slides.length]);
+          clearTimeout(timer); if (!calm) timer = setTimeout(function () { go((cur + 1) % slides.length); }, 5500);
+        });
+      }
+      // si sostituisce lo slider originale solo quando la prima foto è pronta
+      load(slides[0], function (err) {
+        if (err) return;
+        hs.insertBefore(hero, hs.firstChild); hs.classList.add("pk-has-hero"); go(0);
+      });
+      document.addEventListener("visibilitychange", function () { if (document.hidden) clearTimeout(timer); else if (cur >= 0 && !calm) timer = setTimeout(function () { go((cur + 1) % slides.length); }, 3000); });
+      // leggero effetto profondità scorrendo
+      if (!calm) {
+        var tick = false;
+        addEventListener("scroll", function () {
+          if (tick) return; tick = true;
+          requestAnimationFrame(function () { var y = Math.min(scrollY, innerHeight); media.style.transform = "translateY(" + (y * 0.22) + "px)"; text.style.transform = "translateY(" + (y * 0.1) + "px)"; tick = false; });
+        }, { passive: true });
+      }
+    });
+
+    // ---------- scheda immobile: prima la foto grande ----------
+    safe(function () {
+      var sec = document.querySelector("main > .sectionpage"), sup = sec && sec.querySelector(".sup"), gal = sec && sec.querySelector(".gallery");
+      if (!sup || !gal || document.querySelector(".pk-ph")) return;
+      var first = gal.querySelector(".carousel-item") , pic = first && first.querySelector("picture");
+      var src = "";
+      if (pic) pic.querySelectorAll("source").forEach(function (s) { if (!s.media && !src) src = (s.getAttribute("srcset") || "").split(" ")[0]; });
+      if (!src) { var im0 = gal.querySelector("img"); src = im0 ? (im0.getAttribute("data-src") || im0.getAttribute("src") || "") : ""; }
+      src = src.replace("/thumb/", "/");
+      if (!src) return;
+      var h1 = sup.querySelector("h1"), price = sup.querySelector(".seconda"), cod = sup.querySelector(".codice_top"), mot = sup.querySelector(".motivazione_top");
+      var nFoto = gal.querySelectorAll(".carousel-inner > .carousel-item").length || gal.querySelectorAll(".carousel-item").length;
+      var ph = el("section", "pk-ph"); ph.setAttribute("aria-label", "Foto principale");
+      var bg = el("div", "pk-ph-bg"); bg.style.backgroundImage = "url('" + src + "')";
+      var img = el("img", "pk-ph-img"); img.alt = h1 ? h1.textContent.trim() : "";
+      var capEl = el("div", "pk-ph-cap");
+      var left = el("div", "pk-ph-box"), right = el("div", "pk-ph-box pk-ph-right");
+      left.appendChild(el("div", "pk-eyebrow")).textContent = [mot && mot.textContent.trim(), cod && cod.textContent.trim()].filter(Boolean).join(" · ");
+      left.appendChild(el("div", "pk-ph-title")).textContent = h1 ? h1.textContent.trim() : "";
+      if (price && price.textContent.trim()) right.appendChild(el("div", "pk-ph-price")).textContent = price.textContent.trim();
+      var btns = el("div", "pk-ph-btns");
+      var all = el("button", "pk-ph-all", "Guarda le foto" + (nFoto > 1 ? " (" + nFoto + ")" : "")); all.type = "button";
+      var more = el("a", "pk-ph-more", "Dettagli ↓"); more.href = "#pk-dettagli";
+      btns.appendChild(all); btns.appendChild(more); right.appendChild(btns);
+      capEl.appendChild(left); capEl.appendChild(right);
+      ph.appendChild(bg); ph.appendChild(img); ph.appendChild(capEl); ph.appendChild(el("span", "pk-ph-cue"));
+      sec.id = sec.id || "pk-dettagli";
+      more.href = "#" + sec.id;
+      sec.parentNode.insertBefore(ph, sec);
+      document.body.classList.add("pk-scheda");
+
+      // la foto non viene mai ingrandita oltre la sua risoluzione: se non basta per riempire lo schermo, si vede intera sullo sfondo sfocato
+      function fit() {
+        var nw = img.naturalWidth, nh = img.naturalHeight; if (!nw) return;
+        var dpr = Math.min(window.devicePixelRatio || 1, 2), W = ph.clientWidth, H = ph.clientHeight;
+        var need = Math.max(W / nw, H / nh) * dpr;
+        ph.classList.toggle("contain", need > 1.15);
+        if (need > 1.15) { var k = Math.min(W / nw, H / nh, 1.1 / dpr); img.style.width = Math.round(nw * k) + "px"; img.style.height = Math.round(nh * k) + "px"; }
+        else { img.style.width = ""; img.style.height = ""; }
+      }
+      img.onload = function () { fit(); ph.classList.add("ready"); };
+      img.onerror = function () { ph.remove(); document.body.classList.remove("pk-scheda"); };
+      img.src = src;
+      addEventListener("resize", fit);
+
+      function openGallery() { var it = gal.querySelector(".carousel-item.active") || first; if (it) it.click(); }
+      all.addEventListener("click", function (e) { e.stopPropagation(); openGallery(); });
+      more.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); scrollTo({ top: sec.getBoundingClientRect().top + scrollY - 10, behavior: calm ? "auto" : "smooth" }); });
+      ph.addEventListener("click", function (e) { if (!capEl.contains(e.target) || e.target === capEl) openGallery(); });
+    });
+  });
+})();
