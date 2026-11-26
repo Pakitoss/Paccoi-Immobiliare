@@ -253,6 +253,10 @@
         <a href="https://wa.me/+${P.WA}" aria-label="WhatsApp" target="_blank" rel="noopener">${I.wa}</a>
       </div></div></div>
     <header class="site"><div class="wrap">
+      <a class="logo" href="index.html" aria-label="Immobiliare Paccoi — Home">
+        <img class="col" src="${LOGO_COL}" alt="San Pietro di Paolo Pompilio Paccoi &amp; c. Snc">
+        <img class="neg" src="${LOGO_NEG}" alt="" aria-hidden="true"></a>
+
       <nav class="main" aria-label="Menu principale"><ul>
         <li><a href="index.html"${cur("home")}>Home</a></li>
         <li><a href="index.html#chi-siamo">Chi siamo</a></li>
@@ -262,13 +266,10 @@
           <ul class="sub"><li><a href="index.html#servizi">Valutazione professionale</a></li><li><a href="index.html#servizi">Valore al tuo immobile</a></li><li><a href="index.html#servizi">Marketing immobiliare</a></li></ul></li>
         <li><a href="index.html#contatti">Contatti</a></li>
       </ul></nav>
-      <button class="menu-btn" aria-expanded="false" aria-controls="drawer"><span></span>MENU</button>
-      <a class="logo" href="index.html" aria-label="Immobiliare Paccoi — Home">
-        <img class="col" src="${LOGO_COL}" alt="San Pietro di Paolo Pompilio Paccoi &amp; c. Snc">
-        <img class="neg" src="${LOGO_NEG}" alt="" aria-hidden="true"></a>
       <div class="header-cta">
         <a class="tel" href="${P.TEL_HREF}">${I.tel}${P.TEL}</a>
         <a class="btn btn-primary" href="index.html#contatti">Contattaci</a>
+        <button class="menu-btn" aria-expanded="false" aria-controls="drawer"><span></span>MENU</button>
       </div>
     </div></header>
     <div class="drawer" id="drawer" aria-hidden="true">
