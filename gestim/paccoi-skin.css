@@ -675,3 +675,6 @@ html body .select2-dropdown .select2-results__message{color:var(--pk-muted)!impo
 html body .select2-container--default .select2-dropdown .select2-results__option.select2-results__option--highlighted[aria-selected], html body .select2-container--default .select2-dropdown .select2-results__option.select2-results__option--highlighted{background:rgba(232,192,143,.12)!important;color:#fff!important}
 html body .select2-container--default .select2-dropdown .select2-results__option[aria-selected=true]{background:rgba(232,192,143,.06)!important;color:var(--pk-gold)!important}
 html body .select2-container--default .select2-dropdown .select2-results__option.select2-results__option--highlighted[aria-selected=true]{background:rgba(232,192,143,.14)!important}
+
+/* V3.7 — schede immobili: niente linee sopra e sotto i dati (mq, bagni, camere) */
+html body [class*=immobili_list] .icone, html body .boxdettagli .icone{border-top:0!important;border-bottom:0!important;box-shadow:none!important}
