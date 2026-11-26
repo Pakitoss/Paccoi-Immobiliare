@@ -209,47 +209,11 @@
     btn.classList.add("hint");
   }
 
-  // schermata di benvenuto: il clic su "Entra nel sito" fa partire la musica
-  function splash() {
-    const LOGO = "https://www.immobiliarepaccoi.it/img/logo_neg.png";
-    const el = document.createElement("div");
-    el.className = "welcome"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-label", "Benvenuto");
-    el.innerHTML = `<div class="welcome-bg"></div>
-      <div class="welcome-box">
-        <img src="${LOGO}" alt="Paccoi Immobiliare" class="welcome-logo">
-        <p class="welcome-eyebrow">Agenzia immobiliare · San Benedetto del Tronto</p>
-        <p class="welcome-title">È il momento di <em>cambiare casa!</em></p>
-        <button type="button" class="btn btn-primary welcome-go"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Entra nel sito</button>
-        <button type="button" class="welcome-mute">Entra senza musica</button>
-      </div>`;
-    document.body.appendChild(el);
-    document.documentElement.style.overflow = "hidden";
-    requestAnimationFrame(() => el.classList.add("show"));
-    setTimeout(() => el.classList.add("show"), 60);   // anche se la scheda non è in primo piano
-    const close = (withMusic) => {
-      sessionStorage.setItem(KEY + "-intro", "1");
-      if (withMusic) { sessionStorage.setItem(KEY, "on"); start(); }
-      else { sessionStorage.setItem(KEY, "off"); stop(); }
-      btn.classList.remove("hint");
-      el.classList.remove("show"); el.classList.add("hide");
-      document.documentElement.style.overflow = "";
-      setTimeout(() => el.remove(), 900);
-    };
-    el.querySelector(".welcome-go").addEventListener("click", () => close(true));
-    el.querySelector(".welcome-mute").addEventListener("click", () => close(false));
-    el.addEventListener("keydown", (e) => { if (e.key === "Escape") close(true); });
-    setTimeout(() => el.querySelector(".welcome-go").focus(), 50);
-  }
-
-  // all'apertura: proviamo subito a suonare; se il browser lo blocca,
-  // mostriamo la schermata di benvenuto (una volta per visita) o aspettiamo il primo clic
+  // all'apertura: proviamo subito a suonare; se il browser blocca l'audio
+  // (regola di tutti i browser), la musica parte al primo clic, tocco o tasto
   if (pref() !== "off") {
     start();
-    setTimeout(() => {
-      if (ctx.state === "running") return;            // il browser ha permesso l'avvio automatico
-      if (!sessionStorage.getItem(KEY + "-intro")) splash();
-      else armGesture();
-    }, 350);
+    setTimeout(() => { if (ctx.state !== "running") armGesture(); }, 350);
   }
   // pausa quando la scheda non è visibile
   document.addEventListener("visibilitychange", () => {
