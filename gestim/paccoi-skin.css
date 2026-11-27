@@ -792,3 +792,4 @@ html body .pk-cluster.on span{background:#f0cc9c;color:var(--pk-ink);border-colo
   html body.pk-mapmode .pk-mv-switch{bottom:calc(var(--pk-tb,0px) + 16px)}
   html body.pk-mapmode.pk-mv-showmap .pk-mv-switch{bottom:24px}
 }
+@media (max-width:991px){ html body .pk-mv-area, html body .pk-mv-here{display:none!important} }
