@@ -702,6 +702,7 @@ html.pk-ready body{opacity:1;transition:opacity .25s ease}
    ========================================================= */
 html body .pk-mapview{display:none}
 html body.pk-mapmode #listImmobili{display:none!important}
+html body.pk-mapmode main{overflow-x:clip}
 html body.pk-mapmode .pk-mapview{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,46%);align-items:start;width:100vw;margin:8px 0 0 calc(50% - 50vw);border-top:1px solid var(--pk-line);background:var(--pk-bg)}
 /* pulsante "Mappa" accanto a Schede / Lista */
 html body .pk-mapbtn{display:inline-flex!important;align-items:center;gap:7px;margin-left:10px;padding:7px 14px;border:1px solid var(--pk-line2);border-radius:6px;color:var(--pk-text)!important;font:600 14px var(--pk-sans);text-decoration:none!important;transition:background .2s,border-color .2s;vertical-align:middle}
@@ -717,9 +718,9 @@ html body .pk-mv-close{background:transparent;border:1px solid var(--pk-line2);c
 html body .pk-mv-close:hover{border-color:var(--pk-gold);color:var(--pk-gold)}
 html body .pk-mv-filters{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;padding:14px;margin-bottom:12px;background:var(--pk-bg2);border:1px solid var(--pk-line);border-radius:10px}
 html body .pk-seg{display:inline-flex;background:rgba(255,255,255,.05);border:1px solid rgba(233,225,215,.08);border-radius:8px;padding:3px;height:46px;align-items:center}
-html body .pk-seg button{background:transparent;border:0;color:var(--pk-text);font:600 14px var(--pk-sans);padding:0 14px;height:38px;border-radius:6px;cursor:pointer}
+html body .pk-seg button{background:transparent;border:0;color:var(--pk-text);font:600 14px var(--pk-sans);padding:0 12px;height:38px;border-radius:6px;cursor:pointer}
 html body .pk-seg button.on{background:var(--pk-grad);color:var(--pk-ink)}
-html body .pk-fsel{display:flex;flex-direction:column;gap:5px;margin:0;flex:1 1 130px;min-width:120px}
+html body .pk-fsel{display:flex;flex-direction:column;gap:5px;margin:0;flex:1 1 100px;min-width:100px}
 html body .pk-fsel span{font:700 10.5px var(--pk-sans);letter-spacing:.12em;text-transform:uppercase;color:var(--pk-gold)}
 html body .pk-fsel select{appearance:none;-webkit-appearance:none;height:46px;width:100%;padding:0 32px 0 12px;border-radius:6px;border:1px solid rgba(233,225,215,.08);color:#e9e1d7;font:400 14.5px var(--pk-sans);cursor:pointer;
   background:rgba(255,255,255,.055) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%23e8c08f' stroke-width='1.8'/%3E%3C/svg%3E") no-repeat right 12px center}

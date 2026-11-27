@@ -31,6 +31,12 @@
     var a = hash(id + "a") * Math.PI * 2, d = 150 + hash(id + "d") * 200;
     return [lat + (d * Math.cos(a)) / 111320, lng + (d * Math.sin(a)) / (111320 * Math.cos(lat * Math.PI / 180))];
   }
+  function dove(c) {
+    var d = c.querySelector(".dove"); if (!d) return "";
+    var parts = [];
+    [].slice.call(d.childNodes).forEach(function (n) { var t = (n.textContent || "").replace(/\s+/g, " ").trim(); if (t) parts.push(t); });
+    return parts.join(" · ");
+  }
   function parse(html) {
     var d = new DOMParser().parseFromString(html, "text/html"), out = [];
     [].slice.call(d.querySelectorAll(".immobili_listgriglia, .immobili_listlista")).forEach(function (c) {
@@ -40,7 +46,7 @@
       var lat = parseFloat(m("latitude")), lng = parseFloat(m("longitude"));
       var title = g(".titolo") || m("name");
       var it = { id: c.getAttribute("data-idimmobile") || (a && a.href) || title, url: a ? a.href : "", img: img ? (img.getAttribute("src") || img.getAttribute("data-src") || "") : "",
-        title: title, place: g(".dove") || m("addressLocality"), priceTxt: g("figure .prezzo") || g(".prezzo"), contract: /affitt/i.test(g(".motivazione") + " " + title) ? "Affitto" : "Vendita",
+        title: title, place: dove(c) || m("addressLocality"), priceTxt: g("figure .prezzo") || g(".prezzo"), contract: /affitt/i.test(g(".motivazione") + " " + title) ? "Affitto" : "Vendita",
         code: g(".codice").replace(/^Cod\.?\s*/i, ""), type: title.split(/\s+in\s+(vendita|affitto)/i)[0], mq: null, bagni: null, camere: null, lat: lat, lng: lng };
       it.price = /\d/.test(it.priceTxt) ? num(it.priceTxt) : null;
       [].slice.call(c.querySelectorAll(".icone .ico")).forEach(function (x) { var t = x.textContent.replace(/\s+/g, " ").trim(), v = num(t); if (/mq/i.test(t)) it.mq = v; else if (/bagn/i.test(t)) it.bagni = v; else if (/camer|local/i.test(t)) it.camere = v; });
@@ -172,10 +178,10 @@
         if (!it.pos) return;
         var mk = L.marker(it.pos, { icon: icon(it), riseOnHover: true, title: it.title, keyboard: true });
         mk.bindPopup(popup(it), { className: "pk-popup", maxWidth: 300, minWidth: 260, autoPanPadding: [30, 30], closeButton: true });
-        mk.on("click", function () { highlight(it.id, true); });
+        mk.on("click", function () { highlight(it.id); });
         mk.__it = it; S.markers[it.id] = mk; ms.push(mk);
       });
-      cl.addLayers(ms);
+      markersDirty = true;
       fillSelects();
     }
     function fillSelects() {
@@ -200,21 +206,21 @@
       if (f.cam && (it.camere || 0) < +f.cam) return false;
       return true;
     }
-    var drawT = 0;
-    function draw() { clearTimeout(drawT); drawT = setTimeout(drawNow, 60); }
+    var drawT = 0, markersDirty = true;
+    function draw(markersToo) { if (markersToo) markersDirty = true; clearTimeout(drawT); drawT = setTimeout(drawNow, 60); }
     function drawNow() {
       var b = map.getBounds().pad(0.02), shown = [], inMap = [];
-      cl.clearLayers();
       S.items.forEach(function (it) {
         if (!pass(it)) return;
         var mk = S.markers[it.id];
         if (mk) inMap.push(mk);
         if (!S.area || (it.pos && b.contains(it.pos))) shown.push(it);
       });
-      cl.addLayers(inMap);
+      // i segnaposto si ridisegnano solo quando cambiano i filtri (non quando si sposta la mappa)
+      if (markersDirty) { markersDirty = false; map.closePopup(); cl.clearLayers(); cl.addLayers(inMap); }
       grid.innerHTML = "";
       var frag = document.createDocumentFragment();
-      shown.forEach(function (it) { var c = card(it); c.addEventListener("mouseenter", function () { highlight(it.id, false); }); c.addEventListener("mouseleave", function () { highlight(null); }); frag.appendChild(c); });
+      shown.forEach(function (it) { var c = card(it); if (it.id === hl) c.classList.add("on"); c.addEventListener("mouseenter", function () { highlight(it.id); }); c.addEventListener("mouseleave", function () { highlight(null); }); frag.appendChild(c); });
       grid.appendChild(frag);
       var any = S.f.c || S.f.zona || S.f.tipo || S.f.max || S.f.cam; reset.hidden = !any;
       var n = shown.length;
@@ -225,13 +231,13 @@
       empty.hidden = !!n || loading;
     }
     var hl = null;
-    function highlight(id, scroll) {
+    function highlight(id) {
       if (hl && S.markers[hl]) { S.markers[hl].setIcon(icon(S.markers[hl].__it, false)); S.markers[hl].setZIndexOffset(0); }
       [].slice.call(grid.querySelectorAll(".pk-mcard.on")).forEach(function (c) { c.classList.remove("on"); });
       hl = id; if (!id) return;
       var mk = S.markers[id]; if (mk) { mk.setIcon(icon(mk.__it, true)); mk.setZIndexOffset(1000); }
       var c = grid.querySelector('.pk-mcard[data-id="' + (window.CSS && CSS.escape ? CSS.escape(String(id)) : id) + '"]');
-      if (c) { c.classList.add("on"); if (scroll && innerWidth >= 992) c.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
+      if (c) c.classList.add("on");
     }
     function fitAll() {
       var pts = S.items.filter(function (it) { return it.pos && pass(it); }).map(function (it) { return it.pos; });
@@ -244,17 +250,18 @@
     }
 
     // filtri
-    w.querySelectorAll(".pk-seg button").forEach(function (b) { b.addEventListener("click", function () { w.querySelectorAll(".pk-seg button").forEach(function (x) { x.classList.toggle("on", x === b); }); S.f.c = b.getAttribute("data-c"); draw(); }); });
+    w.querySelectorAll(".pk-seg button").forEach(function (b) { b.addEventListener("click", function () { w.querySelectorAll(".pk-seg button").forEach(function (x) { x.classList.toggle("on", x === b); }); S.f.c = b.getAttribute("data-c"); draw(true); }); });
     w.querySelectorAll("select[data-f]").forEach(function (s) { s.addEventListener("change", function () {
       S.f[s.getAttribute("data-f")] = s.value;
       if (s.getAttribute("data-f") === "zona") { if (s.value) { var pts = S.items.filter(function (it) { return it.pos && it.place === s.value; }).map(function (it) { return it.pos; }); if (pts.length) map.fitBounds(L.latLngBounds(pts), { padding: [60, 60], maxZoom: 15 }); } else fitAll(); }
       draw();
     }); });
-    reset.addEventListener("click", function () { S.f = { c: "", zona: "", tipo: "", max: "", cam: "" }; w.querySelectorAll("select[data-f]").forEach(function (s) { s.value = ""; }); w.querySelectorAll(".pk-seg button").forEach(function (x, i) { x.classList.toggle("on", i === 0); }); fitAll(); draw(); });
+    reset.addEventListener("click", function () { S.f = { c: "", zona: "", tipo: "", max: "", cam: "" }; w.querySelectorAll("select[data-f]").forEach(function (s) { s.value = ""; }); w.querySelectorAll(".pk-seg button").forEach(function (x, i) { x.classList.toggle("on", i === 0); }); fitAll(); draw(true); });
     areaBox.addEventListener("change", function () { S.area = areaBox.checked; here.hidden = true; draw(); });
     here.addEventListener("click", function () { here.hidden = true; areaBox.checked = true; S.area = true; draw(); });
     map.on("moveend", function () { if (S.area) draw(); else if (!loading) here.hidden = false; });
     map.on("popupclose", function () { highlight(null); });
+    map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
 
     // telefono: un pulsante passa dall'elenco alla mappa e viceversa
     var sw = w.querySelector(".pk-mv-switch");
