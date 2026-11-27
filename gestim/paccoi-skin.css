@@ -931,4 +931,4 @@ html body .pk-why-link:hover>svg:last-child{transform:translateX(4px)}
 }
 html body .pk-why p{text-align:left!important}
 html body .pk-hours dd span{display:block;white-space:nowrap}
-html body .pk-why-sedi .pk-why-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (min-width:992px){html body .pk-why-sedi .pk-why-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
