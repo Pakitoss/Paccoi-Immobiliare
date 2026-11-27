@@ -688,3 +688,11 @@ html body [class*=immobili_list] .icone, html body .boxdettagli .icone{border-to
   html body #motoreRicerca#motoreRicerca .select2-search--inline, html body #motoreRicercaInterno#motoreRicercaInterno .select2-search--inline{display:flex!important;align-items:center!important;height:48px!important}
   html body #motoreRicerca#motoreRicerca .select2-search__field, html body #motoreRicercaInterno#motoreRicercaInterno .select2-search__field{height:auto!important;line-height:1.2!important;margin:0!important;padding:0!important}
 }
+
+/* =========================================================
+   V3.9 — niente "lampo" del sito vecchio: la pagina resta nascosta
+   finché il restyling non è pronto (al massimo 2,5 secondi)
+   ========================================================= */
+@keyframes pk-show{to{opacity:1}}
+html:not(.pk-ready) body{opacity:0;animation:pk-show .3s ease 2.5s forwards}
+html.pk-ready body{opacity:1;transition:opacity .25s ease}

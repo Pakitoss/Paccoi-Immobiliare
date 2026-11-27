@@ -480,3 +480,16 @@
     }, 30);
   });
 })();
+
+/* =========================================================
+   V3.9 — mostra la pagina solo quando il restyling è applicato
+   (questo blocco gira per ultimo, dopo tutti gli altri)
+   ========================================================= */
+(function () {
+  var root = document.documentElement;
+  function show() { root.classList.add("pk-ready"); }
+  function ready(fn) { document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", fn) : fn(); }
+  ready(function () { requestAnimationFrame(function () { requestAnimationFrame(show); }); });
+  setTimeout(show, 2500);
+  addEventListener("pageshow", show);
+})();

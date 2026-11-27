@@ -156,15 +156,33 @@
   }
 
   function tick() {
-    while (nextT < ctx.currentTime + 0.15) { play(step, nextT); step++; nextT += S16; }
+    while (nextT < ctx.currentTime + 0.15) { play(step, nextT); step++; nextT += S16; if (step % 8 === 0) savePos(); }
   }
+  // cambiando pagina il sito si ricarica: ci ricordiamo a che punto era il brano
+  // e ripartiamo da lì, invece che dall'inizio
+  const POS = "paccoi-musica-pos";
+  let resumed = false;
+  function savePos() { try { if (ctx && timer) sessionStorage.setItem(POS, JSON.stringify({ step: step, vib: lastVib, at: Date.now() })); } catch (e) {} }
+  function loadPos() {
+    try {
+      const s = JSON.parse(sessionStorage.getItem(POS) || "null");
+      if (s && typeof s.step === "number" && Date.now() - s.at < 30 * 60 * 1000) { step = s.step; lastVib = s.vib || lastVib; return true; }
+    } catch (e) {}
+    return false;
+  }
+  addEventListener("pagehide", savePos);
+  addEventListener("beforeunload", savePos);
   function start() {
     if (!ctx) init();
     ctx.resume();
-    if (!timer) { nextT = ctx.currentTime + 0.08; timer = setInterval(tick, 25); }
+    if (!timer) {
+      if (!resumed) { resumed = true; if (loadPos()) master.gain.value = 0; }
+      nextT = ctx.currentTime + 0.05; timer = setInterval(tick, 25);
+    }
+    const fade = step > 0 ? 0.6 : 2.5;   // ripresa: rientra in fretta; prima apertura: dissolvenza lenta
     master.gain.cancelScheduledValues(ctx.currentTime);
     master.gain.setValueAtTime(master.gain.value, ctx.currentTime);
-    master.gain.linearRampToValueAtTime(0.55, ctx.currentTime + 2.5);
+    master.gain.linearRampToValueAtTime(0.55, ctx.currentTime + fade);
     playing = true; ui();
   }
   function stop() {
