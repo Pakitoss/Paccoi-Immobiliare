@@ -929,3 +929,4 @@ html body .pk-why-link:hover>svg:last-child{transform:translateX(4px)}
   html body .pk-hours dl, html body .pk-hours-note{margin-left:0!important}
   html body .pk-why-lead p{padding-left:16px}
 }
+html body .pk-why p{text-align:left!important}
