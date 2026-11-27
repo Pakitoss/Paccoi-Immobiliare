@@ -786,3 +786,4 @@ html body .pk-mv-switch{display:none}
   html body .pk-seg{width:100%}
   html body .pk-seg button{flex:1}
 }
+html body .pk-cluster.on span{background:#f0cc9c;color:var(--pk-ink);border-color:#f0cc9c;transform:scale(1.12);transition:transform .15s ease}

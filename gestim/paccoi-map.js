@@ -253,8 +253,10 @@
     function highlight(id) {
       if (hl && S.markers[hl]) { S.markers[hl].setIcon(icon(S.markers[hl].__it, false)); S.markers[hl].setZIndexOffset(0); }
       [].slice.call(grid.querySelectorAll(".pk-mcard.on")).forEach(function (c) { c.classList.remove("on"); });
+      [].slice.call(w.querySelectorAll(".pk-cluster.on")).forEach(function (c) { c.classList.remove("on"); });
       hl = id; if (!id) return;
-      var mk = S.markers[id]; if (mk) { mk.setIcon(icon(mk.__it, true)); mk.setZIndexOffset(1000); }
+      var mk = S.markers[id]; if (mk) { mk.setIcon(icon(mk.__it, true)); mk.setZIndexOffset(1000);
+        var vp = cl.getVisibleParent ? cl.getVisibleParent(mk) : null; if (vp && vp !== mk && vp._icon) vp._icon.classList.add("on"); }
       var c = grid.querySelector('.pk-mcard[data-id="' + (window.CSS && CSS.escape ? CSS.escape(String(id)) : id) + '"]');
       if (c) c.classList.add("on");
     }
