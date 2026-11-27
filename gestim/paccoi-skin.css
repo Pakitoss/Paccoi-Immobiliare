@@ -793,3 +793,11 @@ html body .pk-cluster.on span{background:#f0cc9c;color:var(--pk-ink);border-colo
   html body.pk-mapmode.pk-mv-showmap .pk-mv-switch{bottom:24px}
 }
 @media (max-width:991px){ html body .pk-mv-area, html body .pk-mv-here{display:none!important} }
+/* v3.12 — pulsante dorato "Mappa" accanto a "Contattaci" */
+html body .pk-cta-mappa{display:none!important}
+@media (min-width:992px){
+  html body header#headerPage .contentbox .langtel{gap:12px}
+  html body header#headerPage .pk-cta-mappa{display:inline-flex!important;padding:12px 20px}
+  html body header#headerPage .pk-cta-mappa svg{flex:none}
+  html body.pk-has-ctamappa header#headerPage .contentbox .pk-nav-mappa{display:none!important}
+}

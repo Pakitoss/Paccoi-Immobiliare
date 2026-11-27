@@ -524,6 +524,16 @@
         li.appendChild(a); after.parentNode.insertBefore(li, after.nextSibling);
       });
     });
+    // pulsante dorato "Mappa" in alto a destra, accanto a "Contattaci"
+    safe(function () {
+      var lt = document.querySelector("header#headerPage .contentbox .langtel");
+      if (!lt || lt.querySelector(".pk-cta-mappa")) return;
+      var a = document.createElement("a"); a.className = "pk-cta pk-cta-mappa"; a.href = MAPURL;
+      a.innerHTML = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5 9 4Zm0 0v13m6-10.5v13"/></svg>Mappa';
+      a.addEventListener("click", function (e) { if (document.getElementById("listImmobili") && window.location.pathname.indexOf("/immobili") === 0) { e.preventDefault(); withMap(function (M) { M.open(); scrollTo({ top: 0, behavior: "smooth" }); }); } });
+      var c = lt.querySelector(".pk-cta"); lt.insertBefore(a, c || null);
+      document.body.classList.add("pk-has-ctamappa");
+    });
     // pagina dei risultati
     safe(function () {
       var list = document.getElementById("listImmobili"); if (!list || !MAPJS) return;
