@@ -964,6 +964,7 @@ html body .pk-vpage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9
 html body .pk-vpage-text .pk-eyebrow::before{content:"";width:34px;height:1px;background:currentColor;opacity:.7}
 html body .pk-vpage-h{font-family:var(--pk-serif)!important;font-weight:500!important;color:var(--pk-heading)!important;font-size:clamp(36px,4vw,56px)!important;line-height:1.04!important;margin:0 0 16px!important}
 html body .pk-vpage-lead{font-size:18px!important;line-height:1.6!important;color:var(--pk-text)!important;margin:0 0 24px!important}
+html body .pk-vband p, html body .pk-vpage p, html body .pk-vnote{text-align:left!important}
 html body .pk-vpage-step{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--pk-gold);margin-bottom:18px}
 html body .pk-vpage-note{margin:14px 0 0!important;font-size:13.5px!important;color:var(--pk-muted)!important}
 html body .pk-vpage-card{position:sticky;top:96px}
