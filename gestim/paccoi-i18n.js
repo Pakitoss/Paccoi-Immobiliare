@@ -119,6 +119,46 @@
     "La mappa non si è caricata. Riprova tra poco.": "The map did not load. Please try again shortly.",
     "Mappa degli immobili": "Property map", "Avvicina": "Zoom in", "Allontana": "Zoom out",
 
+    // pagine "Perché sceglierci"
+    "Perché sceglierci": "Why choose us", "Sede principale": "Main office", "Indirizzo": "Address", "Responsabile": "Manager",
+    "Orari di apertura": "Opening hours", "Orario invernale": "Winter hours", "Orario estivo": "Summer hours", "Indicazioni": "Directions",
+    "Siamo aperti tutti i giorni tranne il sabato pomeriggio e l’intera domenica.": "We are open every day except Saturday afternoon and all day Sunday.",
+    "Al tuo fianco": "By your side", "Ogni fase, con i professionisti giusti": "Every step, with the right professionals",
+    "Notaio di tua fiducia o da noi suggerito": "A notary of your choice, or one we recommend", "Periti esperti del settore edile e immobiliare": "Expert building and property surveyors",
+    "Principali banche per mutui e prestiti": "Leading banks for mortgages and loans", "Tecnici per il certificato energetico": "Certified energy assessors",
+    "La provvigione è dovuta solo ad affare concluso.": "Our fee is only due once the sale is completed.",
+    "Mercato sempre aggiornato": "Up-to-date market knowledge", "Dalla proposta al rogito": "From offer to completion",
+    "Prima di comprare casa": "Before you buy", "Sei controlli da fare, insieme a noi": "Six checks to make, together with us",
+    "La zona": "The area", "Lo stato dell'immobile": "The condition of the property", "Ipoteche": "Mortgages and charges", "Condoni edilizi": "Planning amnesties",
+    "Certificazioni degli impianti": "System certificates", "Parliamone": "Let's talk",
+    "Vuoi sapere quanto vale la tua casa?": "Want to know what your home is worth?", "Ti richiamiamo noi, senza impegno.": "We'll call you back, with no obligation.",
+    "La valutazione è gratuita e senza impegno.": "The valuation is free and with no obligation.", "Valutazione gratuita": "Free valuation",
+    "Oggi vendere un bene immobile non può più limitarsi ad una semplice messa in contatto della domanda con l’offerta.":
+      "Today, selling a property can no longer be just a matter of putting buyers and sellers in touch.",
+    "Occorre sempre più organizzare tutta una serie di servizi integrativi e complementari per assicurare il completo successo di ogni transazione. La nostra agenzia garatisce la transazione immobiliare accompagnandovi in tutte le fasi dell’acquisto e della vendita, in collaborazione con un notaio di vostra fiducia (o da noi suggerito), esperti periti del settore edile/immobiliare e principali istituti bancari per quanto riguarda mutui e prestiti, tecnici abilitati a produrre il certificato di prestazione energetica, perché il nostro guadagno è legato ad un obbligo di risultato, pertanto la mediazione, è dovuta solamente all’effettiva conclusione dell’affare.":
+      "More and more, a whole range of additional services is needed to make every transaction a complete success. Our agency looks after the whole transaction and supports you through every stage of buying and selling, working with a notary of your choice (or one we recommend), expert building and property surveyors, the main banks for mortgages and loans, and certified assessors for the energy performance certificate. Our fee is tied to results: commission is only due once the deal is actually completed.",
+    "Partiamo da una conoscenza sempre aggiornata dei mercati immobiliari in cui operiamo, sia in termini di conoscenza dei bisogni della domanda sia per quanto riguarda la giusta determinazione dei prezzi.":
+      "We start from an always up-to-date knowledge of the property markets we work in, both in understanding what buyers need and in setting the right price.",
+    "Seguiamo ogni negoziazione in tutte le sue fasi fino alla completa definizione dell’operazione, dalla proposta di acquisto al rogito notarile.":
+      "We follow every negotiation through all its stages until the deal is fully completed, from the purchase offer to the signing at the notary.",
+    "L’ acquisto di una casa, soprattutto della prima casa, è un passo fondamentale nella vita di un uomo.":
+      "Buying a home, especially your first home, is one of the most important steps in life.",
+    "Il possederla infonde sicurezza e tranquillità. E’ un traguardo, una meta che trascende il puro investimento economico e coinvolge il nostro atavico bisogno di protezione.":
+      "Owning it brings security and peace of mind. It is a milestone, a goal that goes beyond a financial investment and touches our age-old need for shelter.",
+    "Dopo l’acquisto possiamo modificarla, ristrutturarla sino a quando non assumerà quelle caratteristiche volute o addirittura sognate precedentemente: è nostra. Ma l’eccitazione legata a questo importante acquisto deve essere necessariamente accompagnata da una serie di informazioni preliminari.":
+      "Once bought, we can change it and renovate it until it becomes the home we wanted, or even dreamed of: it is ours. But the excitement of such an important purchase must go hand in hand with some careful preliminary checks.",
+    "Ponete attenzione alla zona in cui l’immobile si trova. Valutatene la rumorosità, l’esistenza di aree verdi, di scuole, di parcheggi, negozi, della vicinanza di fermate di mezzi pubblici.":
+      "Pay attention to the area where the property is located. Consider the noise, green spaces, schools, parking, shops and how close public transport stops are.",
+    "Attenzione allo stato di conservazione sia dello stabile che dell’appartamento. Verificatene la luminosità e l’esposizione ed eventuali ristrutturazioni da effettuare.":
+      "Check the condition of both the building and the apartment. Look at the natural light, the aspect and any renovation work needed.",
+    "Assicuratevi che sulla casa non gravino ipoteche. Questo controllo può essere effettuato presso la conservatoria dei registri avendo a disposizione i dati anagrafici del venditore.":
+      "Make sure there are no mortgages or charges on the property. This can be checked at the land registry with the seller's personal details.",
+    "Verificate se presso il Comune siano state presentate domande di condono edilizio e a che punto siano le pratiche. Il venditore è comunque tenuto a dichiarare, al momento del rogito, l’inesistenza di opere abusive inerenti l’appartamento.":
+      "Check with the town council whether any planning amnesty applications have been filed and how far they have progressed. In any case, at completion the seller must declare that there is no unauthorised building work on the property.",
+    "Richiedete un estratto conto, all’amministratore di condominio, per verificare la regolarità dei pagamenti da parte del venditore. Chiedete se sono in previsione spese condominiali straordinarie e per quale importo. Verificate che nel compromesso sia inserita la clausola attestante che sino al momento del rogito le spese condominiali saranno a carico del venditore.":
+      "Ask the building manager for a statement to check that the seller is up to date with payments. Ask whether any extraordinary service charges are planned, and how much they will be. Make sure the preliminary contract states that service charges are paid by the seller until completion.",
+    "Fatevi consegnare, laddove già eseguiti, la certificazione di conformità redatta da un tecnico abilitato, di tutti gli impianti elettrici, del gas e termici. Dal 31/12/98 tutti questi impianti devono essere adeguati, infatti, alle normative sulla sicurezza previste dalla legge 46/1990 e successive modificazioni ed integrazioni.":
+      "Where available, ask for the compliance certificates issued by a qualified technician for all electrical, gas and heating systems. Since 31/12/98 all these systems must meet the safety standards of Law 46/1990 and later amendments.",
     // pagina dell'annuncio
     "Descrizione": "Description", "Caratteristiche": "Features", "Scopri le caratteristiche di questo immobile": "Discover the features of this property",
     "Nelle vicinanze": "Nearby", "Servizi e infrastrutture della zona": "Local services and amenities", "Ubicazione immobile": "Property location",
