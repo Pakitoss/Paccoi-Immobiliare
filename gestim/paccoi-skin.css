@@ -814,7 +814,6 @@ html body.pk-mapmode .pk-mapview{animation:pkMapIn .45s cubic-bezier(.2,.7,.2,1)
 html body .pk-mv-mapbox, html body .pk-mv-map, html body .pk-mv-map.leaflet-container{background:#1b1510!important}
 html body .pk-mv-map .leaflet-tile-container img, html body .pk-mv-map .leaflet-tile{transition:opacity .35s ease!important}
 html body .pk-mv-map .leaflet-marker-pane>*{animation:pkFade .3s ease both}
-html body .pk-mcard{animation:pkFade .35s ease both}
 html body:not(.pk-mapmode) #listImmobili{animation:pkFade .35s ease both}
 @media (max-width:991px){ html body.pk-mv-showmap .pk-mv-mapbox{animation:pkFade .3s ease both} }
-@media (prefers-reduced-motion:reduce){ html body.pk-mapmode .pk-mapview, html body .pk-mcard, html body .pk-mv-map .leaflet-marker-pane>*, html body:not(.pk-mapmode) #listImmobili{animation:none} }
+@media (prefers-reduced-motion:reduce){ html body.pk-mapmode .pk-mapview, html body .pk-mv-map .leaflet-marker-pane>*, html body:not(.pk-mapmode) #listImmobili{animation:none} }

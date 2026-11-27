@@ -226,7 +226,7 @@
       if (f.cam && (it.camere || 0) < +f.cam) return false;
       return true;
     }
-    var drawT = 0, markersDirty = true;
+    var drawT = 0, markersDirty = true, lastSig = null, cards = {};
     function draw(markersToo) { if (markersToo) markersDirty = true; clearTimeout(drawT); drawT = setTimeout(drawNow, 60); }
     function drawNow() {
       // sul telefono, finché la mappa è nascosta, l'elenco mostra tutti gli immobili filtrati
@@ -240,10 +240,18 @@
       });
       // i segnaposto si ridisegnano solo quando cambiano i filtri (non quando si sposta la mappa)
       if (markersDirty) { markersDirty = false; map.closePopup(); cl.clearLayers(); cl.addLayers(inMap); }
-      grid.innerHTML = "";
-      var frag = document.createDocumentFragment();
-      shown.forEach(function (it) { var c = card(it); if (it.id === hl) c.classList.add("on"); c.addEventListener("mouseenter", function () { highlight(it.id); }); c.addEventListener("mouseleave", function () { highlight(null); }); frag.appendChild(c); });
-      grid.appendChild(frag);
+      // le schede già create si riusano: niente foto che spariscono e ricompaiono
+      var sig = shown.map(function (it) { return it.id; }).join(",");
+      if (sig !== lastSig) {
+        lastSig = sig;
+        var frag = document.createDocumentFragment();
+        shown.forEach(function (it) {
+          var c = cards[it.id];
+          if (!c) { c = cards[it.id] = card(it); c.addEventListener("mouseenter", function () { highlight(it.id); }); c.addEventListener("mouseleave", function () { highlight(null); }); }
+          c.classList.toggle("on", it.id === hl); frag.appendChild(c);
+        });
+        grid.textContent = ""; grid.appendChild(frag);
+      }
       var any = S.f.c || S.f.zona || S.f.tipo || S.f.max || S.f.cam; reset.hidden = !any;
       var n = shown.length;
       count.innerHTML = "";
