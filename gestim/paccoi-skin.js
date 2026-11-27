@@ -565,3 +565,67 @@
     });
   });
 })();
+
+/* =========================================================
+   V3.14 — sito in inglese
+   Selettore IT / EN in alto. La scelta resta salvata nel browser.
+   La traduzione (gestim/paccoi-i18n.js) si scarica solo per chi sceglie EN.
+   ========================================================= */
+(function () {
+  function ready(fn) { document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", fn) : fn(); }
+  function safe(fn) { try { fn(); } catch (e) { if (window.console) console.warn("[paccoi lingua]", e); } }
+  var me = document.querySelector('script[src*="gestim/paccoi-skin.js"]');
+  var I18N = me ? me.src.replace(/paccoi-skin\.js.*$/, "paccoi-i18n.js") : "";
+  var KEY = "paccoi-lingua";
+  function get() { try { return localStorage.getItem(KEY) === "en" ? "en" : "it"; } catch (e) { return "it"; } }
+  function set(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+  var loading = null;
+  function load() {
+    if (window.PKI18N) return Promise.resolve();
+    if (!loading) loading = new Promise(function (ok, ko) { var s = document.createElement("script"); s.src = I18N; s.onload = ok; s.onerror = ko; document.head.appendChild(s); });
+    return loading;
+  }
+  var lang = get();
+  // chi ha scelto l'inglese non vede l'italiano nemmeno per un istante
+  if (lang === "en" && I18N) {
+    document.documentElement.classList.add("pk-en");
+    load().catch(function () { document.documentElement.classList.add("pk-en-done"); });
+    setTimeout(function () { document.documentElement.classList.add("pk-en-done"); }, 3000);
+  }
+  function switcher(cls) {
+    var w = document.createElement("div"); w.className = "pk-lang " + (cls || ""); w.setAttribute("role", "group"); w.setAttribute("aria-label", "Lingua / Language");
+    ["it", "en"].forEach(function (l) {
+      var b = document.createElement("button"); b.type = "button"; b.textContent = l.toUpperCase(); b.setAttribute("lang", l);
+      b.setAttribute("aria-pressed", lang === l ? "true" : "false"); if (lang === l) b.className = "on";
+      b.addEventListener("click", function () {
+        if (l === lang) return;
+        set(l);
+        if (l === "it") { document.documentElement.classList.add("pk-leaving"); location.reload(); return; }
+        lang = "en"; document.documentElement.classList.add("pk-switching");
+        load().then(function () {
+          window.PKI18N.apply();
+          document.querySelectorAll(".pk-lang button").forEach(function (x) { var on = x.getAttribute("lang") === "en"; x.classList.toggle("on", on); x.setAttribute("aria-pressed", on ? "true" : "false"); });
+          setTimeout(function () { document.documentElement.classList.remove("pk-switching"); }, 30);
+        }, function () { document.documentElement.classList.remove("pk-switching"); });
+      });
+      w.appendChild(b);
+    });
+    return w;
+  }
+  ready(function () {
+    safe(function () {
+      // computer: in alto a destra, prima di "Mappa"
+      var lt = document.querySelector("header#headerPage .contentbox .langtel");
+      if (lt && !lt.querySelector(".pk-lang")) lt.insertBefore(switcher("pk-lang-head"), lt.querySelector(".pk-cta") || null);
+      // barra che compare scorrendo
+      var sc = document.querySelector(".intestazione_scroll .menu");
+      if (sc && !sc.querySelector(".pk-lang")) sc.appendChild(switcher("pk-lang-scroll"));
+      // telefono: nella barra in alto e nel menu a tendina
+      var top = document.querySelector("header#headerPage .recapititop");
+      if (top && !top.querySelector(".pk-lang")) top.appendChild(switcher("pk-lang-mob"));
+      var mn = document.querySelector(".menuNav .overlay-content");
+      if (mn && !mn.querySelector(".pk-lang")) mn.insertBefore(switcher("pk-lang-menu"), mn.firstChild);
+    });
+    if (lang === "en") load().then(function () { window.PKI18N.apply(); }, function () {});
+  });
+})();

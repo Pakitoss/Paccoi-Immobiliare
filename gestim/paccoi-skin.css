@@ -818,3 +818,28 @@ html body:not(.pk-mapmode) #listImmobili{animation:pkFade .35s ease both}
 @media (max-width:991px){ html body.pk-mv-showmap .pk-mv-mapbox{animation:pkFade .3s ease both} }
 @media (prefers-reduced-motion:reduce){ html body.pk-mapmode .pk-mapview, html body .pk-mv-map .leaflet-marker-pane>*, html body:not(.pk-mapmode) #listImmobili{animation:none} }
 html{background:#1f1812}
+/* v3.14 — selettore lingua IT / EN */
+html.pk-en:not(.pk-en-done) body{opacity:0!important;animation:none!important}
+html.pk-switching body, html.pk-leaving body{opacity:0!important;transition:opacity .2s ease!important}
+html body .pk-lang{display:inline-flex;align-items:center;gap:2px;padding:3px;border:1px solid rgba(232,192,143,.45);border-radius:999px;background:rgba(22,17,13,.35);flex:none}
+html body .pk-lang button{appearance:none;border:0;background:transparent;color:var(--pk-muted);font:700 12px/1 var(--pk-sans);letter-spacing:.08em;padding:7px 10px;border-radius:999px;cursor:pointer;transition:background .2s ease,color .2s ease}
+html body .pk-lang button:hover{color:var(--pk-heading)}
+html body .pk-lang button.on{background:var(--pk-grad);color:var(--pk-ink)}
+html body .pk-lang-head, html body .pk-lang-scroll{display:none}
+html body .pk-lang-mob{margin-left:auto}
+html body .pk-lang-menu{margin:0 0 18px}
+@media (min-width:992px){
+  html body .pk-lang-head{display:inline-flex}
+  html body .intestazione_scroll .menu{display:flex;align-items:center;gap:14px}
+  html body .pk-lang-scroll{display:inline-flex}
+  html body .pk-lang-mob, html body .pk-lang-menu{display:none}
+}
+@media (max-width:991px){
+  html body header#headerPage .recapititop{display:flex!important;align-items:center}
+  html body .pk-lang-mob button{padding:6px 9px;font-size:11px}
+}
+/* descrizione dell'annuncio in inglese */
+html body .pk-tr{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:0 0 16px;padding:12px 14px;border:1px solid var(--pk-line);border-radius:6px;background:rgba(232,192,143,.06);color:var(--pk-muted);font:500 14px/1.4 var(--pk-sans)}
+html body .pk-tr-btn{appearance:none;border:1px solid rgba(232,192,143,.6);background:transparent;color:var(--pk-gold);font:700 13px var(--pk-sans);padding:8px 14px;border-radius:999px;cursor:pointer}
+html body .pk-tr-btn:hover{background:var(--pk-grad);color:var(--pk-ink)}
+html body .pk-tr-btn[disabled]{opacity:.6;cursor:default}
