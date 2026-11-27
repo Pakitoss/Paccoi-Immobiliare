@@ -826,7 +826,7 @@ html body .pk-lang button{appearance:none;border:0;background:transparent;color:
 html body .pk-lang button:hover{color:var(--pk-heading)}
 html body .pk-lang button.on{background:var(--pk-grad);color:var(--pk-ink)}
 html body .pk-lang-head, html body .pk-lang-scroll{display:none}
-html body .pk-lang-mob{margin-left:auto}
+html body .pk-lang-mob{position:absolute;top:12px;right:12px;z-index:45}
 html body .pk-lang-menu{margin:0 0 18px}
 @media (min-width:992px){
   html body .pk-lang-head{display:inline-flex}
@@ -835,7 +835,7 @@ html body .pk-lang-menu{margin:0 0 18px}
   html body .pk-lang-mob, html body .pk-lang-menu{display:none}
 }
 @media (max-width:991px){
-  html body header#headerPage .recapititop{display:flex!important;align-items:center}
+  html body header#headerPage .contentbox{position:relative}
   html body .pk-lang-mob button{padding:6px 9px;font-size:11px}
 }
 /* descrizione dell'annuncio in inglese */

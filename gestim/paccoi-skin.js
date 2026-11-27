@@ -620,9 +620,9 @@
       // barra che compare scorrendo
       var sc = document.querySelector(".intestazione_scroll .menu");
       if (sc && !sc.querySelector(".pk-lang")) sc.appendChild(switcher("pk-lang-scroll"));
-      // telefono: nella barra in alto e nel menu a tendina
-      var top = document.querySelector("header#headerPage .recapititop");
-      if (top && !top.querySelector(".pk-lang")) top.appendChild(switcher("pk-lang-mob"));
+      // telefono: in alto a destra sopra il logo e nel menu a tendina
+      var top = document.querySelector("header#headerPage .contentbox");
+      if (top && !top.querySelector(".pk-lang-mob")) top.appendChild(switcher("pk-lang-mob"));
       var mn = document.querySelector(".menuNav .overlay-content");
       if (mn && !mn.querySelector(".pk-lang")) mn.insertBefore(switcher("pk-lang-menu"), mn.firstChild);
     });
