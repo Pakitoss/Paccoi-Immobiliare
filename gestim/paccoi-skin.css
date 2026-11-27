@@ -805,3 +805,16 @@ html body .pk-cta-mappa{display:none!important}
   html body .intestazione_scroll .pk-nav-mappa>a{color:var(--pk-ink)!important;background:var(--pk-grad)!important;border-radius:4px;font-weight:700!important;padding-left:16px!important;padding-right:16px!important}
   html body .intestazione_scroll .pk-nav-mappa>a::after, html body .intestazione_scroll .pk-nav-mappa>a::before{display:none!important}
 }
+/* v3.13 — apertura della mappa senza lampi */
+html.pk-wantmap #listImmobili{display:none!important}
+html.pk-wantmap main{min-height:100vh}
+@keyframes pkMapIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pkFade{from{opacity:0}to{opacity:1}}
+html body.pk-mapmode .pk-mapview{animation:pkMapIn .45s cubic-bezier(.2,.7,.2,1) both}
+html body .pk-mv-mapbox, html body .pk-mv-map, html body .pk-mv-map.leaflet-container{background:#1b1510!important}
+html body .pk-mv-map .leaflet-tile-container img, html body .pk-mv-map .leaflet-tile{transition:opacity .35s ease!important}
+html body .pk-mv-map .leaflet-marker-pane>*{animation:pkFade .3s ease both}
+html body .pk-mcard{animation:pkFade .35s ease both}
+html body:not(.pk-mapmode) #listImmobili{animation:pkFade .35s ease both}
+@media (max-width:991px){ html body.pk-mv-showmap .pk-mv-mapbox{animation:pkFade .3s ease both} }
+@media (prefers-reduced-motion:reduce){ html body.pk-mapmode .pk-mapview, html body .pk-mcard, html body .pk-mv-map .leaflet-marker-pane>*, html body:not(.pk-mapmode) #listImmobili{animation:none} }

@@ -23,6 +23,9 @@
     return Promise.all(p.concat([l.then(function () { return (window.L && L.markerClusterGroup) ? null : js(CLUSTER + "leaflet.markercluster.js"); })]));
   }
 
+  var LIBS = null; function libsOnce() { return LIBS || (LIBS = libs()); }
+  if (document.documentElement.classList.contains("pk-wantmap")) libsOnce();
+
   /* ---------- dati ---------- */
   function num(s) { var m = String(s || "").replace(/\./g, "").replace(",", ".").match(/\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; }
   function hash(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967295; }
@@ -141,14 +144,14 @@
 
   function open() {
     var host = document.getElementById("listImmobili"); if (!host) return;
-    document.body.classList.add("pk-mapmode");
+    document.body.classList.add("pk-mapmode"); document.documentElement.classList.remove("pk-wantmap");
     try { sessionStorage.setItem("pk-vista", "mappa"); } catch (e) {}
     if (location.hash !== "#mappa") history.replaceState(null, "", location.pathname + location.search + "#mappa");
     if (S) { setTimeout(function () { S.map.invalidateSize(); }, 50); return; }
     var w = build(host);
     S = { w: w, items: [], markers: {}, f: { c: "", zona: "", tipo: "", max: "", cam: "" }, area: true, fitted: false };
     w.querySelector(".pk-mv-close").addEventListener("click", close);
-    libs().then(function () { init(w); }).catch(function () { w.querySelector(".pk-mv-count").textContent = "La mappa non si è caricata. Riprova tra poco."; });
+    libsOnce().then(function () { init(w); }).catch(function () { w.querySelector(".pk-mv-count").textContent = "La mappa non si è caricata. Riprova tra poco."; });
   }
   function close() {
     document.body.classList.remove("pk-mapmode", "pk-mv-showmap");

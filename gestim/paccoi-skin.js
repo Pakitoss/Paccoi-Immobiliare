@@ -506,6 +506,16 @@
   var MAPJS = me ? me.src.replace(/paccoi-skin\.js.*$/, "paccoi-map.js") : "";
   var MAPURL = "/immobili/?cf=yes#mappa";
   var loading = null;
+  // se si arriva per aprire la mappa, l'elenco non si mostra nemmeno per un istante
+  // e il codice della mappa si scarica subito, senza aspettare il resto della pagina
+  var WANT = false;
+  try { WANT = /^\/immobili\/?$/.test(location.pathname) && (location.hash === "#mappa" || sessionStorage.getItem("pk-vista") === "mappa"); } catch (e) {}
+  if (WANT && MAPJS) {
+    document.documentElement.classList.add("pk-wantmap");
+    loading = new Promise(function (ok, ko) { var s = document.createElement("script"); s.src = MAPJS; s.onload = ok; s.onerror = ko; document.head.appendChild(s); });
+    loading.catch(function () { document.documentElement.classList.remove("pk-wantmap"); });
+    setTimeout(function () { if (!document.body || !document.body.classList.contains("pk-mapmode")) document.documentElement.classList.remove("pk-wantmap"); }, 8000);
+  }
   function withMap(fn) {
     if (window.PKMap) return fn(window.PKMap);
     if (!loading) loading = new Promise(function (ok, ko) { var s = document.createElement("script"); s.src = MAPJS; s.onload = ok; s.onerror = ko; document.head.appendChild(s); });
