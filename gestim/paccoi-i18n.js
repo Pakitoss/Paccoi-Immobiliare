@@ -159,6 +159,23 @@
       "Ask the building manager for a statement to check that the seller is up to date with payments. Ask whether any extraordinary service charges are planned, and how much they will be. Make sure the preliminary contract states that service charges are paid by the seller until completion.",
     "Fatevi consegnare, laddove già eseguiti, la certificazione di conformità redatta da un tecnico abilitato, di tutti gli impianti elettrici, del gas e termici. Dal 31/12/98 tutti questi impianti devono essere adeguati, infatti, alle normative sulla sicurezza previste dalla legge 46/1990 e successive modificazioni ed integrazioni.":
       "Where available, ask for the compliance certificates issued by a qualified technician for all electrical, gas and heating systems. Since 31/12/98 all these systems must meet the safety standards of Law 46/1990 and later amendments.",
+    // "Quanto vale la tua casa?"
+    "Quanto vale la tua casa?": "What is your home worth?", "Quanto vale casa?": "Home valuation",
+    "Una stima professionale, gratuita e senza impegno, da chi conosce il mercato della costa e dell'entroterra da oltre 20 anni.":
+      "A professional valuation, free and with no obligation, from people who have known the coastal and inland market for over 20 years.",
+    "Valuta ora": "Get a valuation", "Continua": "Continue", "Scegli…": "Choose…", "Es. Grottammare": "E.g. Grottammare", "Es. 90": "E.g. 90",
+    "Via o quartiere (facoltativo)": "Street or area (optional)", "Indirizzo o zona": "Address or area",
+    "Villa / casa indipendente": "Villa / detached house", "Casale / rustico": "Farmhouse / country house", "Terreno": "Land",
+    "Locale commerciale / ufficio": "Shop / office", "Altro": "Other", "Buono / abitabile": "Good / habitable", "Nuovo o ristrutturato": "New or renovated",
+    "Raccontaci il tuo immobile in pochi secondi: ti ricontattiamo noi per una valutazione professionale, gratuita e senza impegno.":
+      "Tell us about your property in a few seconds: we will get back to you for a professional valuation, free and with no obligation.",
+    "Gratuita e senza impegno": "Free and with no obligation", "Analisi accurata del mercato e della zona": "Careful analysis of the market and the area",
+    "Verifica dei documenti dell'immobile": "Check of the property documents", "Oltre 20 anni di esperienza sul territorio": "Over 20 years of local experience",
+    "Passo 1 di 2 · Il tuo immobile": "Step 1 of 2 · Your property",
+    "Al passo successivo inserisci nome e recapiti e invii la richiesta.": "In the next step, add your name and contact details and send the request.",
+    "Ultimo passo per la tua valutazione gratuita": "Last step for your free valuation",
+    "Abbiamo già scritto i dati del tuo immobile nel messaggio: aggiungi nome e recapiti, accetta la privacy e premi Invia.":
+      "We have already added your property details to the message: add your name and contact details, accept the privacy policy and press Send.",
     // pagina dell'annuncio
     "Descrizione": "Description", "Caratteristiche": "Features", "Scopri le caratteristiche di questo immobile": "Discover the features of this property",
     "Nelle vicinanze": "Nearby", "Servizi e infrastrutture della zona": "Local services and amenities", "Ubicazione immobile": "Property location",
