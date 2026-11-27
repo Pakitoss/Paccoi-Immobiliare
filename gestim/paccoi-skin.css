@@ -678,3 +678,13 @@ html body .select2-container--default .select2-dropdown .select2-results__option
 
 /* V3.7 — schede immobili: niente linee sopra e sotto i dati (mq, bagni, camere) */
 html body [class*=immobili_list] .icone, html body .boxdettagli .icone{border-top:0!important;border-bottom:0!important;box-shadow:none!important}
+
+/* V3.8 — barra filtri: testo delle tendine centrato in verticale anche dopo la scelta */
+@media (min-width:992px){
+  html body #motoreRicerca#motoreRicerca form>.row.g-0, html body #motoreRicercaInterno#motoreRicercaInterno form>.row.g-0{grid-template-columns:.85fr .85fr .85fr 1.3fr 1.3fr 1.3fr 1.3fr auto auto!important}
+  html body #motoreRicerca#motoreRicerca .select2-selection__rendered, html body #motoreRicercaInterno#motoreRicercaInterno .select2-selection__rendered{display:flex!important;align-items:center!important;height:48px!important;line-height:normal!important;min-width:0;width:100%}
+  html body #motoreRicerca#motoreRicerca .select2-selection__rendered>li, html body #motoreRicercaInterno#motoreRicercaInterno .select2-selection__rendered>li{display:flex!important;align-items:center!important;height:48px!important;line-height:normal!important;margin:0!important;padding:0!important;min-width:0;max-width:100%;flex:1 1 auto;float:none!important;background:transparent!important;border:0!important}
+  html body #motoreRicerca#motoreRicerca .select2-selection__rendered>li>span, html body #motoreRicercaInterno#motoreRicercaInterno .select2-selection__rendered>li>span{display:block!important;line-height:1.2!important;margin:0!important;padding:0!important;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:100%}
+  html body #motoreRicerca#motoreRicerca .select2-search--inline, html body #motoreRicercaInterno#motoreRicercaInterno .select2-search--inline{display:flex!important;align-items:center!important;height:48px!important}
+  html body #motoreRicerca#motoreRicerca .select2-search__field, html body #motoreRicercaInterno#motoreRicercaInterno .select2-search__field{height:auto!important;line-height:1.2!important;margin:0!important;padding:0!important}
+}
