@@ -176,13 +176,56 @@
     "Negozi": "Shops", "Banca": "Bank", "Banche": "Banks", "Ufficio postale": "Post office", "Posta": "Post office", "Palestra": "Gym",
     "Aeroporto": "Airport", "Porto": "Harbour", "Chiesa": "Church", "Asilo": "Nursery", "Università": "University", "Campi da calcio": "Football pitches",
     "Piscina comunale": "Public pool", "Centro storico": "Historic centre", "Golf": "Golf", "Spiaggia libera": "Public beach",
+    // altre caratteristiche viste negli annunci
+    "Bagno secondario con": "Second bathroom with", "Tipologia di proprietà": "Type of ownership", "Pannelli solari termici": "Solar thermal panels",
+    "Distanza mare/lago": "Distance to sea/lake", "Aria condizionata": "Air conditioning", "Impianto di pannelli fotovoltaici": "Solar PV system",
+    "Batteria di accumulo per fotovoltaico": "Solar battery storage", "Animali ammessi": "Pets allowed", "Adatto per studenti": "Suitable for students",
+    "Presente": "Yes", "Presenti": "Yes", "Non presenti": "None", "Mai ristrutturato": "Never renovated", "Verde + pavimentato": "Garden and paving",
+    "normale proprietà": "freehold", "Dato in locazione": "Let", "Lungomare": "Seafront", "Su due livelli": "On two levels", "Centrale": "Central",
+    "A norma": "Up to code", "Presente e funzionante su tutto l'alloggio": "Working throughout the property", "Semicentrale": "Semi-central",
+    "di piccole parti": "small areas", "di molte parti": "many areas", "Semitotale": "Extensive", "Basculante manuale": "Manual up-and-over",
+    "Corte pavimentata": "Paved courtyard", "Presente solo in una/qualche stanza": "Only in some rooms", "Marmettoni": "Marble-chip tiles",
+    "Climatizzato": "Air-conditioned", "condominiale": "shared", "Multipiano": "Multi-level", "Basculante elettrica": "Electric up-and-over",
+    "Semiabitabile": "Semi eat-in", "Vasca Idromassaggio": "Whirlpool bath", "Periferica": "Outskirts", "altro / a scelta": "other / to choose",
+    "In costruzione": "Under construction", "Rimessa": "Outbuilding", "Marmo di qualità": "Quality marble", "stato grezzo": "unfinished shell",
+    "Avvolgibile elettrica": "Electric roller door", "Isolata": "Isolated", "Turistica": "Tourist area", "Parzialmente arredato di cucina": "Kitchen furnished only",
+    "Presente solo nelle camere": "Only in the bedrooms", "Terreno agricolo": "Agricultural land", "Strada ad alto traffico": "Busy road",
+    "Zona industriale": "Industrial area", "Sanitari Standard": "Standard fittings", "Zona in forte espansione": "Fast-growing area",
+    "Solo predisposta": "Pre-wired only", "Balcone abitabile": "Large balcony", "Altri immobili disponibili nel fabbricato": "Other units available in the building",
+    "Ingresso autonomo": "Private entrance", "Portone Blindato": "Security front door", "Cappotto termico esterno": "External thermal insulation",
+    "Domotica in casa": "Home automation", "Adatto ad operazioni immobiliari d'impresa": "Suitable for property development", "Sottocosto": "Below market price",
+    "tutti i lati": "all sides", "Palestre": "Gyms", "Ospedale Civile": "Hospital", "Complessi Sportivi": "Sports facilities", "Parco giochi": "Playground",
+    "Stazione Ferroviaria": "Train station", "Scuole Elementari": "Primary schools", "Scuole Medie": "Middle schools", "Scuole Superiori": "Secondary schools",
+    "Palazzetto dello sport / stadio Riviera delle Palme": "Sports arena / Riviera delle Palme stadium",
+    "Palazzetto dello sport / stadio Riviera delle Palm": "Sports arena / Riviera delle Palme stadium", "Ufficio Postale": "Post office",
+    "Uffici comunali": "Town hall offices", "Fermata autobus di linea": "Bus stop", "Porto turistico": "Marina", "Pista da pattinaggio a rotelle": "Roller rink",
+    "Cinema": "Cinema", "Teatro": "Theatre", "Pista d'atletica": "Athletics track", "Negozi e shopping": "Shops", "Biblioteca Comunale": "Public library",
+    "Asilo nido": "Nursery", "Scuola materna": "Nursery school", "Scuola dell'infanzia": "Nursery school", "Musei": "Museums", "Museo": "Museum",
+    "Centro benessere": "Spa", "Discoteca": "Nightclub", "Impianti sciistici": "Ski lifts", "Terme": "Thermal baths", "Maneggio": "Riding stables",
+    "Campo da golf": "Golf course", "Parcheggio": "Car park", "Parcheggi": "Car parks", "Pronto soccorso": "A&E", "Guardia medica": "Out-of-hours doctor",
     "Superstrada": "Dual carriageway", "Ferrovia": "Railway", "Ospedali": "Hospitals", "Centro sportivo": "Sports centre"
   };
   var UP = {}; Object.keys(D).forEach(function (k) { var u = k.toUpperCase(); if (!(u in D) && u !== k) UP[u] = D[k].toUpperCase(); });
   var TYPES = Object.keys(D);
 
   function plural(n, one, many) { return n + " " + (+n === 1 ? one : many); }
-  function word(t) { return D.hasOwnProperty(t) ? D[t] : (UP.hasOwnProperty(t) ? UP[t] : null); }
+  var LOW = {}; Object.keys(D).forEach(function (k) { var l = k.toLowerCase(); if (!(l in LOW)) LOW[l] = D[k]; });
+  function word(t) { return D.hasOwnProperty(t) ? D[t] : (UP.hasOwnProperty(t) ? UP[t] : (LOW.hasOwnProperty(t.toLowerCase()) && t.length > 3 ? LOW[t.toLowerCase()] : null)); }
+  var COMPASS = { nord: "North", sud: "South", est: "East", ovest: "West" };
+  // valore di una caratteristica: "Sud - Est", "Presente, 12 mq", "per 2 famiglie", "In aderenza su 1 lato"...
+  function val(v) {
+    var w = word(v); if (w != null) return w;
+    var x;
+    if ((x = v.match(/^per (\d+) famigli[ae]$/i))) return "for " + plural(x[1], "family", "families");
+    if ((x = v.match(/^In aderenza su (\d+) lat[oi]$/i))) return "Attached on " + plural(x[1], "side", "sides");
+    if ((x = v.match(/^maggiore di (.+)$/i))) return "more than " + x[1];
+    if ((x = v.match(/^(.*)\bcirca$/i))) return x[1] + "approx.";
+    if ((x = v.match(/^([\d.,]+) ?mt\.?$/i))) return x[1] + " m";
+    if ((x = v.match(/^([\d.,]+) ?mq$/i))) return x[1] + " m²";
+    if (/^(prevalente(mente)? a )?((nord|sud|est|ovest)[\s\-\/,]*)+$/i.test(v)) return v.replace(/^prevalente(mente)? a /i, "mainly ").replace(/\b(nord|sud|est|ovest)\b/gi, function (m) { return COMPASS[m.toLowerCase()]; });
+    if (/,/.test(v)) { var parts = v.split(/\s*,\s*/); var out = parts.map(function (p) { return val(p) || p; }); if (out.join(", ") !== v) return out.join(", "); }
+    return null;
+  }
   function type(t) { var w = word(t); return w || t; }
 
   var RULES = [
@@ -204,8 +247,10 @@
     [/^· carico (\d+) di (\d+)…$/, function (m) { return "· loading " + m[1] + " of " + m[2] + "…"; }],
     [/^· carico (\d+)…$/, function (m) { return "· loading " + m[1] + "…"; }],
     [/^([\d.,]+) mq$/i, function (m) { return m[1] + " m²"; }],
+    [/^€ (\d+),(\d) mln$/, function (m) { return "€ " + m[1] + "." + m[2] + "m"; }],
+    [/^€ (\d+) mln$/, function (m) { return "€ " + m[1] + "m"; }],
     [/^(.+) \((\d+)\)$/, function (m) { var w = word(m[1]); return w ? w + " (" + m[2] + ")" : null; }],
-    [/^(.+?)\s*:\s*(.+)$/, function (m) { var k = word(m[1].trim()); if (!k) return null; var v = word(m[2].trim()); return k + ": " + (v || m[2].trim()); }],
+    [/^(.+?)\s*:\s*(.+)$/, function (m) { var k = word(m[1].trim()); if (!k) return null; var v = val(m[2].trim()); return k + ": " + (v || m[2].trim()); }],
     [/^(.+?)\s*:$/, function (m) { var k = word(m[1].trim()); return k ? k + ":" : null; }],
     // "200 mq · 4 camere · 2 bagni" (schede della mappa)
     [/^\d[\d.]* mq( · .+)?$|^\d+ camer[ae]( · .+)?$|^\d+ bagn[io]$/i, function (m) {
