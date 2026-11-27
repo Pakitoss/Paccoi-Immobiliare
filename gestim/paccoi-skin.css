@@ -844,7 +844,7 @@ html body .pk-tr-btn{appearance:none;border:1px solid rgba(232,192,143,.6);backg
 html body .pk-tr-btn:hover{background:var(--pk-grad);color:var(--pk-ink)}
 html body .pk-tr-btn[disabled]{opacity:.6;cursor:default}
 /* v3.15 — pagine "Perché sceglierci" */
-html.pk-why-page body:not(.pk-why-on) main .sectionpage{opacity:0}
+html.pk-why-page body:not(.pk-why-on) main .sectionpage{opacity:0;animation:pk-show .3s ease 2.5s forwards}
 html body.pk-why-on main{overflow-x:clip}
 html body .pk-why{color:var(--pk-text);font-family:var(--pk-sans)}
 html body .pk-why-hero{position:relative;width:100vw;margin-left:calc(50% - 50vw);min-height:clamp(300px,46vh,460px);display:flex;align-items:flex-end;overflow:hidden;margin-top:6px;border-top:1px solid var(--pk-line);border-bottom:1px solid var(--pk-line)}

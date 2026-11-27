@@ -667,8 +667,10 @@
   ready(function () {
     try {
       var sec = document.querySelector("main .sectionpage"), h1 = sec && sec.querySelector("h1"), testo = sec && sec.querySelector(".testo");
-      if (!sec || !h1 || !testo || sec.querySelector(".pk-why")) return;
+      if (!sec || !h1 || !testo || sec.querySelector(".pk-why")) return giveUp();
       var ps = [].slice.call(testo.querySelectorAll(":scope > p")).filter(function (p) { return p.textContent.trim(); });
+      // se nel gestionale il testo cambia forma, la pagina resta com'è
+      if ((kind === "compravendite" && ps.length < 4) || (kind === "stime" && ps.length < 8) || (kind === "sedi" && !/Sede di/.test(testo.textContent))) return giveUp();
       var img = testo.querySelector("img");
       var photo = img ? (img.getAttribute("src") || img.getAttribute("data-src")) : "";
       var wrap = el("div", "pk-why pk-why-" + kind);
@@ -691,7 +693,7 @@
         var win = (all.match(/Invernale:\s*([^\n]+)/i) || [])[1] || "";
         var sum = (all.match(/Estivo:\s*([^\n]+)/i) || [])[1] || "";
         var note = ps.filter(function (p) { return /aperti/i.test(p.textContent); })[0];
-        if (!addr[1] || !tel) return;  // testo cambiato nel gestionale: si lascia la pagina com'è
+        if (!addr[1] || !tel) return giveUp();
         var grid = el("div", "pk-why-grid");
         var card = el("div", "pk-why-card pk-sede");
         card.appendChild(txt("div", "pk-eyebrow", "Sede principale"));
@@ -785,8 +787,9 @@
       h1.style.display = "none"; testo.style.display = "none";
       sec.insertBefore(wrap, h1);
       document.body.classList.add("pk-why-on");
-    } catch (e) { if (window.console) console.warn("[paccoi perché sceglierci]", e); }
+    } catch (e) { giveUp(); if (window.console) console.warn("[paccoi perché sceglierci]", e); }
 
+    function giveUp() { document.documentElement.classList.remove("pk-why-page"); }
     function lead(p) { var d = el("div", "pk-why-lead"); d.appendChild(p); return d; }
     function point(icon, n, title, p) {
       var c = el("article", "pk-why-point");
