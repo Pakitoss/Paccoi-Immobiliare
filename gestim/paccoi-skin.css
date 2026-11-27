@@ -984,7 +984,8 @@ html body .pk-vnote span{display:block;color:var(--pk-muted);font-size:14px;line
 html body .pk-top-valuta{display:none}
 @media (min-width:992px){
   html body header#headerPage .recapititop{display:flex!important;align-items:center}
-  html body .pk-top-valuta{display:inline-flex;align-items:center;gap:8px;margin-left:auto;margin-right:18px;color:var(--pk-gold)!important;font-weight:700;font-size:13px;text-decoration:none!important;white-space:nowrap}
+  html body .pk-top-valuta{display:inline-flex;align-items:center;gap:8px;margin-left:auto;margin-right:26px;color:var(--pk-gold)!important;font-weight:700;font-size:13px;text-decoration:none!important;white-space:nowrap}
   html body .pk-top-valuta b{font-weight:700;color:var(--pk-ink);background:var(--pk-grad);padding:3px 9px;border-radius:999px;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
   html body .pk-top-valuta:hover span{text-decoration:underline}
 }
+@media (min-width:992px){html body header#headerPage .recapititop .socialtop{margin-left:0!important;float:none!important}}

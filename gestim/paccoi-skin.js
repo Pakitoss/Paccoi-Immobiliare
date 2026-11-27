@@ -887,7 +887,7 @@
     safe(function () {
       // barra in alto (telefono / email): link dorato, visibile in ogni pagina
       var top = document.querySelector("header#headerPage .recapititop");
-      if (top && !top.querySelector(".pk-top-valuta")) { var ta = el("a", "pk-top-valuta", HOUSE + "<span>Quanto vale la tua casa?</span><b>Valutazione gratuita</b>"); ta.href = URL_V; top.appendChild(ta); }
+      if (top && !top.querySelector(".pk-top-valuta")) { var ta = el("a", "pk-top-valuta", HOUSE + "<span>Quanto vale la tua casa?</span><b>Valutazione gratuita</b>"); ta.href = URL_V; top.insertBefore(ta, top.querySelector(".socialtop")); }
       document.querySelectorAll(".intestazione_scroll .navbar-nav, .menuNav .navbar-nav").forEach(function (nav) {
         if (nav.querySelector(".pk-nav-valuta")) return;
         var items = [].slice.call(nav.children).filter(function (x) { return x.tagName === "LI"; });
