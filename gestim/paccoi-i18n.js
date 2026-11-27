@@ -79,6 +79,8 @@
       "In 20 years of business the company has reached important milestones and built strong relationships with sellers, buyers and investors.",
     "Il gruppo “PACCOI IMMOBILIARE” è da sempre guidato nel suo lavoro dai principi di professionalità, fiducia ed efficienza.":
       "“PACCOI IMMOBILIARE” has always been guided by professionalism, trust and efficiency.",
+    "L'accurata selezione delle proprietà, effettuata dai professionisti di “PACCOI IMMOBILIARE” è finalizzata alla migliore collocazione dei beni all'interno del target prescelto. Per questo motivo la Società investe in modo importante nella realizzazione di shooting fotografici, di campagne marketing e di strategie di comunicazione integrata, così da ottimizzare richieste e offerte del mercato di riferimento.":
+      "The careful selection of properties by the professionals of “PACCOI IMMOBILIARE” aims to place each property in front of the right buyers. That is why the company invests heavily in photo shoots, marketing campaigns and integrated communication, to attract the right enquiries and offers.",
     "Tel.": "Tel.", "tel.": "tel.",
 
     // servizi
