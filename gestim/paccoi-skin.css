@@ -801,3 +801,7 @@ html body .pk-cta-mappa{display:none!important}
   html body header#headerPage .pk-cta-mappa svg{flex:none}
   html body.pk-has-ctamappa header#headerPage .contentbox .pk-nav-mappa{display:none!important}
 }
+@media (min-width:992px){
+  html body .intestazione_scroll .pk-nav-mappa>a{color:var(--pk-ink)!important;background:var(--pk-grad)!important;border-radius:4px;font-weight:700!important;padding-left:16px!important;padding-right:16px!important}
+  html body .intestazione_scroll .pk-nav-mappa>a::after, html body .intestazione_scroll .pk-nav-mappa>a::before{display:none!important}
+}
