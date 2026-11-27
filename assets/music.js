@@ -158,20 +158,17 @@
   function tick() {
     while (nextT < ctx.currentTime + 0.15) { play(step, nextT); step++; nextT += S16; if (step % 8 === 0) savePos(); }
   }
-  // cambiando pagina il sito si ricarica: ci ricordiamo a che punto era il brano
+  // cambiando pagina il sito si ricarica, e gli annunci si aprono in una nuova scheda:
+  // ci ricordiamo a che punto era il brano (condiviso tra le schede del sito)
   // e ripartiamo da lì, invece che dall'inizio
   const POS = "paccoi-musica-pos";
-  let resumed = false;
-  function savePos() { try { if (ctx && timer) sessionStorage.setItem(POS, JSON.stringify({ step: step, vib: lastVib, at: Date.now() })); } catch (e) {} }
-  function loadPos() {
-    try {
-      const s = JSON.parse(sessionStorage.getItem(POS) || "null");
-      if (s && typeof s.step === "number" && Date.now() - s.at < 30 * 60 * 1000) { step = s.step; lastVib = s.vib || lastVib; return true; }
-    } catch (e) {}
-    return false;
-  }
-  addEventListener("pagehide", savePos);
-  addEventListener("beforeunload", savePos);
+  const store = (() => { try { localStorage.setItem("pk-t", "1"); localStorage.removeItem("pk-t"); return localStorage; } catch (e) { return sessionStorage; } })();
+  let resumed = false, mySave = 0;
+  function savePos(force) { try { if (ctx && timer && (force === true || !document.hidden)) { mySave = Date.now(); store.setItem(POS, JSON.stringify({ step: step, vib: lastVib, at: mySave })); } } catch (e) {} }
+  function readPos() { try { const s = JSON.parse(store.getItem(POS) || "null"); return s && typeof s.step === "number" && Date.now() - s.at < 30 * 60 * 1000 ? s : null; } catch (e) { return null; } }
+  function loadPos() { const s = readPos(); if (s) { step = s.step; lastVib = s.vib || lastVib; return true; } return false; }
+  addEventListener("pagehide", () => savePos(true));
+  addEventListener("beforeunload", () => savePos(true));
   function start() {
     if (!ctx) init();
     ctx.resume();
@@ -197,7 +194,8 @@
   /* ---------- pulsante ---------- */
   // la scelta "musica spenta" vale solo per la visita in corso:
   // a ogni nuova apertura del sito la musica è di nuovo attiva
-  const pref = () => sessionStorage.getItem(KEY);
+  const pref = () => { try { const v = JSON.parse(store.getItem(KEY) || "null"); return v && Date.now() - v.at < 3 * 60 * 60 * 1000 ? v.v : null; } catch (e) { return null; } };
+  const setPref = (v) => { try { store.setItem(KEY, JSON.stringify({ v: v, at: Date.now() })); } catch (e) {} };
   const btn = document.createElement("button");
   btn.type = "button"; btn.className = "music-btn";
   btn.innerHTML = '<span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl">Musica</span>';
@@ -209,8 +207,8 @@
   }
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (playing && ctx && ctx.state === "running") { stop(); sessionStorage.setItem(KEY, "off"); }
-    else { start(); sessionStorage.setItem(KEY, "on"); }
+    if (playing && ctx && ctx.state === "running") { stop(); setPref("off"); }
+    else { start(); setPref("on"); }
   });
   document.body.appendChild(btn); ui();
 
@@ -233,9 +231,15 @@
     start();
     setTimeout(() => { if (ctx.state !== "running") armGesture(); }, 350);
   }
-  // pausa quando la scheda non è visibile
+  // pausa quando la scheda non è visibile; tornando su questa scheda
+  // la musica riprende dal punto in cui era arrivata nell'altra scheda
   document.addEventListener("visibilitychange", () => {
-    if (!ctx || !playing) return;
-    if (document.hidden) ctx.suspend(); else ctx.resume();
+    if (!ctx) return;
+    if (document.hidden) { if (playing) { savePos(true); ctx.suspend(); } return; }
+    if (pref() === "off") { if (playing) stop(); return; }
+    const s = readPos();
+    const jump = s && s.at > mySave;
+    if (jump) { step = s.step; lastVib = s.vib || lastVib; }
+    if (playing) { ctx.resume(); if (jump) nextT = Math.max(nextT, ctx.currentTime + 0.05); mySave = Date.now(); }
   });
 })();
