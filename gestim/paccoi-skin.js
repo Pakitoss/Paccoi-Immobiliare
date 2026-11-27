@@ -493,3 +493,55 @@
   setTimeout(show, 2500);
   addEventListener("pageshow", show);
 })();
+
+/* =========================================================
+   V3.11 — mappa degli immobili (stile Airbnb)
+   Pulsante "Mappa" accanto a Schede / Lista nei risultati e voce "Mappa" nel menu.
+   Il codice della mappa (gestim/paccoi-map.js) si carica solo quando serve.
+   ========================================================= */
+(function () {
+  function ready(fn) { document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", fn) : fn(); }
+  function safe(fn) { try { fn(); } catch (e) { if (window.console) console.warn("[paccoi mappa]", e); } }
+  var me = document.querySelector('script[src*="gestim/paccoi-skin.js"]');
+  var MAPJS = me ? me.src.replace(/paccoi-skin\.js.*$/, "paccoi-map.js") : "";
+  var MAPURL = "/immobili/?cf=yes#mappa";
+  var loading = null;
+  function withMap(fn) {
+    if (window.PKMap) return fn(window.PKMap);
+    if (!loading) loading = new Promise(function (ok, ko) { var s = document.createElement("script"); s.src = MAPJS; s.onload = ok; s.onerror = ko; document.head.appendChild(s); });
+    loading.then(function () { window.PKMap && fn(window.PKMap); });
+  }
+  ready(function () {
+    // voce "Mappa" nel menu (in alto, nella barra che compare scorrendo e nel menu del telefono)
+    safe(function () {
+      document.querySelectorAll("header .navbar-nav, .intestazione_scroll .navbar-nav, #menuNav .navbar-nav, #menuNav ul").forEach(function (nav) {
+        if (nav.querySelector(".pk-nav-mappa")) return;
+        var items = [].slice.call(nav.children).filter(function (x) { return x.tagName === "LI"; });
+        var after = items.filter(function (li) { return /immobili/i.test((li.querySelector("a") || {}).textContent || ""); })[0];
+        if (!after) return;
+        var li = document.createElement("li"); li.className = (after.className || "nav-item").replace(/\bdropdown\b|\bactive\b/g, "").trim() + " pk-nav-mappa";
+        var a = document.createElement("a"); a.className = ((after.querySelector("a") || {}).className || "nav-link").replace(/\bdropdown-toggle\b|\bactive\b/g, "").trim(); a.href = MAPURL; a.textContent = "Mappa";
+        li.appendChild(a); after.parentNode.insertBefore(li, after.nextSibling);
+      });
+    });
+    // pagina dei risultati
+    safe(function () {
+      var list = document.getElementById("listImmobili"); if (!list || !MAPJS) return;
+      document.body.classList.add("pk-risultati");
+      function addBtn() {
+        var lista = [].slice.call(list.querySelectorAll("a")).filter(function (a) { return /^\s*Lista\s*$/.test(a.textContent); })[0];
+        if (!lista || lista.parentNode.querySelector(".pk-mapbtn")) return;
+        var b = document.createElement("a"); b.href = "#mappa"; b.className = "pk-mapbtn" + (document.body.classList.contains("pk-mapmode") ? " on" : "");
+        b.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5 9 4Zm0 0v13m6-10.5v13"/></svg> Mappa';
+        b.addEventListener("click", function (e) { e.preventDefault(); b.classList.add("on"); withMap(function (M) { M.open(); }); });
+        lista.parentNode.insertBefore(b, lista.nextSibling);
+        [].slice.call(lista.parentNode.querySelectorAll("a")).forEach(function (a) { if (a !== b && /Schede|Lista/.test(a.textContent)) a.addEventListener("click", function () { if (window.PKMap) window.PKMap.close(); }); });
+      }
+      addBtn();
+      new MutationObserver(addBtn).observe(list, { childList: true, subtree: false });
+      var want = location.hash === "#mappa"; try { if (!want && sessionStorage.getItem("pk-vista") === "mappa") want = true; } catch (e) {}
+      if (want) withMap(function (M) { M.open(); });
+      addEventListener("hashchange", function () { if (location.hash === "#mappa") withMap(function (M) { M.open(); }); });
+    });
+  });
+})();

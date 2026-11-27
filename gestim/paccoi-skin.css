@@ -696,3 +696,92 @@ html body [class*=immobili_list] .icone, html body .boxdettagli .icone{border-to
 @keyframes pk-show{to{opacity:1}}
 html:not(.pk-ready) body{opacity:0;animation:pk-show .3s ease 2.5s forwards}
 html.pk-ready body{opacity:1;transition:opacity .25s ease}
+
+/* =========================================================
+   V3.11 — mappa degli immobili (stile Airbnb)
+   ========================================================= */
+html body .pk-mapview{display:none}
+html body.pk-mapmode #listImmobili{display:none!important}
+html body.pk-mapmode .pk-mapview{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,46%);align-items:start;width:100vw;margin:8px 0 0 calc(50% - 50vw);border-top:1px solid var(--pk-line);background:var(--pk-bg)}
+/* pulsante "Mappa" accanto a Schede / Lista */
+html body .pk-mapbtn{display:inline-flex!important;align-items:center;gap:7px;margin-left:10px;padding:7px 14px;border:1px solid var(--pk-line2);border-radius:6px;color:var(--pk-text)!important;font:600 14px var(--pk-sans);text-decoration:none!important;transition:background .2s,border-color .2s;vertical-align:middle}
+html body .pk-mapbtn:hover{border-color:var(--pk-gold);color:var(--pk-gold)!important}
+html body .pk-mapbtn.on{background:var(--pk-grad);color:var(--pk-ink)!important;border-color:transparent}
+/* colonna dell'elenco */
+html body .pk-mv-list{padding:26px clamp(18px,2.6vw,40px) 60px;min-width:0}
+html body .pk-mv-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+html body .pk-mv-count{font:400 15px var(--pk-sans);color:var(--pk-muted)}
+html body .pk-mv-count strong{font:500 26px/1.1 var(--pk-serif);color:var(--pk-heading);margin-right:6px}
+html body .pk-mv-load{color:var(--pk-gold)}
+html body .pk-mv-close{background:transparent;border:1px solid var(--pk-line2);color:var(--pk-text);border-radius:999px;padding:9px 18px;font:600 14px var(--pk-sans);cursor:pointer;white-space:nowrap}
+html body .pk-mv-close:hover{border-color:var(--pk-gold);color:var(--pk-gold)}
+html body .pk-mv-filters{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;padding:14px;margin-bottom:12px;background:var(--pk-bg2);border:1px solid var(--pk-line);border-radius:10px}
+html body .pk-seg{display:inline-flex;background:rgba(255,255,255,.05);border:1px solid rgba(233,225,215,.08);border-radius:8px;padding:3px;height:46px;align-items:center}
+html body .pk-seg button{background:transparent;border:0;color:var(--pk-text);font:600 14px var(--pk-sans);padding:0 14px;height:38px;border-radius:6px;cursor:pointer}
+html body .pk-seg button.on{background:var(--pk-grad);color:var(--pk-ink)}
+html body .pk-fsel{display:flex;flex-direction:column;gap:5px;margin:0;flex:1 1 130px;min-width:120px}
+html body .pk-fsel span{font:700 10.5px var(--pk-sans);letter-spacing:.12em;text-transform:uppercase;color:var(--pk-gold)}
+html body .pk-fsel select{appearance:none;-webkit-appearance:none;height:46px;width:100%;padding:0 32px 0 12px;border-radius:6px;border:1px solid rgba(233,225,215,.08);color:#e9e1d7;font:400 14.5px var(--pk-sans);cursor:pointer;
+  background:rgba(255,255,255,.055) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%23e8c08f' stroke-width='1.8'/%3E%3C/svg%3E") no-repeat right 12px center}
+html body .pk-fsel select:hover, html body .pk-fsel select:focus{border-color:rgba(232,192,143,.45);outline:none}
+html body .pk-fsel select option{background:#1d1610;color:#e9e1d7}
+html body .pk-mv-reset{background:transparent;border:0;color:var(--pk-gold);font:600 14px var(--pk-sans);text-decoration:underline;cursor:pointer;height:46px;padding:0 6px}
+html body .pk-mv-area{display:flex;align-items:center;gap:10px;margin:4px 2px 20px;font:400 14.5px var(--pk-sans);color:var(--pk-muted);cursor:pointer;user-select:none}
+html body .pk-mv-area input{width:18px;height:18px;accent-color:#d19a6a;margin:0;cursor:pointer}
+html body .pk-mv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:26px 22px}
+html body .pk-mv-empty{padding:40px 20px;text-align:center;color:var(--pk-muted);font:400 16px var(--pk-sans);border:1px dashed var(--pk-line2);border-radius:10px}
+/* schede dell'elenco e del fumetto sulla mappa */
+html body .pk-mcard{display:block;color:var(--pk-text)!important;text-decoration:none!important;border-radius:10px;overflow:hidden;background:var(--pk-bg2);border:1px solid var(--pk-line);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+html body .pk-mcard:hover, html body .pk-mcard.on{border-color:rgba(232,192,143,.55);box-shadow:0 18px 40px -22px rgba(0,0,0,.9);transform:translateY(-2px)}
+html body .pk-mcard-ph{position:relative;aspect-ratio:4/3;background:#2a2019;overflow:hidden}
+html body .pk-mcard-ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease}
+html body .pk-mcard:hover .pk-mcard-ph img{transform:scale(1.04)}
+html body .pk-mcard-tag{position:absolute;left:10px;top:10px;font:700 10.5px var(--pk-sans);letter-spacing:.12em;text-transform:uppercase;color:#fff;background:rgba(22,17,13,.72);backdrop-filter:blur(6px);padding:5px 9px;border-radius:4px}
+html body .pk-mcard-body{padding:14px 16px 16px}
+html body .pk-mcard-price{font:700 17px var(--pk-sans);color:var(--pk-heading);margin-bottom:4px}
+html body .pk-mcard-title{font:500 19px/1.2 var(--pk-serif);color:var(--pk-heading);margin-bottom:6px}
+html body .pk-mcard-place, html body .pk-mcard-specs{font:400 13.5px/1.45 var(--pk-sans);color:var(--pk-muted)}
+/* mappa */
+html body .pk-mv-mapbox{position:sticky;top:76px;height:calc(100vh - 76px);min-height:420px;border-left:1px solid var(--pk-line)}
+html body .pk-mv-map{position:absolute;inset:0;background:#1b1510}
+html body .pk-mv-map .leaflet-tile-pane{filter:invert(.92) hue-rotate(180deg) sepia(.32) saturate(.75) brightness(.92) contrast(.95)}
+html body .pk-mv-note{position:absolute;z-index:500;left:12px;bottom:12px;font:600 11.5px var(--pk-sans);letter-spacing:.06em;color:var(--pk-text);background:rgba(22,17,13,.78);backdrop-filter:blur(6px);padding:6px 10px;border-radius:999px;pointer-events:none}
+html body .pk-mv-here{position:absolute;z-index:500;left:50%;top:16px;transform:translateX(-50%);background:var(--pk-grad);color:var(--pk-ink);border:0;border-radius:999px;padding:10px 18px;font:700 14px var(--pk-sans);box-shadow:0 10px 24px -10px rgba(0,0,0,.8);cursor:pointer}
+html body .pk-mv-map .leaflet-control-zoom{border:0!important;box-shadow:0 10px 24px -12px rgba(0,0,0,.9)!important;margin:14px 14px 0 0!important}
+html body .pk-mv-map .leaflet-control-zoom a{background:#241b14!important;color:var(--pk-gold)!important;border-color:var(--pk-line)!important;width:38px!important;height:38px!important;line-height:36px!important;font-size:20px!important}
+html body .pk-mv-map .leaflet-control-zoom a:hover{background:#33271d!important}
+html body .pk-mv-map .leaflet-control-attribution{background:rgba(22,17,13,.7)!important;color:var(--pk-muted)!important;font-size:10.5px}
+html body .pk-mv-map .leaflet-control-attribution a{color:var(--pk-gold)!important}
+/* segnaposto con il prezzo */
+html body .pk-pin{background:none!important;border:0!important}
+html body .pk-pin span{position:absolute;left:0;top:0;transform:translate(-50%,-100%) translateY(-7px);display:block;white-space:nowrap;font:700 13px/1 var(--pk-sans);color:var(--pk-heading);background:#1f1812;border:1px solid rgba(232,192,143,.6);padding:7px 10px;border-radius:999px;box-shadow:0 6px 16px -6px rgba(0,0,0,.85);transition:transform .15s ease,background .15s ease}
+html body .pk-pin span::after{content:"";position:absolute;left:50%;bottom:-5px;width:8px;height:8px;background:inherit;border-right:1px solid rgba(232,192,143,.6);border-bottom:1px solid rgba(232,192,143,.6);transform:translateX(-50%) rotate(45deg)}
+html body .pk-pin.aff span{color:var(--pk-gold)}
+html body .pk-pin:hover span, html body .pk-pin.on span{background:#f0cc9c;color:var(--pk-ink);border-color:#f0cc9c;transform:translate(-50%,-100%) translateY(-7px) scale(1.08)}
+html body .pk-pin.on span::after, html body .pk-pin:hover span::after{border-color:#f0cc9c}
+html body .pk-cluster{background:none!important}
+html body .pk-cluster span{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:rgba(31,24,18,.92);border:2px solid var(--pk-gold);color:var(--pk-gold);font:700 14px var(--pk-sans);box-shadow:0 0 0 6px rgba(232,192,143,.16),0 8px 18px -8px rgba(0,0,0,.9)}
+html body .pk-cluster.big span{background:rgba(209,154,106,.95);color:var(--pk-ink);border-color:#f0cc9c}
+html body .pk-popup .leaflet-popup-content-wrapper{background:transparent;padding:0;border-radius:10px;box-shadow:0 24px 50px -18px rgba(0,0,0,.95)}
+html body .pk-popup .leaflet-popup-content{margin:0;width:270px!important}
+html body .pk-popup .leaflet-popup-tip{background:#281e16}
+html body .pk-popup .pk-mcard{border-color:rgba(232,192,143,.45)}
+html body .pk-popup a.leaflet-popup-close-button{z-index:3;top:8px!important;right:8px!important;width:28px!important;height:28px!important;line-height:26px!important;border-radius:50%;background:rgba(22,17,13,.75)!important;color:#fff!important;font-size:18px!important;text-align:center}
+html body .pk-mv-switch{display:none}
+/* tablet e telefono: elenco a tutta larghezza, la mappa si apre con un pulsante */
+@media (max-width:991px){
+  html body.pk-mapmode .pk-mapview{display:block}
+  html body .pk-mv-mapbox{display:none}
+  html body.pk-mv-showmap .pk-mv-mapbox{display:block;position:fixed;z-index:1040;left:0;right:0;top:0;bottom:0;height:auto;border:0}
+  html body.pk-mv-showmap .pk-mv-list{visibility:hidden;height:0;overflow:hidden;padding:0}
+  html body.pk-mapmode .pk-mv-switch{display:block;position:fixed;z-index:1050;left:50%;bottom:22px;transform:translateX(-50%);background:#1f1812;color:var(--pk-heading);border:1px solid rgba(232,192,143,.6);border-radius:999px;padding:13px 22px;font:700 15px var(--pk-sans);box-shadow:0 14px 30px -10px rgba(0,0,0,.9);cursor:pointer}
+  html body .pk-mv-grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+  html body .pk-mv-head{flex-wrap:wrap}
+  html body .pk-mv-map .leaflet-control-zoom{display:none}
+  html body .pk-popup .leaflet-popup-content{width:240px!important}
+}
+@media (max-width:575px){
+  html body .pk-fsel{flex:1 1 calc(50% - 10px);min-width:0}
+  html body .pk-seg{width:100%}
+  html body .pk-seg button{flex:1}
+}
