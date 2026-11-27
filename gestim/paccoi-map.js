@@ -37,6 +37,8 @@
     [].slice.call(d.childNodes).forEach(function (n) { var t = (n.textContent || "").replace(/\s+/g, " ").trim(); if (t) parts.push(t); });
     return parts.join(" · ");
   }
+  function town(it) { return String(it.place || "").split(" · ")[0]; }
+  function inZona(it, v) { return v.slice(0, 2) === "c:" ? town(it) === v.slice(2) : it.place === v.slice(2); }
   function parse(html) {
     var d = new DOMParser().parseFromString(html, "text/html"), out = [];
     [].slice.call(d.querySelectorAll(".immobili_listgriglia, .immobili_listlista")).forEach(function (c) {
@@ -62,7 +64,7 @@
   var URL1 = "/immobili/business3/";
   function page(p) { return fetch(URL1 + (p > 1 ? "?p=" + p : ""), { credentials: "same-origin" }).then(function (r) { return r.text(); }).then(parse); }
   function load(onChunk) {
-    var key = "pk-mappa:" + location.search, cached = null;
+    var key = "pk-mappa2:" + location.search, cached = null;
     try { cached = JSON.parse(sessionStorage.getItem(key) || "null"); } catch (e) {}
     if (cached && Date.now() - cached.at < 10 * 60 * 1000) { onChunk(cached.items, cached.items.length, cached.items.length); return Promise.resolve(cached.items); }
     var all = [];
@@ -186,9 +188,26 @@
     }
     function fillSelects() {
       var zs = {}, ts = {};
-      S.items.forEach(function (it) { if (it.place && it.pos) zs[it.place] = (zs[it.place] || 0) + 1; if (it.type) ts[it.type] = (ts[it.type] || 0) + 1; });
-      fill(w.querySelector('select[data-f="zona"]'), zs, "Tutte le zone");
+      S.items.forEach(function (it) {
+        if (it.place && it.pos) { var t = town(it); zs[t] = zs[t] || { n: 0, z: {} }; zs[t].n++; if (it.place !== t) zs[t].z[it.place] = (zs[t].z[it.place] || 0) + 1; }
+        if (it.type) ts[it.type] = (ts[it.type] || 0) + 1;
+      });
+      fillZone(w.querySelector('select[data-f="zona"]'), zs);
       fill(w.querySelector('select[data-f="tipo"]'), ts, "Tutte");
+    }
+    function fillZone(sel, zs) {
+      var cur = sel.value, towns = Object.keys(zs).sort(function (a, b) { return a.localeCompare(b, "it"); }), n = 0;
+      towns.forEach(function (t) { n += 1 + Object.keys(zs[t].z).length; });
+      if (sel.__n === n) return; sel.__n = n;
+      sel.innerHTML = ""; var o0 = el("option", null, "Tutte le zone"); o0.value = ""; sel.appendChild(o0);
+      towns.forEach(function (t) {
+        var zk = Object.keys(zs[t].z).sort(function (a, b) { return a.localeCompare(b, "it"); });
+        var g = document.createElement("optgroup"); g.label = t;
+        var o = el("option", null, (zk.length ? "Tutto il comune" : t) + " (" + zs[t].n + ")"); o.value = "c:" + t; g.appendChild(o);
+        zk.forEach(function (k) { var oz = el("option", null, k.slice(t.length + 3) + " (" + zs[t].z[k] + ")"); oz.value = "z:" + k; g.appendChild(oz); });
+        sel.appendChild(g);
+      });
+      sel.value = cur;
     }
     function fill(sel, obj, first) {
       var cur = sel.value, keys = Object.keys(obj).sort(function (a, b) { return a.localeCompare(b, "it"); });
@@ -200,7 +219,7 @@
     function pass(it) {
       var f = S.f;
       if (f.c && it.contract !== f.c) return false;
-      if (f.zona && it.place !== f.zona) return false;
+      if (f.zona && !inZona(it, f.zona)) return false;
       if (f.tipo && it.type !== f.tipo) return false;
       if (f.max && (it.price == null || it.price > +f.max)) return false;
       if (f.cam && (it.camere || 0) < +f.cam) return false;
@@ -253,7 +272,7 @@
     w.querySelectorAll(".pk-seg button").forEach(function (b) { b.addEventListener("click", function () { w.querySelectorAll(".pk-seg button").forEach(function (x) { x.classList.toggle("on", x === b); }); S.f.c = b.getAttribute("data-c"); draw(true); }); });
     w.querySelectorAll("select[data-f]").forEach(function (s) { s.addEventListener("change", function () {
       S.f[s.getAttribute("data-f")] = s.value;
-      if (s.getAttribute("data-f") === "zona") { if (s.value) { var pts = S.items.filter(function (it) { return it.pos && it.place === s.value; }).map(function (it) { return it.pos; }); if (pts.length) map.fitBounds(L.latLngBounds(pts), { padding: [60, 60], maxZoom: 15 }); } else fitAll(); }
+      if (s.getAttribute("data-f") === "zona") { if (s.value) { var pts = S.items.filter(function (it) { return it.pos && inZona(it, s.value); }).map(function (it) { return it.pos; }); if (pts.length) map.fitBounds(L.latLngBounds(pts), { padding: [60, 60], maxZoom: 15 }); } else fitAll(); }
       draw();
     }); });
     reset.addEventListener("click", function () { S.f = { c: "", zona: "", tipo: "", max: "", cam: "" }; w.querySelectorAll("select[data-f]").forEach(function (s) { s.value = ""; }); w.querySelectorAll(".pk-seg button").forEach(function (x, i) { x.classList.toggle("on", i === 0); }); fitAll(); draw(true); });
