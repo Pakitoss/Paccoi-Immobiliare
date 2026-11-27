@@ -805,3 +805,161 @@
     }
   });
 })();
+
+/* =========================================================
+   V3.16 — "Quanto vale la tua casa?" in primo piano
+   Modulo breve (comune, tipologia, metri quadri...) in home e nella pagina
+   Valutazione professionale: porta al modulo contatti di Gestim già compilato.
+   Il modulo di Gestim resta quello di sempre (dati, privacy, invio).
+   ========================================================= */
+(function () {
+  function ready(fn) { document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", fn) : fn(); }
+  function safe(fn) { try { fn(); } catch (e) { if (window.console) console.warn("[paccoi valutazione]", e); } }
+  var URL_V = "/valutazione-professionale/#valuta", KEY = "pk-valuta";
+  var path = location.pathname.replace(/\/?$/, "/");
+  function en() { return document.documentElement.lang === "en"; }
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function txt(tag, cls, t) { var e = document.createElement(tag); if (cls) e.className = cls; e.textContent = t; return e; }
+  var HOUSE = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5.5h4V20"/></svg>';
+  var ARROW = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  var TIPI = ["Appartamento", "Villa / casa indipendente", "Casale / rustico", "Attico", "Terreno", "Locale commerciale / ufficio", "Altro"];
+  var STATI = ["Buono / abitabile", "Nuovo o ristrutturato", "Da ristrutturare"];
+
+  function towns() {
+    var s = document.querySelector('#motoreRicerca select[name="Comune[]"]'), out = [];
+    if (s) [].forEach.call(s.options, function (o) { var t = o.text.trim(); if (o.value && t && out.indexOf(t) < 0) out.push(t); });
+    if (!out.length) out = ["San Benedetto del Tronto", "Grottammare", "Cupra Marittima", "Monteprandone", "Acquaviva Picena", "Ripatransone", "Martinsicuro", "Ascoli Piceno"];
+    return out.sort(function (a, b) { return a.localeCompare(b, "it"); });
+  }
+  function field(label, input) { var l = el("label", "pk-vf"); l.appendChild(txt("span", null, label)); l.appendChild(input); return l; }
+  function select(name, list, first) {
+    var s = document.createElement("select"); s.name = name;
+    var o0 = txt("option", null, first); o0.value = ""; s.appendChild(o0);
+    list.forEach(function (v) { var o = txt("option", null, v); o.value = v; s.appendChild(o); });
+    return s;
+  }
+  // il modulo breve: compact = versione in una riga per la home
+  function form(compact) {
+    var f = el("form", "pk-vform" + (compact ? " pk-vform-row" : "")); f.noValidate = true;
+    var dl = document.createElement("datalist"); dl.id = "pk-vtowns-" + (compact ? "r" : "f");
+    towns().forEach(function (t) { var o = document.createElement("option"); o.value = t; dl.appendChild(o); });
+    var comune = document.createElement("input"); comune.name = "comune"; comune.setAttribute("list", dl.id); comune.autocomplete = "address-level2"; comune.placeholder = "Es. San Benedetto del Tronto"; comune.required = true;
+    var tipo = select("tipo", TIPI, "Scegli…"); tipo.required = true;
+    var mq = document.createElement("input"); mq.name = "mq"; mq.type = "number"; mq.min = "10"; mq.max = "100000"; mq.inputMode = "numeric"; mq.placeholder = "Es. 90";
+    f.appendChild(field("Comune", comune)); f.appendChild(dl);
+    f.appendChild(field("Tipologia", tipo));
+    f.appendChild(field("Metri quadri", mq));
+    if (!compact) {
+      var zona = document.createElement("input"); zona.name = "zona"; zona.placeholder = "Via o quartiere (facoltativo)";
+      var stato = select("stato", STATI, "Scegli…");
+      var cam = select("camere", ["1", "2", "3", "4", "5+"], "—");
+      f.appendChild(field("Indirizzo o zona", zona));
+      var two = el("div", "pk-vf-two"); two.appendChild(field("Stato", stato)); two.appendChild(field("Camere", cam)); f.appendChild(two);
+    }
+    var err = txt("p", "pk-vf-err", ""); err.hidden = true;
+    var b = el("button", "pk-btn pk-btn-gold pk-vf-go", "<span>" + (compact ? "Valuta ora" : "Continua") + "</span>" + ARROW); b.type = "submit";
+    f.appendChild(b); f.appendChild(err);
+    f.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!comune.value.trim() || !tipo.value) { err.textContent = en() ? "Please enter the town and the property type." : "Inserisci il comune e la tipologia."; err.hidden = false; (comune.value.trim() ? tipo : comune).focus(); return; }
+      var d = {}; [].forEach.call(f.elements, function (x) { if (x.name && x.value) d[x.name] = x.value.trim(); });
+      try { sessionStorage.setItem(KEY, JSON.stringify(d)); } catch (e2) {}
+      location.href = "/contatti/#valuta";
+    });
+    return f;
+  }
+  function message(d) {
+    var E = en(), L = E ? { t: "Free valuation request", c: "Town", y: "Type", m: "Floor area", z: "Address or area", s: "Condition", r: "Bedrooms", e: "Please contact me for a free valuation of my property. Thank you!" }
+      : { t: "Richiesta di valutazione gratuita", c: "Comune", y: "Tipologia", m: "Metri quadri", z: "Indirizzo o zona", s: "Stato", r: "Camere", e: "Vorrei essere ricontattato per una valutazione gratuita del mio immobile. Grazie!" };
+    var rows = [L.t + ":"];
+    if (d.comune) rows.push("- " + L.c + ": " + d.comune);
+    if (d.tipo) rows.push("- " + L.y + ": " + d.tipo);
+    if (d.mq) rows.push("- " + L.m + ": " + d.mq + " mq");
+    if (d.zona) rows.push("- " + L.z + ": " + d.zona);
+    if (d.stato) rows.push("- " + L.s + ": " + d.stato);
+    if (d.camere) rows.push("- " + L.r + ": " + d.camere);
+    rows.push(""); rows.push(L.e);
+    return rows.join("\n");
+  }
+
+  ready(function () {
+    // menu: "Quanto vale casa?" in evidenza (in alto, nella barra che scorre e nel menu del telefono)
+    safe(function () {
+      document.querySelectorAll("header .navbar-nav, .intestazione_scroll .navbar-nav, .menuNav .navbar-nav").forEach(function (nav) {
+        if (nav.querySelector(".pk-nav-valuta")) return;
+        var items = [].slice.call(nav.children).filter(function (x) { return x.tagName === "LI"; });
+        var ref = items.filter(function (li) { return /contatti/i.test((li.querySelector("a") || {}).textContent || ""); })[0] || items[items.length - 1];
+        if (!ref) return;
+        var li = document.createElement("li"); li.className = (ref.className || "nav-item").replace(/\bdropdown\b|\bactive\b/g, "").trim() + " pk-nav-valuta";
+        var a = document.createElement("a"); a.className = ((ref.querySelector("a") || {}).className || "nav-link").replace(/\bdropdown-toggle\b|\bactive\b/g, "").trim(); a.href = URL_V;
+        a.innerHTML = HOUSE + "<span>Quanto vale casa?</span>";
+        li.appendChild(a); ref.parentNode.insertBefore(li, ref);
+      });
+    });
+
+    // home: fascia subito dopo la foto grande e la ricerca
+    safe(function () {
+      var hs = document.querySelector("main > .homeslide"); if (!hs || document.querySelector(".pk-vband")) return;
+      var after = hs; var mr = document.getElementById("motoreRicerca");
+      if (mr) { var p = mr; while (p.parentElement && p.parentElement.tagName !== "MAIN" && p.parentElement !== document.body) p = p.parentElement; if (p.parentElement && p.parentElement.tagName === "MAIN" && (hs.compareDocumentPosition(p) & 4)) after = p; }
+      var band = el("section", "pk-vband");
+      var inner = el("div", "pk-vband-in");
+      var left = el("div", "pk-vband-text");
+      left.appendChild(txt("div", "pk-eyebrow", "Valutazione gratuita"));
+      left.appendChild(txt("h2", "pk-vband-h", "Quanto vale la tua casa?"));
+      left.appendChild(txt("p", null, "Una stima professionale, gratuita e senza impegno, da chi conosce il mercato della costa e dell'entroterra da oltre 20 anni."));
+      inner.appendChild(left);
+      inner.appendChild(form(true));
+      band.appendChild(inner);
+      after.parentNode.insertBefore(band, after.nextSibling);
+    });
+
+    // pagina Valutazione professionale: modulo in primo piano
+    safe(function () {
+      if (path !== "/valutazione-professionale/") return;
+      var sec = document.querySelector("main .sectionpage"), h1 = sec && sec.querySelector("h1"), testo = sec && sec.querySelector(".testo");
+      if (!sec || !h1 || sec.querySelector(".pk-vpage")) return;
+      var box = el("div", "pk-vpage"); box.id = "valuta";
+      var left = el("div", "pk-vpage-text");
+      left.appendChild(txt("div", "pk-eyebrow", "Valutazione gratuita"));
+      left.appendChild(txt("h2", "pk-vpage-h", "Quanto vale la tua casa?"));
+      left.appendChild(txt("p", "pk-vpage-lead", "Raccontaci il tuo immobile in pochi secondi: ti ricontattiamo noi per una valutazione professionale, gratuita e senza impegno."));
+      var ul = el("ul", "pk-why-ticks pk-vpage-ticks");
+      ["Gratuita e senza impegno", "Analisi accurata del mercato e della zona", "Verifica dei documenti dell'immobile", "Oltre 20 anni di esperienza sul territorio"].forEach(function (t) {
+        var li = el("li", null, '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>'); li.appendChild(txt("span", null, t)); ul.appendChild(li);
+      });
+      left.appendChild(ul);
+      box.appendChild(left);
+      var card = el("div", "pk-why-card pk-vpage-card");
+      card.appendChild(txt("div", "pk-vpage-step", "Passo 1 di 2 · Il tuo immobile"));
+      card.appendChild(form(false));
+      card.appendChild(txt("p", "pk-vpage-note", "Al passo successivo inserisci nome e recapiti e invii la richiesta."));
+      box.appendChild(card);
+      h1.parentNode.insertBefore(box, testo || h1.nextSibling);
+      if (testo) testo.classList.add("pk-vpage-more");
+      if (location.hash === "#valuta") setTimeout(function () { box.scrollIntoView({ behavior: "smooth", block: "start" }); }, 350);
+    });
+
+    // contatti: modulo di Gestim già compilato con i dati della valutazione
+    safe(function () {
+      if (path !== "/contatti/") return;
+      var d = null; try { d = JSON.parse(sessionStorage.getItem(KEY) || "null"); } catch (e) {}
+      var f = document.getElementById("formContatti"); if (!d || !f) return;
+      var note = f.querySelector('textarea[name="note"]'); if (!note) return;
+      function fill() { note.value = message(d); }
+      fill();
+      // se l'utente cambia lingua dopo, il messaggio segue la lingua
+      new MutationObserver(function () { if (!note.__edited) fill(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+      note.addEventListener("input", function () { note.__edited = true; });
+      f.addEventListener("submit", function () { try { sessionStorage.removeItem(KEY); } catch (e) {} });
+      var bar = el("div", "pk-vnote");
+      bar.appendChild(el("div", "pk-vnote-ico", HOUSE));
+      var t = el("div");
+      t.appendChild(txt("b", null, "Ultimo passo per la tua valutazione gratuita"));
+      t.appendChild(txt("span", null, "Abbiamo già scritto i dati del tuo immobile nel messaggio: aggiungi nome e recapiti, accetta la privacy e premi Invia."));
+      bar.appendChild(t);
+      f.parentNode.insertBefore(bar, f);
+      setTimeout(function () { bar.scrollIntoView({ behavior: "smooth", block: "center" }); var n = f.querySelector('input[name="nome"]'); if (n) try { n.focus({ preventScroll: true }); } catch (e) {} }, 400);
+    });
+  });
+})();
