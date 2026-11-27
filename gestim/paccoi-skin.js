@@ -713,8 +713,9 @@
           var hrs = el("div", "pk-hours");
           hrs.appendChild(el("div", "pk-hours-h", svg("clock") + "<span>Orari di apertura</span>"));
           var tb = el("dl");
-          if (win) { tb.appendChild(txt("dt", null, "Orario invernale")); tb.appendChild(txt("dd", null, win.trim())); }
-          if (sum) { tb.appendChild(txt("dt", null, "Orario estivo")); tb.appendChild(txt("dd", null, sum.trim())); }
+          function slots(v) { var dd = document.createElement("dd"); v.trim().split(/\s*\/\s*/).forEach(function (x) { dd.appendChild(txt("span", null, x)); }); return dd; }
+          if (win) { tb.appendChild(txt("dt", null, "Orario invernale")); tb.appendChild(slots(win)); }
+          if (sum) { tb.appendChild(txt("dt", null, "Orario estivo")); tb.appendChild(slots(sum)); }
           hrs.appendChild(tb);
           if (note) hrs.appendChild(txt("p", "pk-hours-note", note.textContent.trim()));
           card.appendChild(hrs);
