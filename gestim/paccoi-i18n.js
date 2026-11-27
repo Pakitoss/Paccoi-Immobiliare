@@ -328,12 +328,27 @@
     function done() { note.textContent = "Automatic translation of the Italian description."; btn.remove(); }
     function run(T) {
       btn.disabled = true; btn.textContent = "Translating…";
-      var blocks = [].slice.call(testo.querySelectorAll("p, li")).filter(function (p) { return p.textContent.trim(); });
-      if (!blocks.length) blocks = [testo];
+      // blocchi di testo: paragrafi, voci di elenco e testo sciolto tra un blocco e l'altro
+      var blocks = [], group = [];
+      function flushGroup(parent, before) {
+        if (!group.length) return;
+        var txt = group.map(function (n) { return n.nodeName === "BR" ? "\n" : n.textContent; }).join("").replace(/[ \t]+/g, " ").trim();
+        if (txt) { var sp = document.createElement("div"); parent.insertBefore(sp, before || null); group.forEach(function (n) { sp.appendChild(n); }); blocks.push(sp); }
+        group = [];
+      }
+      function collect(el) {
+        [].slice.call(el.childNodes).forEach(function (n) {
+          if (n.nodeType === 1 && /^(UL|OL|DIV|BLOCKQUOTE|TABLE|TBODY|TR)$/.test(n.tagName)) { flushGroup(el, n); collect(n); }
+          else if (n.nodeType === 1 && /^(P|LI|H\d|TD)$/.test(n.tagName)) { flushGroup(el, n); if (n.textContent.trim()) blocks.push(n); }
+          else group.push(n);
+        });
+        flushGroup(el, null);
+      }
+      collect(testo);
       var chain = Promise.resolve();
       blocks.forEach(function (p) {
         chain = chain.then(function () {
-          var src = p.innerText.trim(); if (!src) return;
+          var src = (p.innerText || p.textContent).trim(); if (!src) return;
           return T.translate(src).then(function (out) { p.textContent = out; p.style.whiteSpace = "pre-line"; });
         });
       });
