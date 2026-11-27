@@ -843,7 +843,7 @@
     var f = el("form", "pk-vform" + (compact ? " pk-vform-row" : "")); f.noValidate = true;
     var dl = document.createElement("datalist"); dl.id = "pk-vtowns-" + (compact ? "r" : "f");
     towns().forEach(function (t) { var o = document.createElement("option"); o.value = t; dl.appendChild(o); });
-    var comune = document.createElement("input"); comune.name = "comune"; comune.setAttribute("list", dl.id); comune.autocomplete = "address-level2"; comune.placeholder = "Es. San Benedetto del Tronto"; comune.required = true;
+    var comune = document.createElement("input"); comune.name = "comune"; comune.setAttribute("list", dl.id); comune.autocomplete = "address-level2"; comune.placeholder = "Es. Grottammare"; comune.required = true;
     var tipo = select("tipo", TIPI, "Scegli…"); tipo.required = true;
     var mq = document.createElement("input"); mq.name = "mq"; mq.type = "number"; mq.min = "10"; mq.max = "100000"; mq.inputMode = "numeric"; mq.placeholder = "Es. 90";
     f.appendChild(field("Comune", comune)); f.appendChild(dl);
@@ -857,7 +857,7 @@
       var two = el("div", "pk-vf-two"); two.appendChild(field("Stato", stato)); two.appendChild(field("Camere", cam)); f.appendChild(two);
     }
     var err = txt("p", "pk-vf-err", ""); err.hidden = true;
-    var b = el("button", "pk-btn pk-btn-gold pk-vf-go", "<span>" + (compact ? "Valuta ora" : "Continua") + "</span>" + ARROW); b.type = "submit";
+    var b = el("button", "pk-btn pk-btn-gold pk-vf-go", "<span>" + (compact ? "Valuta ora" : "Continua") + "</span>" + (compact ? "" : ARROW)); b.type = "submit";
     f.appendChild(b); f.appendChild(err);
     f.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -885,7 +885,10 @@
   ready(function () {
     // menu: "Quanto vale casa?" in evidenza (in alto, nella barra che scorre e nel menu del telefono)
     safe(function () {
-      document.querySelectorAll("header .navbar-nav, .intestazione_scroll .navbar-nav, .menuNav .navbar-nav").forEach(function (nav) {
+      // barra in alto (telefono / email): link dorato, visibile in ogni pagina
+      var top = document.querySelector("header#headerPage .recapititop");
+      if (top && !top.querySelector(".pk-top-valuta")) { var ta = el("a", "pk-top-valuta", HOUSE + "<span>Quanto vale la tua casa?</span><b>Valutazione gratuita</b>"); ta.href = URL_V; top.appendChild(ta); }
+      document.querySelectorAll(".intestazione_scroll .navbar-nav, .menuNav .navbar-nav").forEach(function (nav) {
         if (nav.querySelector(".pk-nav-valuta")) return;
         var items = [].slice.call(nav.children).filter(function (x) { return x.tagName === "LI"; });
         var ref = items.filter(function (li) { return /contatti/i.test((li.querySelector("a") || {}).textContent || ""); })[0] || items[items.length - 1];
