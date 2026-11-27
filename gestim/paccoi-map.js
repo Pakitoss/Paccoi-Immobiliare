@@ -162,7 +162,7 @@
 
   function init(w) {
     var mapEl = w.querySelector(".pk-mv-map");
-    var map = L.map(mapEl, { zoomControl: false, scrollWheelZoom: true, worldCopyJump: true, minZoom: 5, maxZoom: 17 }).setView([42.95, 13.85], 10);
+    var map = L.map(mapEl, { zoomControl: false, scrollWheelZoom: true, worldCopyJump: true, minZoom: 5, maxZoom: 17 }).setView([42.98, 13.72], 9);
     L.control.zoom({ position: "topright", zoomInTitle: "Avvicina", zoomOutTitle: "Allontana" }).addTo(map);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\" rel=\"noopener\">OpenStreetMap</a>" }).addTo(map);
     var cl = L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 48, spiderfyOnMaxZoom: true, chunkedLoading: true,
@@ -186,7 +186,9 @@
         mk.on("click", function () { highlight(it.id); });
         mk.__it = it; S.markers[it.id] = mk; ms.push(mk);
       });
-      markersDirty = true;
+      // durante il caricamento i nuovi segnaposto si aggiungono a quelli già presenti (niente lampeggio)
+      var anyF = S.f.c || S.f.zona || S.f.tipo || S.f.max || S.f.cam;
+      if (!anyF && !markersDirty && cl._map) { var ok = ms.filter(function (m) { return pass(m.__it); }); if (ok.length) cl.addLayers(ok); } else markersDirty = true;
       fillSelects();
     }
     function fillSelects() {
@@ -278,10 +280,15 @@
       var la = pts.map(function (p) { return p[0]; }).sort(function (a, b) { return a - b; }), lo = pts.map(function (p) { return p[1]; }).sort(function (a, b) { return a - b; });
       var mla = la[Math.floor(la.length / 2)], mlo = lo[Math.floor(lo.length / 2)];
       var near = pts.filter(function (p) { return Math.abs(p[0] - mla) < 1.2 && Math.abs(p[1] - mlo) < 1.6; });
-      map.fitBounds(L.latLngBounds(near.length ? near : pts), { padding: [40, 40], maxZoom: 14 });
+      go(L.latLngBounds(near.length ? near : pts), 40, 14);
+    }
+    // spostamenti morbidi della mappa
+    function go(bounds, pad, maxZ) {
+      if (!map.getContainer().offsetWidth) { map.fitBounds(bounds, { padding: [pad, pad], maxZoom: maxZ, animate: false }); return; }
+      map.flyToBounds(bounds, { padding: [pad, pad], maxZoom: maxZ, duration: 0.8, easeLinearity: 0.3 });
     }
 
-    function zoomZona(v) { var pts = S.items.filter(function (it) { return it.pos && inZona(it, v); }).map(function (it) { return it.pos; }); if (pts.length) map.fitBounds(L.latLngBounds(pts), { padding: [60, 60], maxZoom: 15 }); }
+    function zoomZona(v) { var pts = S.items.filter(function (it) { return it.pos && inZona(it, v); }).map(function (it) { return it.pos; }); if (pts.length) go(L.latLngBounds(pts), 60, 15); }
     // filtri
     w.querySelectorAll(".pk-seg button").forEach(function (b) { b.addEventListener("click", function () { w.querySelectorAll(".pk-seg button").forEach(function (x) { x.classList.toggle("on", x === b); }); S.f.c = b.getAttribute("data-c"); draw(true); }); });
     w.querySelectorAll("select[data-f]").forEach(function (s) { s.addEventListener("change", function () {

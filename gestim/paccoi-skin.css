@@ -817,3 +817,4 @@ html body .pk-mv-map .leaflet-marker-pane>*{animation:pkFade .3s ease both}
 html body:not(.pk-mapmode) #listImmobili{animation:pkFade .35s ease both}
 @media (max-width:991px){ html body.pk-mv-showmap .pk-mv-mapbox{animation:pkFade .3s ease both} }
 @media (prefers-reduced-motion:reduce){ html body.pk-mapmode .pk-mapview, html body .pk-mv-map .leaflet-marker-pane>*, html body:not(.pk-mapmode) #listImmobili{animation:none} }
+html{background:#1f1812}
