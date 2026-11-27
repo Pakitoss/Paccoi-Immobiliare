@@ -728,7 +728,11 @@
         var car = testo.querySelector(".carousel");
         var media = el("div", "pk-why-media"); if (car) media.appendChild(car); grid.appendChild(media);
         body.appendChild(grid);
-        var first = car && car.querySelector(".carousel-item img"); if (first) photo = first.getAttribute("src") || first.getAttribute("data-src") || photo;
+        var first = car && car.querySelector(".carousel-item img");
+        if (first) {
+          var srcset = (first.parentNode.querySelector("source[srcset]") || first).getAttribute("srcset") || "";
+          photo = first.currentSrc || first.getAttribute("src") || first.getAttribute("data-src") || srcset.split(/\s|,/)[0] || photo;
+        }
       }
 
       if (kind === "compravendite" && ps.length >= 4) {
