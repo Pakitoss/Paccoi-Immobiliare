@@ -168,7 +168,7 @@
   const ME = Math.random().toString(36).slice(2);
   const bc = ("BroadcastChannel" in window) ? new BroadcastChannel("paccoi-musica") : null;
   const claim = () => { yielded = false; if (bc) bc.postMessage({ t: "play", id: ME }); };
-  function savePos(force) { try { if (ctx && timer && !yielded && (force === true || !document.hidden)) { mySave = Date.now(); store.setItem(POS, JSON.stringify({ step: step, vib: lastVib, at: mySave })); } } catch (e) {} }
+  function savePos(force) { try { if (ctx && timer && !yielded && ctx.state === "running" && (force === true || !document.hidden)) { mySave = Date.now(); store.setItem(POS, JSON.stringify({ step: step, vib: lastVib, at: mySave })); } } catch (e) {} }
   function readPos() { try { const s = JSON.parse(store.getItem(POS) || "null"); return s && typeof s.step === "number" && Date.now() - s.at < 30 * 60 * 1000 ? s : null; } catch (e) { return null; } }
   function loadPos() { const s = readPos(); if (s) { step = s.step; lastVib = s.vib || lastVib; return true; } return false; }
   addEventListener("pagehide", () => savePos(true));
@@ -184,7 +184,9 @@
     master.gain.cancelScheduledValues(ctx.currentTime);
     master.gain.setValueAtTime(master.gain.value, ctx.currentTime);
     master.gain.linearRampToValueAtTime(0.55, ctx.currentTime + fade);
-    playing = true; ui(); claim();
+    playing = true; ui();
+    // si prende la musica solo quando il browser la lascia davvero suonare
+    const p = ctx.resume(); if (p && p.then) p.then(() => { if (ctx.state === "running") claim(); }); else if (ctx.state === "running") claim();
   }
   function stop() {
     if (!ctx) return;
@@ -247,7 +249,8 @@
     yielded = false;
     if (!playing) { start(); return; }
     ctx.resume(); if (jump) nextT = Math.max(nextT, ctx.currentTime + 0.05);
-    mySave = Date.now(); claim();
+    mySave = Date.now();
+    const p = ctx.resume(); if (p && p.then) p.then(() => { if (ctx.state === "running") claim(); });
   }
   document.addEventListener("visibilitychange", () => {
     if (!ctx) return;
