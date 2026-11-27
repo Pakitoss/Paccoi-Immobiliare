@@ -226,12 +226,14 @@
     var drawT = 0, markersDirty = true;
     function draw(markersToo) { if (markersToo) markersDirty = true; clearTimeout(drawT); drawT = setTimeout(drawNow, 60); }
     function drawNow() {
-      var b = map.getBounds().pad(0.02), shown = [], inMap = [];
+      // sul telefono, finché la mappa è nascosta, l'elenco mostra tutti gli immobili filtrati
+      var vis = map.getContainer().offsetWidth > 0, useArea = S.area && vis;
+      var b = vis ? map.getBounds().pad(0.02) : null, shown = [], inMap = [];
       S.items.forEach(function (it) {
         if (!pass(it)) return;
         var mk = S.markers[it.id];
         if (mk) inMap.push(mk);
-        if (!S.area || (it.pos && b.contains(it.pos))) shown.push(it);
+        if (!useArea || (it.pos && b.contains(it.pos))) shown.push(it);
       });
       // i segnaposto si ridisegnano solo quando cambiano i filtri (non quando si sposta la mappa)
       if (markersDirty) { markersDirty = false; map.closePopup(); cl.clearLayers(); cl.addLayers(inMap); }
@@ -243,7 +245,7 @@
       var n = shown.length;
       count.innerHTML = "";
       count.appendChild(el("strong", null, n === 1 ? "1 immobile" : n + " immobili"));
-      count.appendChild(document.createTextNode(S.area ? " nell'area della mappa" : " in elenco"));
+      count.appendChild(document.createTextNode(useArea ? " nell'area della mappa" : " in elenco"));
       if (loading) count.appendChild(el("span", "pk-mv-load", " · carico " + S.items.length + (total ? " di " + total : "") + "…"));
       empty.hidden = !!n || loading;
     }
@@ -268,14 +270,15 @@
       map.fitBounds(L.latLngBounds(near.length ? near : pts), { padding: [40, 40], maxZoom: 14 });
     }
 
+    function zoomZona(v) { var pts = S.items.filter(function (it) { return it.pos && inZona(it, v); }).map(function (it) { return it.pos; }); if (pts.length) map.fitBounds(L.latLngBounds(pts), { padding: [60, 60], maxZoom: 15 }); }
     // filtri
     w.querySelectorAll(".pk-seg button").forEach(function (b) { b.addEventListener("click", function () { w.querySelectorAll(".pk-seg button").forEach(function (x) { x.classList.toggle("on", x === b); }); S.f.c = b.getAttribute("data-c"); draw(true); }); });
     w.querySelectorAll("select[data-f]").forEach(function (s) { s.addEventListener("change", function () {
-      S.f[s.getAttribute("data-f")] = s.value;
-      if (s.getAttribute("data-f") === "zona") { if (s.value) { var pts = S.items.filter(function (it) { return it.pos && inZona(it, s.value); }).map(function (it) { return it.pos; }); if (pts.length) map.fitBounds(L.latLngBounds(pts), { padding: [60, 60], maxZoom: 15 }); } else fitAll(); }
+      S.f[s.getAttribute("data-f")] = s.value; if (!map.getContainer().offsetWidth) S.seen = false;
+      if (s.getAttribute("data-f") === "zona") { if (s.value) zoomZona(s.value); else fitAll(); }
       draw(true);
     }); });
-    reset.addEventListener("click", function () { S.f = { c: "", zona: "", tipo: "", max: "", cam: "" }; w.querySelectorAll("select[data-f]").forEach(function (s) { s.value = ""; }); w.querySelectorAll(".pk-seg button").forEach(function (x, i) { x.classList.toggle("on", i === 0); }); fitAll(); draw(true); });
+    reset.addEventListener("click", function () { if (!map.getContainer().offsetWidth) S.seen = false; S.f = { c: "", zona: "", tipo: "", max: "", cam: "" }; w.querySelectorAll("select[data-f]").forEach(function (s) { s.value = ""; }); w.querySelectorAll(".pk-seg button").forEach(function (x, i) { x.classList.toggle("on", i === 0); }); fitAll(); draw(true); });
     areaBox.addEventListener("change", function () { S.area = areaBox.checked; here.hidden = true; draw(); });
     here.addEventListener("click", function () { here.hidden = true; areaBox.checked = true; S.area = true; draw(); });
     map.on("moveend", function () { if (S.area) draw(); else if (!loading) here.hidden = false; });
@@ -284,10 +287,13 @@
 
     // telefono: un pulsante passa dall'elenco alla mappa e viceversa
     var sw = w.querySelector(".pk-mv-switch");
+    function tb() { var t = document.querySelector(".mobile_toolbar"), h = 0; if (t && t.offsetHeight) h = Math.max(0, Math.round(innerHeight - t.getBoundingClientRect().top)); document.body.style.setProperty("--pk-tb", h + "px"); }
+    tb(); addEventListener("resize", tb); setTimeout(tb, 1500);
     sw.addEventListener("click", function () {
       var on = document.body.classList.toggle("pk-mv-showmap");
       sw.textContent = on ? "Mostra l'elenco" : "Mostra la mappa";
-      if (on) setTimeout(function () { map.invalidateSize(); }, 30); else scrollTo({ top: w.getBoundingClientRect().top + scrollY - 80 });
+      if (on) setTimeout(function () { map.invalidateSize(); if (!S.seen) { S.seen = true; if (S.f.zona) zoomZona(S.f.zona); else fitAll(); } draw(); }, 30);
+      else { draw(); scrollTo({ top: w.getBoundingClientRect().top + scrollY - 80, behavior: "instant" }); }
     });
 
     load(function (chunk, n, est) {

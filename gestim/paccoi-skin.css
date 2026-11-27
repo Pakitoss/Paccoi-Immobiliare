@@ -787,3 +787,8 @@ html body .pk-mv-switch{display:none}
   html body .pk-seg button{flex:1}
 }
 html body .pk-cluster.on span{background:#f0cc9c;color:var(--pk-ink);border-color:#f0cc9c;transform:scale(1.12);transition:transform .15s ease}
+/* telefono: il pulsante Mappa/Elenco sta sopra la barra in basso del sito */
+@media (max-width:991px){
+  html body.pk-mapmode .pk-mv-switch{bottom:calc(var(--pk-tb,0px) + 16px)}
+  html body.pk-mapmode.pk-mv-showmap .pk-mv-switch{bottom:24px}
+}
