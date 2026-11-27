@@ -202,10 +202,8 @@
       sel.innerHTML = ""; var o0 = el("option", null, "Tutte le zone"); o0.value = ""; sel.appendChild(o0);
       towns.forEach(function (t) {
         var zk = Object.keys(zs[t].z).sort(function (a, b) { return a.localeCompare(b, "it"); });
-        var g = document.createElement("optgroup"); g.label = t;
-        var o = el("option", null, (zk.length ? "Tutto il comune" : t) + " (" + zs[t].n + ")"); o.value = "c:" + t; g.appendChild(o);
-        zk.forEach(function (k) { var oz = el("option", null, k.slice(t.length + 3) + " (" + zs[t].z[k] + ")"); oz.value = "z:" + k; g.appendChild(oz); });
-        sel.appendChild(g);
+        var o = el("option", null, t + " (" + zs[t].n + ")"); o.value = "c:" + t; sel.appendChild(o);
+        zk.forEach(function (k) { var oz = el("option", null, "\u00a0\u00a0\u00a0· " + k.slice(t.length + 3) + " (" + zs[t].z[k] + ")"); oz.value = "z:" + k; sel.appendChild(oz); });
       });
       sel.value = cur;
     }
@@ -275,7 +273,7 @@
     w.querySelectorAll("select[data-f]").forEach(function (s) { s.addEventListener("change", function () {
       S.f[s.getAttribute("data-f")] = s.value;
       if (s.getAttribute("data-f") === "zona") { if (s.value) { var pts = S.items.filter(function (it) { return it.pos && inZona(it, s.value); }).map(function (it) { return it.pos; }); if (pts.length) map.fitBounds(L.latLngBounds(pts), { padding: [60, 60], maxZoom: 15 }); } else fitAll(); }
-      draw();
+      draw(true);
     }); });
     reset.addEventListener("click", function () { S.f = { c: "", zona: "", tipo: "", max: "", cam: "" }; w.querySelectorAll("select[data-f]").forEach(function (s) { s.value = ""; }); w.querySelectorAll(".pk-seg button").forEach(function (x, i) { x.classList.toggle("on", i === 0); }); fitAll(); draw(true); });
     areaBox.addEventListener("change", function () { S.area = areaBox.checked; here.hidden = true; draw(); });
