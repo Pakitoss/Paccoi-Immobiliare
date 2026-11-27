@@ -843,3 +843,89 @@ html body .pk-tr{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;ma
 html body .pk-tr-btn{appearance:none;border:1px solid rgba(232,192,143,.6);background:transparent;color:var(--pk-gold);font:700 13px var(--pk-sans);padding:8px 14px;border-radius:999px;cursor:pointer}
 html body .pk-tr-btn:hover{background:var(--pk-grad);color:var(--pk-ink)}
 html body .pk-tr-btn[disabled]{opacity:.6;cursor:default}
+/* v3.15 — pagine "Perché sceglierci" */
+html.pk-why-page body:not(.pk-why-on) main .sectionpage{opacity:0}
+html body.pk-why-on main{overflow-x:clip}
+html body .pk-why{color:var(--pk-text);font-family:var(--pk-sans)}
+html body .pk-why-hero{position:relative;width:100vw;margin-left:calc(50% - 50vw);min-height:clamp(300px,46vh,460px);display:flex;align-items:flex-end;overflow:hidden;margin-top:6px;border-top:1px solid var(--pk-line);border-bottom:1px solid var(--pk-line)}
+html body .pk-why-bg{position:absolute;inset:0;background:#2a2018 center/cover no-repeat;transform:scale(1.06);animation:pkWhyBg 14s ease-out forwards}
+html body .pk-why-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(22,17,13,.35) 0%,rgba(22,17,13,.55) 45%,rgba(22,17,13,.94) 100%),linear-gradient(90deg,rgba(22,17,13,.7),rgba(22,17,13,0) 70%)}
+@keyframes pkWhyBg{to{transform:scale(1)}}
+html body .pk-why-htext{position:relative;z-index:1;width:100%;max-width:1240px;margin:0 auto;padding:0 32px 46px;animation:pkMapIn .8s .1s cubic-bezier(.2,.7,.2,1) both}
+html body .pk-why-htext .pk-eyebrow{color:var(--pk-gold)!important}
+html body .pk-why-htext .pk-eyebrow::before, html body .pk-why-head .pk-eyebrow::before, html body .pk-why-card .pk-eyebrow::before, html body .pk-why-cta .pk-eyebrow::before{content:"";width:34px;height:1px;background:currentColor;opacity:.7}
+html body .pk-why-title{font-family:var(--pk-serif)!important;font-weight:500!important;color:var(--pk-heading)!important;font-size:clamp(40px,5.6vw,76px)!important;line-height:1.02!important;margin:0!important;letter-spacing:-.01em;text-shadow:0 2px 24px rgba(0,0,0,.5)}
+html body .pk-why-body{max-width:1240px;margin:0 auto;padding:56px 32px 30px}
+html body .pk-why-h2{font-family:var(--pk-serif)!important;font-weight:500!important;color:var(--pk-heading)!important;font-size:clamp(28px,3vw,40px)!important;line-height:1.1!important;margin:0 0 18px!important}
+html body .pk-why-lead{max-width:920px;margin:0 0 44px}
+html body .pk-why-lead p{font-family:var(--pk-serif)!important;font-style:italic;font-size:clamp(24px,2.5vw,34px)!important;line-height:1.3!important;color:var(--pk-gold)!important;margin:0!important;padding-left:26px;border-left:2px solid var(--pk-bronze)}
+html body .pk-why-prose p{font-size:17px!important;line-height:1.8!important;color:var(--pk-text)!important;margin:0 0 16px!important}
+html body .pk-why-narrow{max-width:860px;margin-bottom:56px}
+html body .pk-why-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:44px;align-items:start;margin-bottom:56px}
+html body .pk-why-sedi .pk-why-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
+html body .pk-why-card{background:linear-gradient(180deg,rgba(51,39,29,.9),rgba(40,30,22,.9));border:1px solid var(--pk-line);border-radius:14px;padding:32px;box-shadow:0 30px 60px -40px rgba(0,0,0,.9)}
+html body .pk-why-ticks{list-style:none;margin:6px 0 22px;padding:0;display:grid;gap:14px}
+html body .pk-why-ticks li{display:flex;gap:14px;align-items:center;font-size:16px;color:var(--pk-text)}
+html body .pk-why-ticks svg, html body .pk-sede-rows svg, html body .pk-hours-h svg{flex:none;color:var(--pk-gold);width:40px;height:40px;padding:9px;border:1px solid rgba(232,192,143,.35);border-radius:50%;background:rgba(232,192,143,.06)}
+html body .pk-why-badge{display:flex;gap:12px;align-items:center;margin:0!important;padding:14px 16px;border-radius:10px;background:rgba(232,192,143,.1);color:var(--pk-heading)!important;font-weight:600;font-size:15px!important}
+html body .pk-why-badge svg{flex:none;color:var(--pk-gold)}
+html body .pk-why-cards{display:grid;gap:22px;margin-bottom:56px}
+html body .pk-why-cards-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+html body .pk-why-cards-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+html body .pk-why-point{position:relative;background:var(--pk-bg2);border:1px solid var(--pk-line);border-radius:14px;padding:28px 26px 24px;transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease}
+html body .pk-why-point:hover{transform:translateY(-4px);border-color:rgba(232,192,143,.45);box-shadow:0 26px 50px -34px rgba(0,0,0,.9)}
+html body .pk-why-ico{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+html body .pk-why-ico svg{color:var(--pk-gold);width:46px;height:46px;padding:11px;border-radius:12px;background:rgba(232,192,143,.1)}
+html body .pk-why-ico i{font-style:normal;font-family:var(--pk-serif);font-size:34px;color:rgba(232,192,143,.28);line-height:1}
+html body .pk-why-point h3{font-family:var(--pk-serif)!important;font-weight:600!important;font-size:24px!important;color:var(--pk-heading)!important;margin:0 0 10px!important}
+html body .pk-why-point p{font-size:15.5px!important;line-height:1.7!important;color:var(--pk-muted)!important;margin:0!important}
+html body .pk-why-head{margin:0 0 26px}
+/* sede */
+html body .pk-sede-rows{list-style:none;margin:8px 0 24px;padding:0;display:grid;gap:16px}
+html body .pk-sede-rows li{display:flex;gap:14px;align-items:center}
+html body .pk-sede-l{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--pk-muted)}
+html body .pk-sede-v{display:block;font-size:17px;font-weight:600;color:var(--pk-heading)!important;text-decoration:none!important}
+html body a.pk-sede-v:hover{color:var(--pk-gold)!important}
+html body .pk-hours{border-top:1px solid var(--pk-line);padding-top:20px;margin-bottom:24px}
+html body .pk-hours-h{display:flex;gap:14px;align-items:center;font-weight:700;color:var(--pk-heading);margin-bottom:12px}
+html body .pk-hours dl{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;margin:0 0 12px 54px}
+html body .pk-hours dt{font-weight:500;color:var(--pk-muted)}
+html body .pk-hours dd{margin:0;font-weight:600;color:var(--pk-text);font-variant-numeric:tabular-nums}
+html body .pk-hours-note{margin:0 0 0 54px!important;font-size:14px!important;color:var(--pk-muted)!important}
+html body .pk-why-media .carousel{border-radius:14px;overflow:hidden;border:1px solid var(--pk-line);box-shadow:0 30px 60px -40px rgba(0,0,0,.95)}
+html body .pk-why-media .carousel-item img{width:100%;aspect-ratio:4/3;object-fit:cover}
+html body .pk-why-media .carousel-indicators button{width:8px!important;height:8px!important;border-radius:50%!important;border:0!important;background:#fff!important;opacity:.45}
+html body .pk-why-media .carousel-indicators button.active{background:var(--pk-gold)!important;opacity:1;width:22px!important;border-radius:6px!important}
+/* bottoni */
+html body .pk-why-acts{display:flex;flex-wrap:wrap;gap:10px}
+html body .pk-btn{display:inline-flex;align-items:center;gap:9px;padding:12px 20px;border-radius:4px;border:1px solid rgba(232,192,143,.55);color:var(--pk-gold)!important;font-weight:700;font-size:15px;text-decoration:none!important;transition:background .2s ease,color .2s ease}
+html body .pk-btn svg{width:18px;height:18px}
+html body .pk-btn:hover{background:rgba(232,192,143,.12)}
+html body .pk-btn-gold{background:var(--pk-grad)!important;border-color:transparent;color:var(--pk-ink)!important}
+html body .pk-btn-gold:hover{background:linear-gradient(135deg,#f7dab2,#e2ad78)!important}
+/* invito finale e altre pagine */
+html body .pk-why-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;padding:36px 40px;border-radius:16px;border:1px solid rgba(232,192,143,.35);background:radial-gradient(120% 140% at 0% 0%,rgba(209,154,106,.22),rgba(31,24,18,0) 60%),var(--pk-surface);margin:0 0 40px}
+html body .pk-why-cta .pk-why-h2{margin-bottom:6px!important}
+html body .pk-why-cta p{margin:0!important;color:var(--pk-muted)!important}
+html body .pk-why-more{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:30px}
+html body .pk-why-link{display:flex;align-items:center;gap:16px;padding:20px 22px;border:1px solid var(--pk-line);border-radius:12px;background:var(--pk-bg2);text-decoration:none!important;transition:border-color .25s ease,transform .25s ease}
+html body .pk-why-link:hover{border-color:rgba(232,192,143,.5);transform:translateY(-2px)}
+html body .pk-why-link>svg:first-child{color:var(--pk-gold);flex:none}
+html body .pk-why-link span{flex:1}
+html body .pk-why-link small{display:block;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--pk-muted)}
+html body .pk-why-link b{display:block;font-family:var(--pk-serif);font-weight:600;font-size:22px;color:var(--pk-heading)}
+html body .pk-why-link>svg:last-child{color:var(--pk-gold);transition:transform .25s ease}
+html body .pk-why-link:hover>svg:last-child{transform:translateX(4px)}
+@media (max-width:991px){
+  html body .pk-why-grid, html body .pk-why-sedi .pk-why-grid{grid-template-columns:1fr;gap:26px}
+  html body .pk-why-cards-3{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  html body .pk-why-htext{padding:0 20px 30px}
+  html body .pk-why-body{padding:36px 18px 20px}
+  html body .pk-why-cards-2, html body .pk-why-cards-3, html body .pk-why-more{grid-template-columns:1fr}
+  html body .pk-why-card{padding:24px 20px}
+  html body .pk-why-cta{padding:26px 22px}
+  html body .pk-hours dl, html body .pk-hours-note{margin-left:0!important}
+  html body .pk-why-lead p{padding-left:16px}
+}

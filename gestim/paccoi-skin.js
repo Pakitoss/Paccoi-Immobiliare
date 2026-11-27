@@ -629,3 +629,171 @@
     if (lang === "en") load().then(function () { window.PKI18N.apply(); }, function () {});
   });
 })();
+
+/* =========================================================
+   V3.15 — pagine "Perché sceglierci": Le nostre sedi, Compravendite immobiliari, Stime e consulenza
+   Il testo resta quello scritto nel gestionale: qui si cambia solo l'impaginazione.
+   ========================================================= */
+(function () {
+  function ready(fn) { document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", fn) : fn(); }
+  var PAGES = {
+    "/le-nostre-sedi/": "sedi",
+    "/compravendite-immobiliari/": "compravendite",
+    "/stime-e-consulenza/": "stime"
+  };
+  var kind = PAGES[location.pathname.replace(/\/?$/, "/")];
+  if (!kind) return;
+  document.documentElement.classList.add("pk-why-page");
+  var I = {
+    pin: '<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/>',
+    tel: '<path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    route: '<path d="M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/><path d="M6 15V9a4 4 0 0 1 4-4h4M18 9v6a4 4 0 0 1-4 4h-4"/>',
+    mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+    seal: '<path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/>',
+    doc: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>',
+    bank: '<path d="M3 10h18L12 4 3 10ZM5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/>',
+    leaf: '<path d="M5 19c0-8 6-14 15-14 0 9-6 15-14 15"/><path d="M5 19 13 11"/>',
+    chart: '<path d="M4 20V4M4 20h16"/><path d="m7 15 4-4 3 3 5-6"/>',
+    key: '<circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M16 7l3 3"/>',
+    arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>'
+  };
+  function svg(n) { return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + I[n] + "</svg>"; }
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function txt(tag, cls, t) { var e = document.createElement(tag); if (cls) e.className = cls; e.textContent = t; return e; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  ready(function () {
+    try {
+      var sec = document.querySelector("main .sectionpage"), h1 = sec && sec.querySelector("h1"), testo = sec && sec.querySelector(".testo");
+      if (!sec || !h1 || !testo || sec.querySelector(".pk-why")) return;
+      var ps = [].slice.call(testo.querySelectorAll(":scope > p")).filter(function (p) { return p.textContent.trim(); });
+      var img = testo.querySelector("img");
+      var photo = img ? (img.getAttribute("src") || img.getAttribute("data-src")) : "";
+      var wrap = el("div", "pk-why pk-why-" + kind);
+
+      // testata con foto
+      var hero = el("header", "pk-why-hero");
+      var bg = el("div", "pk-why-bg"); hero.appendChild(bg);
+      var ht = el("div", "pk-why-htext");
+      ht.appendChild(txt("div", "pk-eyebrow", "Perché sceglierci"));
+      ht.appendChild(txt("h1", "pk-why-title", h1.textContent.trim()));
+      hero.appendChild(ht);
+      wrap.appendChild(hero);
+      var body = el("div", "pk-why-body"); wrap.appendChild(body);
+
+      if (kind === "sedi") {
+        var all = ps.map(function (p) { return p.innerText || p.textContent; }).join("\n");
+        var addr = (all.match(/Sede di ([^\n–-]+?)\s*[–-]\s*([^\n]+)/) || []);
+        var tel = (all.match(/Tel\.?\s*([+\d][\d\s]+\d)/i) || [])[1] || "";
+        var resp = (all.match(/RESPONSABILE:\s*([^\n]+)/i) || [])[1] || "";
+        var win = (all.match(/Invernale:\s*([^\n]+)/i) || [])[1] || "";
+        var sum = (all.match(/Estivo:\s*([^\n]+)/i) || [])[1] || "";
+        var note = ps.filter(function (p) { return /aperti/i.test(p.textContent); })[0];
+        if (!addr[1] || !tel) return;  // testo cambiato nel gestionale: si lascia la pagina com'è
+        var grid = el("div", "pk-why-grid");
+        var card = el("div", "pk-why-card pk-sede");
+        card.appendChild(txt("div", "pk-eyebrow", "Sede principale"));
+        card.appendChild(txt("h2", "pk-why-h2", addr[1].replace(/\s*\(AP\)\s*/, "").trim()));
+        var rows = el("ul", "pk-sede-rows");
+        function row(icon, label, value, href) {
+          var li = el("li", null, svg(icon)); var d = el("div");
+          d.appendChild(txt("span", "pk-sede-l", label));
+          var v = href ? txt("a", "pk-sede-v", value) : txt("span", "pk-sede-v", value); if (href) v.href = href;
+          d.appendChild(v); li.appendChild(d); rows.appendChild(li);
+        }
+        row("pin", "Indirizzo", addr[2].trim() + " · " + addr[1].trim());
+        row("tel", "Telefono", tel.trim(), "tel:" + tel.replace(/\s+/g, ""));
+        if (resp) row("user", "Responsabile", resp.trim().toLowerCase().replace(/\b\w/g, function (c) { return c.toUpperCase(); }));
+        card.appendChild(rows);
+        if (win || sum) {
+          var hrs = el("div", "pk-hours");
+          hrs.appendChild(el("div", "pk-hours-h", svg("clock") + "<span>Orari di apertura</span>"));
+          var tb = el("dl");
+          if (win) { tb.appendChild(txt("dt", null, "Orario invernale")); tb.appendChild(txt("dd", null, win.trim())); }
+          if (sum) { tb.appendChild(txt("dt", null, "Orario estivo")); tb.appendChild(txt("dd", null, sum.trim())); }
+          hrs.appendChild(tb);
+          if (note) hrs.appendChild(txt("p", "pk-hours-note", note.textContent.trim()));
+          card.appendChild(hrs);
+        }
+        var acts = el("div", "pk-why-acts");
+        var a1 = el("a", "pk-btn pk-btn-gold", svg("tel") + "<span>Chiamaci</span>"); a1.href = "tel:" + tel.replace(/\s+/g, "");
+        var a2 = el("a", "pk-btn", svg("route") + "<span>Indicazioni</span>"); a2.href = "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(addr[2].trim() + ", " + addr[1].replace(/\s*\(AP\)\s*/, " ").trim()); a2.target = "_blank"; a2.rel = "noopener";
+        var a3 = el("a", "pk-btn", svg("mail") + "<span>Scrivici</span>"); a3.href = "/contatti/";
+        acts.appendChild(a1); acts.appendChild(a2); acts.appendChild(a3); card.appendChild(acts);
+        grid.appendChild(card);
+        var car = testo.querySelector(".carousel");
+        var media = el("div", "pk-why-media"); if (car) media.appendChild(car); grid.appendChild(media);
+        body.appendChild(grid);
+        var first = car && car.querySelector(".carousel-item img"); if (first) photo = first.getAttribute("src") || first.getAttribute("data-src") || photo;
+      }
+
+      if (kind === "compravendite" && ps.length >= 4) {
+        body.appendChild(lead(ps[0]));
+        var g = el("div", "pk-why-grid");
+        var left = el("div", "pk-why-prose"); left.appendChild(ps[1]); g.appendChild(left);
+        var side = el("aside", "pk-why-card");
+        side.appendChild(txt("div", "pk-eyebrow", "Al tuo fianco"));
+        side.appendChild(txt("h2", "pk-why-h2", "Ogni fase, con i professionisti giusti"));
+        var ul = el("ul", "pk-why-ticks");
+        [["seal", "Notaio di tua fiducia o da noi suggerito"], ["doc", "Periti esperti del settore edile e immobiliare"], ["bank", "Principali banche per mutui e prestiti"], ["leaf", "Tecnici per il certificato energetico"]].forEach(function (x) { var li = el("li", null, svg(x[0])); li.appendChild(txt("span", null, x[1])); ul.appendChild(li); });
+        side.appendChild(ul);
+        side.appendChild(el("p", "pk-why-badge", svg("key") + "<span>La provvigione è dovuta solo ad affare concluso.</span>"));
+        g.appendChild(side); body.appendChild(g);
+        var cards = el("div", "pk-why-cards pk-why-cards-2");
+        cards.appendChild(point("chart", "01", "Mercato sempre aggiornato", ps[2]));
+        cards.appendChild(point("key", "02", "Dalla proposta al rogito", ps[3]));
+        body.appendChild(cards);
+      }
+
+      if (kind === "stime" && ps.length >= 8) {
+        body.appendChild(lead(ps[0]));
+        var pr = el("div", "pk-why-prose pk-why-narrow"); pr.appendChild(ps[1]); body.appendChild(pr);
+        var head = el("div", "pk-why-head");
+        head.appendChild(txt("div", "pk-eyebrow", "Prima di comprare casa"));
+        head.appendChild(txt("h2", "pk-why-h2", "Sei controlli da fare, insieme a noi"));
+        body.appendChild(head);
+        var cs = el("div", "pk-why-cards pk-why-cards-3");
+        var T = [["pin", "La zona"], ["key", "Lo stato dell'immobile"], ["bank", "Ipoteche"], ["doc", "Condoni edilizi"], ["chart", "Spese condominiali"], ["seal", "Certificazioni degli impianti"]];
+        for (var i = 0; i < 6 && ps[i + 2]; i++) cs.appendChild(point(T[i][0], "0" + (i + 1), T[i][1], ps[i + 2]));
+        body.appendChild(cs);
+      }
+
+      // invito finale e collegamenti alle altre pagine
+      var cta = el("section", "pk-why-cta");
+      var ct = el("div");
+      ct.appendChild(txt("div", "pk-eyebrow", "Parliamone"));
+      ct.appendChild(txt("h2", "pk-why-h2", kind === "stime" ? "Vuoi sapere quanto vale la tua casa?" : "Parliamo della tua casa"));
+      ct.appendChild(txt("p", null, kind === "stime" ? "La valutazione è gratuita e senza impegno." : "Ti richiamiamo noi, senza impegno."));
+      cta.appendChild(ct);
+      var cb = el("div", "pk-why-acts");
+      var c1 = el("a", "pk-btn pk-btn-gold", "<span>Contattaci</span>" + svg("arrow")); c1.href = "/contatti/";
+      var c2 = el("a", "pk-btn", "<span>Valutazione gratuita</span>"); c2.href = "/valutazione-professionale/";
+      cb.appendChild(c1); cb.appendChild(c2); cta.appendChild(cb);
+      body.appendChild(cta);
+      var more = el("nav", "pk-why-more"); more.setAttribute("aria-label", "Perché sceglierci");
+      [["/le-nostre-sedi/", "Le nostre sedi", "pin"], ["/compravendite-immobiliari/", "Compravendite immobiliari", "key"], ["/stime-e-consulenza/", "Stime e consulenza", "chart"]].forEach(function (x) {
+        if (PAGES[x[0]] === kind) return;
+        var a = el("a", "pk-why-link", svg(x[2])); a.href = x[0];
+        var s = el("span"); s.appendChild(txt("small", null, "Perché sceglierci")); s.appendChild(txt("b", null, x[1])); a.appendChild(s);
+        a.insertAdjacentHTML("beforeend", svg("arrow")); more.appendChild(a);
+      });
+      body.appendChild(more);
+
+      if (photo) bg.style.backgroundImage = 'url("' + photo.replace(/"/g, "%22") + '")';
+      h1.style.display = "none"; testo.style.display = "none";
+      sec.insertBefore(wrap, h1);
+      document.body.classList.add("pk-why-on");
+    } catch (e) { if (window.console) console.warn("[paccoi perché sceglierci]", e); }
+
+    function lead(p) { var d = el("div", "pk-why-lead"); d.appendChild(p); return d; }
+    function point(icon, n, title, p) {
+      var c = el("article", "pk-why-point");
+      c.appendChild(el("div", "pk-why-ico", svg(icon) + "<i>" + esc(n) + "</i>"));
+      c.appendChild(txt("h3", null, title));
+      c.appendChild(p);
+      return c;
+    }
+  });
+})();
