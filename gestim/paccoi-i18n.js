@@ -28,8 +28,8 @@
     "Powered by": "Powered by",
 
     // barra dei filtri
-    "Codice": "Reference", "Prezzo da": "Price from", "Prezzo a": "Price to", "Comune": "Town", "Zone": "Areas",
-    "Qualsiasi": "Any", "Vendita": "Sale", "Affitto": "Rent", "Tipologia": "Property type", "Tipologia -": "Property type -",
+    "Codice": "Code", "Prezzo da": "Min price", "Prezzo a": "Max price", "Comune": "Town", "Zone": "Areas",
+    "Qualsiasi": "Any", "Vendita": "Sale", "Affitto": "Rent", "Tipologia": "Type", "Tipologia -": "Type -",
     "Cerca": "Search", "CERCA": "SEARCH", "Cerca!": "Search!", "ALTRO": "MORE", "altro": "more",
     "Camere minime": "Min. bedrooms", "Bagni minimi": "Min. bathrooms", "Locali minimi": "Min. rooms",
     "Arredato": "Furnished", "Nuova costruzione": "New build", "Giardino": "Garden", "Posto auto/Box": "Parking / garage",
@@ -197,6 +197,8 @@
     [/^Ultimo aggiornamento (.+)$/, function (m) { return "Last updated " + m[1]; }],
     [/^Preferiti: Cod\.\s*(.+)$/, function (m) { return "Favourites: Ref. " + m[1]; }],
     [/^Stampa: Cod\.\s*(.+)$/, function (m) { return "Print: Ref. " + m[1]; }],
+    [/^(.+) - (Titolare agenzia|Collaboratore)$/, function (m) { return m[1] + " - " + D[m[2]]; }],
+    [/^(.*)P\.IVA:? ?(\d+)$/, function (m) { return m[1] + "VAT no. " + m[2]; }],
     [/^Foto (\d+)$/, function (m) { return "Photo " + m[1]; }],
     [/^(\d+) immobil[ei]$/i, function (m) { return plural(m[1], "property", "properties"); }],
     [/^· carico (\d+) di (\d+)…$/, function (m) { return "· loading " + m[1] + " of " + m[2] + "…"; }],
@@ -322,7 +324,8 @@
     });
     if (queue.length && !scheduled) { scheduled = true; requestAnimationFrame(flush); }
   });
-  function trTitle() { var r = tr(document.title.split(" | ")[0]); if (r) document.title = document.title.replace(document.title.split(" | ")[0], r); }
+  function trTitle() {
+    document.title = document.title.replace(/agenzia immobiliare San benedetto del Tronto/i, "real estate agency in San Benedetto del Tronto"); var r = tr(document.title.split(" | ")[0]); if (r) document.title = document.title.replace(document.title.split(" | ")[0], r); }
 
   function apply() {
     document.documentElement.lang = "en";
