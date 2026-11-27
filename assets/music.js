@@ -163,8 +163,12 @@
   // e ripartiamo da lì, invece che dall'inizio
   const POS = "paccoi-musica-pos";
   const store = (() => { try { localStorage.setItem("pk-t", "1"); localStorage.removeItem("pk-t"); return localStorage; } catch (e) { return sessionStorage; } })();
-  let resumed = false, mySave = 0;
-  function savePos(force) { try { if (ctx && timer && (force === true || !document.hidden)) { mySave = Date.now(); store.setItem(POS, JSON.stringify({ step: step, vib: lastVib, at: mySave })); } } catch (e) {} }
+  let resumed = false, mySave = 0, yielded = false;
+  // una sola scheda suona alla volta: quella che si sta guardando
+  const ME = Math.random().toString(36).slice(2);
+  const bc = ("BroadcastChannel" in window) ? new BroadcastChannel("paccoi-musica") : null;
+  const claim = () => { yielded = false; if (bc) bc.postMessage({ t: "play", id: ME }); };
+  function savePos(force) { try { if (ctx && timer && !yielded && (force === true || !document.hidden)) { mySave = Date.now(); store.setItem(POS, JSON.stringify({ step: step, vib: lastVib, at: mySave })); } } catch (e) {} }
   function readPos() { try { const s = JSON.parse(store.getItem(POS) || "null"); return s && typeof s.step === "number" && Date.now() - s.at < 30 * 60 * 1000 ? s : null; } catch (e) { return null; } }
   function loadPos() { const s = readPos(); if (s) { step = s.step; lastVib = s.vib || lastVib; return true; } return false; }
   addEventListener("pagehide", () => savePos(true));
@@ -180,7 +184,7 @@
     master.gain.cancelScheduledValues(ctx.currentTime);
     master.gain.setValueAtTime(master.gain.value, ctx.currentTime);
     master.gain.linearRampToValueAtTime(0.55, ctx.currentTime + fade);
-    playing = true; ui();
+    playing = true; ui(); claim();
   }
   function stop() {
     if (!ctx) return;
@@ -231,15 +235,29 @@
     start();
     setTimeout(() => { if (ctx.state !== "running") armGesture(); }, 350);
   }
-  // pausa quando la scheda non è visibile; tornando su questa scheda
-  // la musica riprende dal punto in cui era arrivata nell'altra scheda
-  document.addEventListener("visibilitychange", () => {
-    if (!ctx) return;
-    if (document.hidden) { if (playing) { savePos(true); ctx.suspend(); } return; }
+  // pausa quando la scheda non è visibile; tornando su questa scheda (o finestra)
+  // la musica riprende dal punto in cui era arrivata nell'altra
+  function takeOver() {
+    if (!ctx || document.hidden) return;
     if (pref() === "off") { if (playing) stop(); return; }
+    if (!playing && !yielded) return;
     const s = readPos();
     const jump = s && s.at > mySave;
     if (jump) { step = s.step; lastVib = s.vib || lastVib; }
-    if (playing) { ctx.resume(); if (jump) nextT = Math.max(nextT, ctx.currentTime + 0.05); mySave = Date.now(); }
+    yielded = false;
+    if (!playing) { start(); return; }
+    ctx.resume(); if (jump) nextT = Math.max(nextT, ctx.currentTime + 0.05);
+    mySave = Date.now(); claim();
+  }
+  document.addEventListener("visibilitychange", () => {
+    if (!ctx) return;
+    if (document.hidden) { if (playing && !yielded) { savePos(true); ctx.suspend(); } return; }
+    takeOver();
   });
+  addEventListener("focus", takeOver);
+  addEventListener("pageshow", (e) => { if (e.persisted) takeOver(); });
+  if (bc) bc.onmessage = (e) => {
+    const m = e.data || {};
+    if (m.t === "play" && m.id !== ME && ctx && playing && !yielded) { savePos(true); yielded = true; ctx.suspend(); }
+  };
 })();
